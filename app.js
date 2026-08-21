@@ -1,179 +1,18 @@
 import { varieties, getVarietyById } from "./data/varieties.js";
-import { add, put, getAll, getByIndex, exportData, importData, validateBackup } from "./db.js";
-
+import { add, put, getAll, getByIndex, remove, exportData, importData, validateBackup } from "./db.js";
 const $ = (s) => document.querySelector(s);
 const uid = (prefix) => `${prefix}_${crypto.randomUUID()}`;
-
-let selectedVariety = null;
-let deferredInstallPrompt = null;
-
+let selectedVariety = null; let deferredInstallPrompt = null;
 document.addEventListener("DOMContentLoaded", init);
-
-async function init() {
-  bindNavigation();
-  bindActions();
-  renderCatalog();
-  await renderDashboard();
-
-  if ("serviceWorker" in navigator) {
-    try { await navigator.serviceWorker.register("./sw.js"); } catch (e) { console.warn("SW:", e); }
-  }
-
-  window.addEventListener("beforeinstallprompt", (event) => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#installBtn").classList.remove("hidden");
-  });
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#installBtn").addEventListener("click", async () => {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    deferredInstallPrompt = null;
-    $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#installBtn").classList.add("hidden");
-  });
-}
-
-function bindNavigation() {
-  document.querySelectorAll(".nav-btn").forEach(btn => btn.addEventListener("click", () => showView(btn.dataset.view)));
-}
-function showView(name) {
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };`#${name}`).classList.add("active");
-  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.view === name));
-}
-function bindActions() {
-  document.querySelectorAll("[data-nav]").forEach(btn => btn.addEventListener("click", () => {
-    document.querySelectorAll("[data-nav]").forEach(x=>x.classList.remove("active"));
-    btn.classList.add("active");
-    showView(btn.dataset.nav);
-    if (btn.dataset.nav === "dashboard") renderDashboard();
-  }));
-  $("#navNew")?.addEventListener("click", () => showNewCultivationModal());
-
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#newCultivationBtn").addEventListener("click", () => showNewCultivationModal());
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#closeModal").addEventListener("click", closeModal);
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#modal").addEventListener("click", (e) => { if (e.target.id === "modal") closeModal(); });
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#difficultyFilter").addEventListener("change", renderCatalog);
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#exportBtn").addEventListener("click", handleExport);
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#importBtn").addEventListener("click", () => $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#importFile").click());
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#importFile").addEventListener("change", handleImportFile);
-}
+async function init(){bindNavigation();bindActions();renderCatalog();await renderDashboard();if("serviceWorker"in navigator){try{await navigator.serviceWorker.register("./sw.js")}catch(e){console.warn("SW:",e)}}window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstallPrompt=e;$("#installBtn")?.classList.remove("hidden")});$("#installBtn")?.addEventListener("click",async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();deferredInstallPrompt=null;$("#installBtn")?.classList.add("hidden")})}
+function bindNavigation(){document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",async()=>{showView(btn.dataset.view);if(btn.dataset.view==="dashboard")await renderDashboard();if(btn.dataset.view==="catalog")renderCatalog()}))}
+function showView(name){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));const target=$("#"+name);if(!target)return;target.classList.add("active");document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.view===name))}
+function bindActions(){$("#newCultivationBtn")?.addEventListener("click",()=>showNewCultivationModal());$("#closeModal")?.addEventListener("click",closeModal);$("#modal")?.addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});$("#difficultyFilter")?.addEventListener("change",renderCatalog);$("#exportBtn")?.addEventListener("click",handleExport);$("#importBtn")?.addEventListener("click",()=>$("#importFile")?.click());$("#importFile")?.addEventListener("change",handleImportFile)}
 
 function renderCatalog() {
-  const filter = $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#difficultyFilter").value;
+  const filter = $("#difficultyFilter").value;
   const items = varieties.filter(v => filter === "all" || v.difficulty === filter);
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#catalogList").innerHTML = items.map(v => `
+  $("#catalogList").innerHTML = items.map(v => `
     <article class="variety-card card">
       <span class="badge">${v.difficulty === "easy" ? "Fácil" : "Intermediária"}</span>
       <h3>${escapeHtml(v.name)}</h3>
@@ -314,15 +153,7 @@ async function renderDashboard() {
   const items = await getTodayOverview(cultivations);
 
   showView("dashboard");
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#dashboard").innerHTML = `
+  $("#dashboard").innerHTML = `
     <div class="app-shell">
       ${renderTodayHero(items)}
 
@@ -384,91 +215,19 @@ async function renderDashboard() {
     el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId);
   });
 
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#quickNew").onclick=()=>showNewCultivationModal();
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#emptyNew")?.addEventListener("click",()=>showNewCultivationModal());
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#quickCatalog").onclick=()=>showView("catalog");
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#toolCatalog").onclick=()=>showView("catalog");
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#quickBackup").onclick=()=>handleExport();
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#toolBackup").onclick=()=>handleExport();
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#toolSettings").onclick=()=>alert("As configurações serão adicionadas em uma próxima versão.");
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#seeAllCultivations").onclick=()=>showView("cultivations");
+  $("#quickNew").onclick=()=>showNewCultivationModal();
+  $("#emptyNew")?.addEventListener("click",()=>showNewCultivationModal());
+  $("#quickCatalog").onclick=()=>showView("catalog");
+  $("#toolCatalog").onclick=()=>showView("catalog");
+  $("#quickBackup").onclick=()=>handleExport();
+  $("#toolBackup").onclick=()=>handleExport();
+  $("#toolSettings").onclick=()=>alert("As configurações serão adicionadas em uma próxima versão.");
+  $("#seeAllCultivations")?.addEventListener("click", () => showView("cultivations"));
 }
 
 function showNewCultivationModal(preselectedId = null) {
   selectedVariety = preselectedId || varieties[0].id;
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#modalContent").innerHTML = `
+  $("#modalContent").innerHTML = `
     <p class="eyebrow">NOVO CULTIVO</p><h2>Começar uma bandeja</h2>
     <form id="newCultivationForm" class="form-grid">
       <label>Variedade
@@ -485,72 +244,24 @@ function showNewCultivationModal(preselectedId = null) {
       </label>
       <button class="primary" type="submit">Criar cultivo</button>
     </form>`;
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#modal").classList.remove("hidden");
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#newCultivationForm").addEventListener("submit", createCultivation);
+  $("#modal").classList.remove("hidden");
+  $("#newCultivationForm").addEventListener("submit", createCultivation);
 }
 async function createCultivation(e) {
   e.preventDefault();
-  const varietyId = $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#varietySelect").value;
+  const varietyId = $("#varietySelect").value;
   const v = getVarietyById(varietyId);
-  const started = $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#startedAt").value || todayISO();
+  const started = $("#startedAt").value || todayISO();
   const cultivation = {
     id: uid("cult"),
     varietyId,
-    name: $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#cultivationName").value.trim() || `Cultivo de ${v.name}`,
+    name: $("#cultivationName").value.trim() || `Cultivo de ${v.name}`,
     startedAt: new Date(`${started}T00:00:00`).toISOString(),
     status: "active",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     settings: { substrate: "", tray: "", seedAmount: null },
-    notes: $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#initialNote").value.trim()
+    notes: $("#initialNote").value.trim()
   };
   await add("cultivations", cultivation);
   if (cultivation.notes) {
@@ -568,15 +279,7 @@ async function renderCultivationDetail(id) {
   const s = dailyStatus(c);
   const logs = (await getByIndex("dailyLogs","cultivationId",id)).sort((a,b)=>b.day-a.day);
   showView("cultivation");
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#cultivationDetail").innerHTML = `
+  $("#cultivationDetail").innerHTML = `
     <button class="back" id="backDashboard">← Voltar</button>
     <div class="detail">
       <div class="card">
@@ -604,41 +307,9 @@ async function renderCultivationDetail(id) {
         ${logs.length ? logs.map(l=>`<div class="timeline-item"><strong>Dia ${l.day} · ${formatDate(l.date)}</strong><span>${escapeHtml(l.note || "Sem observação.")}</span></div>`).join("") : `<p class="meta">Nenhum registro ainda.</p>`}
       </div>
     </div>`;
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#backDashboard").onclick = async () => { showView("dashboard"); await renderDashboard(); };
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#addLogBtn").onclick = () => showLogModal(c,v,s.day);
-  if ($("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#harvestBtn")) $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#harvestBtn").onclick = () => showHarvestModal(c,v,s.day);
+  $("#backDashboard").onclick = async () => { showView("dashboard"); await renderDashboard(); };
+  $("#addLogBtn").onclick = () => showLogModal(c,v,s.day);
+  if ($("#harvestBtn")) $("#harvestBtn").onclick = () => showHarvestModal(c,v,s.day);
 }
 function todayGuidance(v,s) {
   const out = [];
@@ -659,15 +330,7 @@ function todayGuidance(v,s) {
   return out;
 }
 function showLogModal(c, v, day, existing = null) {
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#modalContent").innerHTML = `
+  $("#modalContent").innerHTML = `
     <p class="eyebrow">DIÁRIO · DIA ${day}</p>
     <h2>Registrar observação</h2>
     <form id="logForm" class="form-grid">
@@ -682,25 +345,9 @@ function showLogModal(c, v, day, existing = null) {
       <button class="primary" type="submit">Salvar registro</button>
     </form>`;
 
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#modal").classList.remove("hidden");
+  $("#modal").classList.remove("hidden");
 
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#logForm").onsubmit = async e => {
+  $("#logForm").onsubmit = async e => {
     e.preventDefault();
     const record = existing || {
       id: uid("log"),
@@ -712,24 +359,8 @@ function showLogModal(c, v, day, existing = null) {
 
     await put("dailyLogs", {
       ...record,
-      condition: $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#logCondition").value,
-      note: $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#logNote").value.trim(),
+      condition: $("#logCondition").value,
+      note: $("#logNote").value.trim(),
       updatedAt: new Date().toISOString()
     });
 
@@ -739,15 +370,7 @@ function showLogModal(c, v, day, existing = null) {
 }
 
 function showHarvestModal(c,v,day) {
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#modalContent").innerHTML = `
+  $("#modalContent").innerHTML = `
     <p class="eyebrow">COLHEITA</p><h2>Registrar colheita</h2>
     <form id="harvestForm" class="form-grid">
       <label>Peso colhido (g)<input id="harvestWeight" type="number" min="0" step="0.1"></label>
@@ -755,71 +378,15 @@ function showHarvestModal(c,v,day) {
       <label>Observação<textarea id="harvestNote" rows="3"></textarea></label>
       <button class="primary" type="submit">Salvar colheita</button>
     </form>`;
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#modal").classList.remove("hidden");
-  $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#harvestForm").onsubmit = async e => {
+  $("#modal").classList.remove("hidden");
+  $("#harvestForm").onsubmit = async e => {
     e.preventDefault();
-    await add("harvests",{id:uid("harvest"),cultivationId:c.id,varietyId:v.id,day,date:new Date().toISOString(),weightGrams:Number($("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#harvestWeight").value)||null,rating:Number($("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#harvestRating").value),note:$("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#harvestNote").value.trim(),createdAt:new Date().toISOString()});
+    await add("harvests",{id:uid("harvest"),cultivationId:c.id,varietyId:v.id,day,date:new Date().toISOString(),weightGrams:Number($("#harvestWeight").value)||null,rating:Number($("#harvestRating").value),note:$("#harvestNote").value.trim(),createdAt:new Date().toISOString()});
     await put("cultivations",{...c,status:"harvested",harvestedAt:new Date().toISOString(),updatedAt:new Date().toISOString()});
     closeModal(); showView("dashboard"); await renderDashboard();
   };
 }
-function closeModal(){ $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#modal").classList.add("hidden"); $("#seeAllCultivations").onclick=async ()=>{
-    const view=$("#cultivations");
-    if(!view){ return; }
-    const list=items=>items.map(cultivationCard).join("");
-    view.innerHTML=`<div class="app-shell"><button class="back" id="backDashAll">← Dashboard</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div></div><div class="cultivation-list">${cultivations.length?list(await getTodayOverview(cultivations)):`<p class="meta">Nenhum cultivo.</p>`}</div></div>`;
-    showView("cultivations");
-    view.querySelector("#backDashAll").onclick=()=>renderDashboard();
-    view.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
-  };"#modalContent").innerHTML=""; }
+function closeModal(){ $("#modal").classList.add("hidden"); $("#modalContent").innerHTML=""; }
 function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
 function todayISO(){return new Date().toISOString().slice(0,10)}
 function formatDate(iso){return new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"}).format(new Date(iso))}
