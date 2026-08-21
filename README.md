@@ -102,3 +102,8 @@ Exemplos:
 - suspeita de mofo.
 
 A inteligência é **heurística e orientativa**: não substitui avaliação visual, conhecimento agronômico ou diagnóstico profissional. O objetivo é ajudar o usuário a perceber padrões nos próprios registros.
+
+
+## V6.1
+
+Ajuste visual de espaçamento interno dos cards de Inteligência e Atividade no dashboard, com padding responsivo para desktop e mobile.
