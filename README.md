@@ -107,3 +107,7 @@ A inteligência é **heurística e orientativa**: não substitui avaliação vis
 ## V6.1
 
 Ajuste visual de espaçamento interno dos cards de Inteligência e Atividade no dashboard, com padding responsivo para desktop e mobile.
+
+## V6.2 — correção de acompanhamento
+
+Corrigido o motor de status diário usado pelo dashboard e pelo detalhe do cultivo, incluindo cálculo do dia, fase, janela de colheita e leitura dos registros do diário.

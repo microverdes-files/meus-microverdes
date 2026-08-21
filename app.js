@@ -5,7 +5,7 @@ const uid = (prefix) => `${prefix}_${crypto.randomUUID()}`;
 let selectedVariety = null; let deferredInstallPrompt = null;
 document.addEventListener("DOMContentLoaded", init);
 async function init(){bindNavigation();bindActions();renderCatalog();await renderDashboard();if("serviceWorker"in navigator){try{await navigator.serviceWorker.register("./sw.js")}catch(e){console.warn("SW:",e)}}window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstallPrompt=e;$("#installBtn")?.classList.remove("hidden")});$("#installBtn")?.addEventListener("click",async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();deferredInstallPrompt=null;$("#installBtn")?.classList.add("hidden")})}
-function bindNavigation(){document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",async()=>{showView(btn.dataset.view);if(btn.dataset.view==="dashboard")await renderDashboard();if(btn.dataset.view==="catalog")renderCatalog()}))}
+function bindNavigation(){document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",async()=>{showView(btn.dataset.view);if(btn.dataset.view==="dashboard")await renderDashboard();if(btn.dataset.view==="catalog")renderCatalog();if(btn.dataset.view==="cultivations")await renderAllCultivations()}))}
 function showView(name){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));const target=$("#"+name);if(!target)return;target.classList.add("active");document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.view===name))}
 function bindActions(){$("#newCultivationBtn")?.addEventListener("click",()=>showNewCultivationModal());$("#closeModal")?.addEventListener("click",closeModal);$("#modal")?.addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});$("#difficultyFilter")?.addEventListener("change",renderCatalog);$("#exportBtn")?.addEventListener("click",handleExport);$("#importBtn")?.addEventListener("click",()=>$("#importFile")?.click());$("#importFile")?.addEventListener("change",handleImportFile)}
 
@@ -33,13 +33,106 @@ function formatRelativeDay(day) {
   return day > 1 ? `Em ${day} dias` : `Há ${Math.abs(day)} dias`;
 }
 
+function getEnginePhase(v, day) {
+  const phases = v?.dailyEngine?.phases || {};
+  const ordered = Object.entries(phases).sort((a,b)=>(a[1].startDay??0)-(b[1].startDay??0));
+  for (const [key, cfg] of ordered) {
+    const start = Number(cfg.startDay ?? 0);
+    const end = Number(cfg.endDay ?? Infinity);
+    if (day >= start && day < end) return key;
+  }
+  if (day >= Number(v?.timing?.harvestDays?.min ?? 9999)) return "harvest";
+  return ordered[0]?.[0] || "growth";
+}
+
+function phaseLabel(phase) {
+  return ({germination:"Germinação",transition:"Transição",growth:"Crescimento",harvest:"Colheita"}[phase] || "Acompanhamento");
+}
+
+function cultivationDay(c) {
+  const start = new Date(c.startedAt);
+  const today = startOfDay(new Date());
+  const planted = startOfDay(start);
+  return Math.max(0, Math.floor((today - planted) / 86400000));
+}
+
+function dailyStatus(c, log = null) {
+  const v = getVarietyById(c.varietyId);
+  const day = cultivationDay(c);
+  const phase = getEnginePhase(v, day);
+  const cfg = v?.dailyEngine?.phases?.[phase] || {};
+  const totalActions = Array.isArray(cfg.actions) ? cfg.actions.length : 0;
+  const completedCount = Number(log?.completedActionsCount ?? 0);
+  const minHarvest = Number(v?.timing?.harvestDays?.min ?? Infinity);
+  const maxHarvest = Number(v?.timing?.harvestDays?.max ?? Infinity);
+  return {
+    day, phase, phaseLabel: phaseLabel(phase),
+    totalActions, completedCount,
+    harvestWindow: day >= minHarvest && day <= maxHarvest,
+    afterWindow: day > maxHarvest
+  };
+}
+
+function progressFor(v, day) {
+  const max = Number(v?.timing?.harvestDays?.max ?? 1);
+  return Math.max(0, Math.min(100, Math.round((day / Math.max(1,max)) * 100)));
+}
+
+async function getCultivationLogs(cultivationId) {
+  return (await getByIndex("dailyLogs", "cultivationId", cultivationId)).sort((a,b)=>{
+    const da=Number(a.day??0), db=Number(b.day??0);
+    return db-da || String(b.date||"").localeCompare(String(a.date||""));
+  });
+}
+
+function latestLogForDay(logs, day) {
+  return (logs || []).find(l => Number(l.day) === Number(day)) || null;
+}
+
+function calculateCompletedActions(log) {
+  if (!log) return 0;
+  if (Array.isArray(log.completedActions)) return log.completedActions.filter(Boolean).length;
+  return log.completedActionsCount ? Number(log.completedActionsCount) : 0;
+}
+
+function aiAnalyze(item) {
+  const {c,v,logs=[]}=item;
+  const recent=logs.filter(l=>Number(item.s.day)-Number(l.day)<=3 && Number(item.s.day)-Number(l.day)>=0);
+  const out=[];
+  const high=recent.filter(l=>l.humidity=== "muito_umida" || l.humidity === "Muito úmido" || l.condition === "Muito úmido").length;
+  const dry=recent.filter(l=>l.humidity=== "seca" || l.humidity === "Seco" || l.condition === "Seco").length;
+  const lowAir=recent.filter(l=>l.ventilation=== "baixa" || l.ventilation === "Baixa").length;
+  const mold=recent.filter(l=>l.condition === "Suspeita de mofo").length;
+  const leggy=recent.filter(l=>l.condition === "Alongado").length;
+  const temps=recent.map(l=>Number(l.temperature)).filter(Number.isFinite);
+  const avg=temps.length ? temps.reduce((a,b)=>a+b,0)/temps.length : null;
+
+  if(mold) out.push({priority:4,type:"danger",icon:"🚨",title:"Investigue sinais de contaminação",text:"Você registrou suspeita de mofo. Não consuma enquanto houver dúvida; inspecione cuidadosamente o cultivo e descarte se a contaminação for confirmada.",evidence:`${mold} registro(s) recente(s)`});
+  if(high>=2 && lowAir>=1) out.push({priority:4,type:"danger",icon:"💦",title:"Umidade alta + pouca ventilação",text:"Os registros recentes sugerem ambiente úmido e pouco ventilado. Evite excesso de água e melhore suavemente a circulação de ar.",evidence:`${high}x umidade alta · ${lowAir}x ventilação baixa`});
+  else if(high>=2) out.push({priority:3,type:"warning",icon:"💧",title:"Umidade elevada repetidamente",text:"O cultivo foi registrado como muito úmido em dias recentes. Verifique a umidade real antes da próxima irrigação.",evidence:`${high} registros de umidade alta`});
+  if(dry>=2) out.push({priority:3,type:"warning",icon:"💧",title:"O cultivo está ficando seco",text:"A umidade foi registrada como seca repetidamente. Verifique o substrato e ajuste a irrigação conforme a necessidade.",evidence:`${dry} registros secos`});
+  if(leggy>=2) out.push({priority:3,type:"warning",icon:"☀️",title:"Crescimento alongado",text:"O cultivo foi registrado como alongado mais de uma vez. Confira distância, intensidade e uniformidade da luz.",evidence:`${leggy} registros de alongamento`});
+  const tmin=Number(v?.environment?.temperature?.min), tmax=Number(v?.environment?.temperature?.max);
+  if(avg!==null && Number.isFinite(tmin) && Number.isFinite(tmax) && (avg<tmin || avg>tmax)) out.push({priority:2,type:"info",icon:"🌡️",title:"Temperatura fora da referência",text:`A média recente está fora da faixa de referência desta variedade. Observe o desenvolvimento antes de fazer mudanças bruscas.`,evidence:`média ${avg.toFixed(1)} °C`});
+  if(item.s.harvestWindow) out.push({priority:2,type:"ready",icon:"✂️",title:"Você entrou na janela de colheita",text:"Compare altura, cor, firmeza e aparência com os sinais de colheita da variedade e registre o resultado quando decidir colher.",evidence:`Dia ${item.s.day}`});
+  if(!out.length) out.push({priority:0,type:"ok",icon:"✨",title:"Cultivo sem alertas importantes",text:"Os registros recentes não indicam um padrão que exija intervenção. Continue observando e registrando.",evidence:"análise dos registros recentes"});
+  return out.sort((a,b)=>b.priority-a.priority);
+}
+
+function renderIntelligencePanel(items) {
+  const insights=[];
+  items.forEach(item=>aiAnalyze(item).filter(x=>x.priority>0).forEach(x=>insights.push({...x,cultivation:item.c.name,cultivationId:item.c.id})));
+  insights.sort((a,b)=>b.priority-a.priority);
+  return insights.slice(0,4).map(i=>`<button class="ai-insight ${i.type}" data-cultivation-id="${escapeHtml(i.cultivationId)}"><span class="ai-icon">${i.icon}</span><span class="ai-body"><strong>${escapeHtml(i.title)}</strong><small>${escapeHtml(i.cultivation)} · ${escapeHtml(i.evidence)}</small><em>${escapeHtml(i.text)}</em></span><b>›</b></button>`).join("") || `<div class="good-state">✨ <strong>Tudo tranquilo.</strong><span>Nenhum alerta importante no momento.</span></div>`;
+}
+
 function getCultivationAttention(c, v, log, day) {
   const status = dailyStatus(c, log);
   if (status.afterWindow) return { level: "warning", label: "Passou da janela", icon: "⚠️" };
   if (status.harvestWindow) return { level: "ready", label: "Avaliar colheita", icon: "✂️" };
   if (log?.condition === "Suspeita de mofo") return { level: "danger", label: "Atenção", icon: "🚨" };
-  if (log?.humidity === "muito_umida") return { level: "warning", label: "Umidade alta", icon: "💦" };
-  if (log?.humidity === "seca") return { level: "warning", label: "Verificar umidade", icon: "💧" };
+  if (log?.humidity === "muito_umida" || log?.condition === "Muito úmido") return { level: "warning", label: "Umidade alta", icon: "💦" };
+  if (log?.humidity === "seca" || log?.condition === "Seco") return { level: "warning", label: "Verificar umidade", icon: "💧" };
   if (status.completedCount < status.totalActions && status.totalActions) return { level: "action", label: "Há tarefas hoje", icon: "✓" };
   return { level: "ok", label: "Em andamento", icon: "🌱" };
 }
@@ -51,8 +144,9 @@ async function getTodayOverview(cultivations) {
     const v = getVarietyById(c.varietyId);
     if (!v) continue;
     const logs = await getCultivationLogs(c.id);
-    const s = dailyStatus(c, latestLogForDay(logs, dailyStatus(c).day));
-    const log = latestLogForDay(logs, s.day);
+    const dayNow = cultivationDay(c);
+    const log = latestLogForDay(logs, dayNow);
+    const s = dailyStatus(c, log);
     items.push({ c, v, s, log, attention: getCultivationAttention(c,v,log,s.day), logs });
   }
   return items;
@@ -187,12 +281,7 @@ async function renderDashboard() {
       <section class="dashboard-grid">
         <div class="card intelligence-card">
           <div class="section-title compact"><div><span class="eyebrow">INTELIGÊNCIA</span><h3>O que merece atenção</h3></div>🧠</div>
-          ${items.filter(x=>x.attention.level!=="ok").slice(0,4).map(x=>`
-            <button class="insight-row" data-cultivation-id="${escapeHtml(x.c.id)}">
-              <span class="insight-icon ${x.attention.level}">${x.attention.icon}</span>
-              <span><strong>${escapeHtml(x.c.name)}</strong><small>${escapeHtml(x.attention.label)} · Dia ${x.s.day}</small></span>
-              <b>›</b>
-            </button>`).join("") || `<div class="good-state">✨ <strong>Tudo tranquilo.</strong><span>Nenhum alerta importante no momento.</span></div>`}
+          ${renderIntelligencePanel(items)}
         </div>
 
         <div class="card">
@@ -223,6 +312,16 @@ async function renderDashboard() {
   $("#toolBackup").onclick=()=>handleExport();
   $("#toolSettings").onclick=()=>alert("As configurações serão adicionadas em uma próxima versão.");
   $("#seeAllCultivations")?.addEventListener("click", () => showView("cultivations"));
+}
+
+async function renderAllCultivations() {
+  const cultivations=await getAll("cultivations");
+  const items=await getTodayOverview(cultivations);
+  showView("cultivations");
+  const host=$("#cultivations .container-inner");
+  host.innerHTML=`<div class="app-shell"><button class="back" id="allBack">← Início</button><div class="section-title"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Todos os cultivos</h2></div><button class="primary" id="allNew">+ Novo</button></div><div class="cultivation-list">${items.length?items.map(cultivationCard).join(""):`<div class="empty-state"><div>🌱</div><h3>Nenhum cultivo ativo</h3><p>Comece sua primeira bandeja.</p><button class="primary" id="allEmptyNew">Começar</button></div>`}</div></div>`;
+  host.querySelector("#allBack").onclick=()=>renderDashboard(); host.querySelector("#allNew").onclick=()=>showNewCultivationModal(); host.querySelector("#allEmptyNew")?.addEventListener("click",()=>showNewCultivationModal());
+  host.querySelectorAll("[data-cultivation-id]").forEach(el=>el.onclick=()=>renderCultivationDetail(el.dataset.cultivationId));
 }
 
 function showNewCultivationModal(preselectedId = null) {
@@ -264,9 +363,7 @@ async function createCultivation(e) {
     notes: $("#initialNote").value.trim()
   };
   await add("cultivations", cultivation);
-  if (cultivation.notes) {
-    await add("dailyLogs", { id: uid("log"), cultivationId: cultivation.id, day: 0, date: cultivation.startedAt, note: cultivation.notes, createdAt: new Date().toISOString() });
-  }
+  await add("dailyLogs", { id: uid("log"), cultivationId: cultivation.id, day: 0, date: cultivation.startedAt, note: cultivation.notes || "Plantio iniciado.", createdAt: new Date().toISOString() });
   closeModal();
   await renderDashboard();
   await renderCultivationDetail(cultivation.id);
@@ -330,42 +427,54 @@ function todayGuidance(v,s) {
   return out;
 }
 function showLogModal(c, v, day, existing = null) {
-  $("#modalContent").innerHTML = `
-    <p class="eyebrow">DIÁRIO · DIA ${day}</p>
-    <h2>Registrar observação</h2>
+  const val = key => existing?.[key] ?? "";
+  const selected = (key, value) => val(key) === value ? "selected" : "";
+  const checked = key => val(key) ? "checked" : "";
+  const options=(items,key)=>items.map(([value,label])=>`<option value="${value}" ${selected(key,value)}>${label}</option>`).join("");
+  const irrigation = Number.isFinite(Number(val("irrigationMl"))) ? val("irrigationMl") : "";
+  const temperature = Number.isFinite(Number(val("temperature"))) ? val("temperature") : "";
+  const humidity = val("humidity") || "adequada";
+  const ventilation = val("ventilation") || "adequada";
+  const condition = val("condition") || "Saudável";
+  const note = val("note");
+  const actions = v?.dailyEngine?.phases?.[getEnginePhase(v,day)]?.actions || [];
+  const completed = Array.isArray(existing?.completedActions) ? existing.completedActions : [];
+  const actionLabels = {
+    check_emergence:"Observar emergência", monitor_humidity:"Verificar umidade", keep_cover_if_needed:"Manter cobertura se necessário",
+    start_light_when_established:"Iniciar luz quando estabelecido", increase_airflow:"Aumentar circulação", provide_light:"Fornecer luz",
+    control_humidity:"Controlar umidade", maintain_airflow:"Manter ventilação", check_for_mold:"Verificar mofo",
+    check_for_leggy_growth:"Verificar alongamento", evaluate_harvest_signals:"Avaliar sinais de colheita", record_harvest_if_ready:"Registrar colheita se estiver pronto"
+  };
+  const conditionOpts=[["Saudável","Saudável"],["Seco","Seco"],["Muito úmido","Muito úmido"],["Alongado","Alongado"],["Suspeita de mofo","Suspeita de mofo"]];
+  const humidityOpts=[["adequada","Adequada"],["muito_umida","Muito úmida"],["seca","Seca"]];
+  const ventilationOpts=[["adequada","Adequada"],["baixa","Baixa"],["alta","Alta"]];
+  const checkedActions = actions.map((a,i)=>`<label class="check-row"><input type="checkbox" data-action-index="${i}" ${completed.includes(a)?"checked":""}><span>${escapeHtml(actionLabels[a] || a.replaceAll("_"," "))}</span></label>`).join("");
+  const conditionHtml=conditionOpts.map(([value,label])=>`<option value="${escapeHtml(value)}" ${condition===value?"selected":""}>${label}</option>`).join("");
+  const humidityHtml=options(humidityOpts,"humidity");
+  const ventilationHtml=options(ventilationOpts,"ventilation");
+  const irrigationType=val("irrigationType")||"nenhuma";
+  const irrigationOptions=[["nenhuma","Nenhuma"],["spray","Borrifador"],["regador","Regador"],["fundo","Por baixo"]].map(([x,l])=>`<option value="${x}" ${irrigationType===x?"selected":""}>${l}</option>`).join("");
+  const photosHint = existing?.photoCount ? ` · ${existing.photoCount} foto(s)` : "";
+  $("#modalContent").innerHTML=`<p class="eyebrow">DIÁRIO · DIA ${day}</p><h2>Registrar observação</h2>
     <form id="logForm" class="form-grid">
-      <label>Condição do cultivo
-        <select id="logCondition">
-          ${["Saudável","Seco","Muito úmido","Alongado","Suspeita de mofo"].map(x => `<option ${existing?.condition === x ? "selected" : ""}>${x}</option>`).join("")}
-        </select>
-      </label>
-      <label>Observação
-        <textarea id="logNote" rows="4" placeholder="O que você observou hoje?">${escapeHtml(existing?.note || "")}</textarea>
-      </label>
+      <label>Condição do cultivo<select id="logCondition">${conditionHtml}</select></label>
+      <label>Umidade<select id="logHumidity">${humidityHtml}</select></label>
+      <label>Ventilação<select id="logVentilation">${ventilationHtml}</select></label>
+      <label>Temperatura (°C)<input id="logTemperature" type="number" step="0.1" min="-10" max="60" value="${escapeHtml(temperature)}" placeholder="Ex.: 24,5"></label>
+      <label>Irrigação<input id="logIrrigation" type="number" min="0" step="1" value="${escapeHtml(irrigation)}" placeholder="mL (opcional)"></label>
+      <label>Como irrigou<select id="logIrrigationType">${irrigationOptions}</select></label>
+      ${checkedActions ? `<div><strong>Checklist de hoje</strong><div class="check-list">${checkedActions}</div></div>` : ""}
+      <label>Observação<textarea id="logNote" rows="4" placeholder="O que você observou hoje?">${escapeHtml(note)}</textarea></label>
       <button class="primary" type="submit">Salvar registro</button>
+      <p class="meta">Fotos podem ser adicionadas na tela do cultivo${photosHint}.</p>
     </form>`;
-
   $("#modal").classList.remove("hidden");
-
-  $("#logForm").onsubmit = async e => {
+  $("#logForm").onsubmit=async e=>{
     e.preventDefault();
-    const record = existing || {
-      id: uid("log"),
-      cultivationId: c.id,
-      day,
-      date: new Date().toISOString(),
-      createdAt: new Date().toISOString()
-    };
-
-    await put("dailyLogs", {
-      ...record,
-      condition: $("#logCondition").value,
-      note: $("#logNote").value.trim(),
-      updatedAt: new Date().toISOString()
-    });
-
-    closeModal();
-    await renderCultivationDetail(c.id);
+    const record=existing || {id:uid("log"),cultivationId:c.id,day,date:new Date().toISOString(),createdAt:new Date().toISOString()};
+    const completedActions=actions.filter((a,i)=>document.querySelector(`[data-action-index="${i}"]`)?.checked);
+    await put("dailyLogs",{...record,condition:$("#logCondition").value,humidity:$("#logHumidity").value,ventilation:$("#logVentilation").value,temperature:$("#logTemperature").value?Number($("#logTemperature").value):null,irrigationMl:$("#logIrrigation").value?Number($("#logIrrigation").value):null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,updatedAt:new Date().toISOString()});
+    closeModal(); await renderCultivationDetail(c.id);
   };
 }
 
@@ -386,6 +495,36 @@ function showHarvestModal(c,v,day) {
     closeModal(); showView("dashboard"); await renderDashboard();
   };
 }
+async function handleExport() {
+  const backup = await exportData();
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `meus-microverdes-backup-${todayISO()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+async function handleImportFile(e) {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  try {
+    const backup = JSON.parse(await file.text());
+    validateBackup(backup);
+    await importData(backup);
+    alert("Backup importado com sucesso.");
+    await renderDashboard();
+  } catch (err) {
+    console.error(err);
+    alert(`Não foi possível importar o backup: ${err.message}`);
+  } finally {
+    e.target.value = "";
+  }
+}
+
 function closeModal(){ $("#modal").classList.add("hidden"); $("#modalContent").innerHTML=""; }
 function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
 function todayISO(){return new Date().toISOString().slice(0,10)}

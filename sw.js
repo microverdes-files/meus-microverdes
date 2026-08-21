@@ -1,4 +1,4 @@
-const CACHE = "meus-microverdes-v6-2";
+const CACHE = "meus-microverdes-v6-2-1";
 const ASSETS = [
   "./", "./index.html", "./styles.css", "./app.js", "./db.js",
   "./manifest.webmanifest", "./data/varieties.js", "./data/varieties.json"
