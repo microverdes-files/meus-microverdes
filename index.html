@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#2f6b3f">
+  <meta name="description" content="Meus Microverdes — acompanhe seus cultivos em casa.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Meus Microverdes</title>
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">MEUS MICROVERDES</p>
+      <h1>Meu jardim em miniatura 🌱</h1>
+    </div>
+    <button id="installBtn" class="secondary hidden" type="button">Instalar</button>
+  </header>
+
+  <main class="container">
+    <section id="dashboard" class="view active">
+      <div class="hero card">
+        <div>
+          <span class="badge">Seu diário de cultivo</span>
+          <h2>Acompanhe cada bandeja, dia após dia.</h2>
+          <p>Escolha uma variedade, registre o plantio e deixe o aplicativo orientar a rotina.</p>
+        </div>
+        <button id="newCultivationBtn" class="primary" type="button">+ Novo cultivo</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat card"><strong id="activeCount">0</strong><span>Cultivos ativos</span></div>
+        <div class="stat card"><strong id="todayCount">0</strong><span>Precisam de atenção</span></div>
+        <div class="stat card"><strong id="harvestCount">0</strong><span>Na janela de colheita</span></div>
+      </div>
+
+      <section>
+        <div class="section-title"><h2>Meus cultivos</h2></div>
+        <div id="cultivationList" class="list"></div>
+      </section>
+    </section>
+
+    <section id="catalog" class="view">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">CATÁLOGO</p>
+          <h2>Escolha sua variedade</h2>
+        </div>
+        <select id="difficultyFilter" aria-label="Filtrar por dificuldade">
+          <option value="all">Todas</option>
+          <option value="easy">Fáceis</option>
+          <option value="intermediate">Intermediárias</option>
+        </select>
+      </div>
+      <div id="catalogList" class="catalog-grid"></div>
+    </section>
+
+    <section id="cultivation" class="view">
+      <div id="cultivationDetail"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegação">
+    <button class="nav-btn active" data-view="dashboard">🏠<span>Início</span></button>
+    <button class="nav-btn" data-view="catalog">🌱<span>Variedades</span></button>
+  </nav>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button id="closeModal" class="close" type="button" aria-label="Fechar">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
