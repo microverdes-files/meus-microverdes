@@ -281,6 +281,21 @@ text: lowAir.length === 1
   /*
    * 9. NENHUM ALERTA
    */
+  const pendingActions = Math.max(
+  0,
+  Number(item.s?.totalActions ?? 0) - Number(item.s?.completedCount ?? 0)
+);
+
+if (pendingActions > 0) {
+  out.push({
+    priority: 2,
+    type: "action",
+    icon: "✓",
+    title: "Há tarefas pendentes hoje",
+    text: `Existem ${pendingActions} tarefa(s) da fase atual que ainda não foram registradas como concluídas. Revise a orientação de hoje e marque as tarefas realizadas.`,
+    evidence: `${pendingActions} tarefa(s) pendente(s)`
+  });
+}
   if (!out.length) {
     out.push({
       priority: 0,
