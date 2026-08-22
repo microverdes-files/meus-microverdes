@@ -327,8 +327,6 @@ if (pendingActions > 0) {
       : `Existem ${pendingActions} tarefa(s) da fase atual ainda pendente(s).`,
     evidence: `${pendingCount} ${pendingCount === 1 ? "tarefa pendente" : "tarefas pendentes"}`
   });
-
-  if (!out.length) {
            
   if (!out.length) {
     out.push({
