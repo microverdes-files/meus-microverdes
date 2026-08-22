@@ -373,11 +373,11 @@ function renderIntelligencePanel(items) {
  for (const insight of insights) {
   if (selected.length >= 4) break;
 
-  const alreadySelected = selected.some(
-    selectedInsight =>
-      selectedInsight.cultivationId === insight.cultivationId &&
-      selectedInsight.title === insight.title
-  );
+ const alreadySelected = selected.some(
+  selectedInsight =>
+    selectedInsight.cultivation === insight.cultivation &&
+    selectedInsight.title === insight.title
+);
 
   if (!alreadySelected) {
     selected.push(insight);
