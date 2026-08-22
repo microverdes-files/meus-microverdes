@@ -314,6 +314,8 @@ if (pendingActions > 0) {
   const pendingActionNames = phaseActions
     .filter(action => !completedActions.includes(action))
     .map(action => actionLabels[action] || action);
+  
+  const pendingCount = pendingActionNames.length;
 
   out.push({
     priority: 2,
@@ -323,8 +325,11 @@ if (pendingActions > 0) {
     text: pendingActionNames.length
       ? pendingActionNames.join(" · ")
       : `Existem ${pendingActions} tarefa(s) da fase atual ainda pendente(s).`,
-      evidence: `${pendingActions} ${pendingActions === 1 ? "tarefa pendente" : "tarefas pendentes"}`  });
-}
+    evidence: `${pendingCount} ${pendingCount === 1 ? "tarefa pendente" : "tarefas pendentes"}`
+  });
+
+  if (!out.length) {
+           
   if (!out.length) {
     out.push({
       priority: 0,
