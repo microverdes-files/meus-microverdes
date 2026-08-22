@@ -281,18 +281,48 @@ text: lowAir.length === 1
   /*
    * 9. NENHUM ALERTA
    */
-  const pendingActions = Math.max(
+const pendingActions = Math.max(
   0,
   Number(item.s?.totalActions ?? 0) - Number(item.s?.completedCount ?? 0)
 );
 
 if (pendingActions > 0) {
+  const actionLabels = {
+    check_emergence: "Observar emergência",
+    monitor_humidity: "Verificar umidade",
+    keep_cover_if_needed: "Manter cobertura se necessário",
+    start_light_when_established: "Iniciar luz quando estabelecido",
+    increase_airflow: "Aumentar circulação",
+    provide_light: "Fornecer luz",
+    control_humidity: "Controlar umidade",
+    maintain_airflow: "Manter ventilação",
+    check_for_mold: "Verificar mofo",
+    check_for_leggy_growth: "Verificar alongamento",
+    evaluate_harvest_signals: "Avaliar sinais de colheita",
+    record_harvest_if_ready: "Registrar colheita se estiver pronto"
+  };
+
+  const phaseActions =
+    item.v?.dailyEngine?.phases?.[item.s?.phase]?.actions || [];
+
+  const completedActions = Array.isArray(item.logs)
+    ? item.logs
+        .filter(l => Number(l.day) === Number(item.s?.day))
+        .flatMap(l => Array.isArray(l.completedActions) ? l.completedActions : [])
+    : [];
+
+  const pendingActionNames = phaseActions
+    .filter(action => !completedActions.includes(action))
+    .map(action => actionLabels[action] || action);
+
   out.push({
     priority: 2,
     type: "action",
     icon: "✓",
     title: "Há tarefas pendentes hoje",
-    text: `Existem ${pendingActions} tarefa(s) da fase atual que ainda não foram registradas como concluídas. Revise a orientação de hoje e marque as tarefas realizadas.`,
+    text: pendingActionNames.length
+      ? pendingActionNames.join(" · ")
+      : `Existem ${pendingActions} tarefa(s) da fase atual ainda pendente(s).`,
     evidence: `${pendingActions} tarefa(s) pendente(s)`
   });
 }
