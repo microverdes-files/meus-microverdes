@@ -340,33 +340,59 @@ if (pendingActions > 0) {
 }
 
 function renderIntelligencePanel(items) {
-  const insights=[];
-  items.forEach(item=>aiAnalyze(item).filter(x=>x.priority>0).forEach(x=>insights.push({...x,cultivation:item.c.name,cultivationId:item.c.id})));
+  const insights = [];
+
+  items.forEach(item =>
+    aiAnalyze(item)
+      .filter(x => x.priority > 0)
+      .forEach(x =>
+        insights.push({
+          ...x,
+          cultivation: item.c.name,
+          cultivationId: item.c.id
+        })
+      )
+  );
+
   insights.sort((a, b) => b.priority - a.priority);
 
-const selected = [];
-const usedCultivations = new Set();
+  const selected = [];
+  const usedCultivations = new Set();
 
-// Primeiro: um alerta por cultivo, respeitando a prioridade.
-for (const insight of insights) {
-  if (selected.length >= 4) break;
-  if (!usedCultivations.has(insight.cultivationId)) {
-    selected.push(insight);
-    usedCultivations.add(insight.cultivationId);
+  // Primeiro: um alerta por cultivo, respeitando a prioridade.
+  for (const insight of insights) {
+    if (selected.length >= 4) break;
+
+    if (!usedCultivations.has(insight.cultivationId)) {
+      selected.push(insight);
+      usedCultivations.add(insight.cultivationId);
+    }
   }
-}
 
-// Depois: completa os espaços restantes com os próximos alertas mais importantes.
-for (const insight of insights) {
-  if (selected.length >= 4) break;
-  if (!selected.includes(insight)) {
-    selected.push(insight);
+  // Depois: completa os espaços restantes com os próximos alertas mais importantes.
+  for (const insight of insights) {
+    if (selected.length >= 4) break;
+
+    if (!selected.includes(insight)) {
+      selected.push(insight);
+    }
   }
-}
 
-return selected
+  return selected
+    .map(i => `
+      <button class="ai-insight ${i.type}" data-cultivation-id="${escapeHtml(i.cultivationId)}">
+        <span class="ai-icon">${i.icon}</span>
+        <span class="ai-body">
+          <strong>${escapeHtml(i.title)}</strong>
+          <small>${escapeHtml(i.cultivation)} · ${escapeHtml(i.evidence)}</small>
+          <em>${escapeHtml(i.text)}</em>
+        </span>
+        <b>›</b>
+      </button>
+    `)
+    .join("")
+    || `<div class="good-state">✨ <strong>Tudo tranquilo.</strong><span>Nenhum alerta importante no momento.</span></div>`;
 }
-
 function getCultivationAttention(c, v, log, day) {
   const status = dailyStatus(c, log);
   if (status.afterWindow) return { level: "warning", label: "Passou da janela", icon: "⚠️" };
