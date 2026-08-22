@@ -363,21 +363,30 @@ function renderIntelligencePanel(items) {
   for (const insight of insights) {
     if (selected.length >= 4) break;
 
-    if (!usedCultivations.has(insight.cultivationId)) {
-      selected.push(insight);
-      usedCultivations.add(insight.cultivationId);
-    }
+const cultivationKey = String(insight.cultivation || "")
+  .trim()
+  .toLowerCase();
+
+if (!usedCultivations.has(cultivationKey)) {
+  selected.push(insight);
+  usedCultivations.add(cultivationKey);
+}
   }
 
   // Depois: completa os espaços restantes com os próximos alertas mais importantes.
- for (const insight of insights) {
+for (const insight of insights) {
   if (selected.length >= 4) break;
 
- const alreadySelected = selected.some(
-  selectedInsight =>
-    selectedInsight.cultivation === insight.cultivation &&
-    selectedInsight.title === insight.title
-);
+  const cultivationKey = String(insight.cultivation || "")
+    .trim()
+    .toLowerCase();
+
+  const alreadySelected = selected.some(
+    selectedInsight =>
+      String(selectedInsight.cultivation || "").trim().toLowerCase() === cultivationKey &&
+      String(selectedInsight.title || "").trim().toLowerCase() ===
+        String(insight.title || "").trim().toLowerCase()
+  );
 
   if (!alreadySelected) {
     selected.push(insight);
