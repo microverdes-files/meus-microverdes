@@ -62,7 +62,7 @@ function dailyStatus(c, log = null) {
   const phase = getEnginePhase(v, day);
   const cfg = v?.dailyEngine?.phases?.[phase] || {};
   const totalActions = Array.isArray(cfg.actions) ? cfg.actions.length : 0;
-  const completedCount = Number(log?.completedActionsCount ?? 0);
+  const completedCount = calculateCompletedActions(log);
   const minHarvest = Number(v?.timing?.harvestDays?.min ?? Infinity);
   const maxHarvest = Number(v?.timing?.harvestDays?.max ?? Infinity);
   return {
