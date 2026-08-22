@@ -323,8 +323,7 @@ if (pendingActions > 0) {
     text: pendingActionNames.length
       ? pendingActionNames.join(" · ")
       : `Existem ${pendingActions} tarefa(s) da fase atual ainda pendente(s).`,
-    evidence: `${pendingActions} tarefa(s) pendente(s)`
-  });
+      evidence: `${pendingActions} ${pendingActions === 1 ? "tarefa pendente" : "tarefas pendentes"}`  });
 }
   if (!out.length) {
     out.push({
