@@ -134,8 +134,14 @@ function aiAnalyze(item) {
   );
 
   const temperatures = recent
-    .map(l => Number(l.temperature))
-    .filter(Number.isFinite);
+  .map(l => Number(l.temperature))
+  .filter((n, index) => {
+    const value = recent[index]?.temperature;
+    return value !== "" &&
+           value !== null &&
+           value !== undefined &&
+           Number.isFinite(n);
+  });
 
   const irrigations = recent
     .map(l => Number(l.irrigationMl))
