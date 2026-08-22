@@ -192,7 +192,7 @@ function aiAnalyze(item) {
   /*
    * 3. CULTIVO SECO
    */
-  if (dry.length >= 2) {
+  if (dry.length >= 1) {
     out.push({
       priority: 3,
       type: "warning",
