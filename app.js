@@ -206,7 +206,7 @@ function aiAnalyze(item) {
   /*
    * 4. VENTILAÇÃO BAIXA
    */
-  if (lowAir.length >= 2 && highHumidity.length === 0) {
+  if (lowAir.length >= 1 && highHumidity.length === 0) {
     out.push({
       priority: 2,
       type: "warning",
