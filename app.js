@@ -234,7 +234,7 @@ function aiAnalyze(item) {
   /*
    * 6. IRRIGAÇÃO + UMIDADE
    */
-  if (highHumidity.length >= 1 && totalIrrigation > 0) {
+  if (highHumidity.length >= 1 && totalIrrigation > 0 && lowAir.length === 0) {
     out.push({
       priority: 2,
       type: "info",
