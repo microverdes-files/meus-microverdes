@@ -370,13 +370,19 @@ function renderIntelligencePanel(items) {
   }
 
   // Depois: completa os espaços restantes com os próximos alertas mais importantes.
-  for (const insight of insights) {
-    if (selected.length >= 4) break;
+ for (const insight of insights) {
+  if (selected.length >= 4) break;
 
-    if (!selected.includes(insight)) {
-      selected.push(insight);
-    }
+  const alreadySelected = selected.some(
+    selectedInsight =>
+      selectedInsight.cultivationId === insight.cultivationId &&
+      selectedInsight.title === insight.title
+  );
+
+  if (!alreadySelected) {
+    selected.push(insight);
   }
+}
 
   return selected
     .map(i => `
