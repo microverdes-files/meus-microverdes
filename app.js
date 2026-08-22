@@ -169,7 +169,7 @@ function aiAnalyze(item) {
   /*
    * 2. UMIDADE + VENTILAÇÃO
    */
-  if (highHumidity.length >= 2 && lowAir.length >= 1) {
+  if (highHumidity.length >= 1 && lowAir.length >= 1) {
     out.push({
       priority: 4,
       type: "danger",
