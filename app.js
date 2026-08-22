@@ -212,8 +212,9 @@ function aiAnalyze(item) {
       type: "warning",
       icon: "🌬️",
       title: "Ventilação merece atenção",
-      text: "A ventilação foi registrada como baixa em mais de um momento. Observe a circulação de ar e a condição das folhas.",
-      evidence: `${lowAir.length} registros de ventilação baixa`
+text: lowAir.length === 1
+  ? "A ventilação foi registrada como baixa. Observe a circulação de ar e a condição das folhas."
+  : "A ventilação foi registrada como baixa em mais de um momento. Observe a circulação de ar e a condição das folhas.",      evidence: `${lowAir.length} registros de ventilação baixa`
     });
   }
 
