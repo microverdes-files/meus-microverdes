@@ -373,26 +373,6 @@ if (!usedCultivations.has(cultivationKey)) {
 }
   }
 
-  // Depois: completa os espaços restantes com os próximos alertas mais importantes.
-for (const insight of insights) {
-  if (selected.length >= 4) break;
-
-  const cultivationKey = String(insight.cultivation || "")
-    .trim()
-    .toLowerCase();
-
-  const alreadySelected = selected.some(
-    selectedInsight =>
-      String(selectedInsight.cultivation || "").trim().toLowerCase() === cultivationKey &&
-      String(selectedInsight.title || "").trim().toLowerCase() ===
-        String(insight.title || "").trim().toLowerCase()
-  );
-
-  if (!alreadySelected) {
-    selected.push(insight);
-  }
-}
-
   return selected
     .map(i => `
       <button class="ai-insight ${i.type}" data-cultivation-id="${escapeHtml(i.cultivationId)}">
