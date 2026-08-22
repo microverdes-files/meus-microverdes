@@ -405,12 +405,26 @@ const s = dailyStatus(c, existingLog);
       </div>
       <div class="card">
         <h3>Diário</h3>
-        ${logs.length ? logs.map(l=>`<div class="timeline-item"><strong>Dia ${l.day} · ${formatDate(l.date)}</strong><span>${escapeHtml(l.note || "Sem observação.")}</span></div>`).join("") : `<p class="meta">Nenhum registro ainda.</p>`}
+        ${logs.length ? logs.map(l=>`
+  <div class="timeline-item">
+    <div>
+      <strong>Dia ${l.day} · ${formatDate(l.date)}</strong>
+      <span>${escapeHtml(l.note || "Sem observação.")}</span>
+    </div>
+    <button class="secondary edit-log-btn" data-log-id="${escapeHtml(l.id)}">✏️ Editar</button>
+  </div>
+`).join("") : `<p class="meta">Nenhum registro ainda.</p>`}
       </div>
     </div>`;
   $("#backDashboard").onclick = async () => { showView("dashboard"); await renderDashboard(); };
   $("#addLogBtn").onclick = () => showLogModal(c,v,s.day,existingLog);
   if ($("#harvestBtn")) $("#harvestBtn").onclick = () => showHarvestModal(c,v,s.day);
+document.querySelectorAll(".edit-log-btn").forEach(btn => {
+  btn.onclick = () => {
+    const log = logs.find(l => l.id === btn.dataset.logId);
+    if (log) showLogModal(c, v, log.day, log);
+  };
+});  
 }
 function todayGuidance(v,s) {
   const out = [];
