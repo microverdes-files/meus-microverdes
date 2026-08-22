@@ -96,27 +96,196 @@ function calculateCompletedActions(log) {
 }
 
 function aiAnalyze(item) {
-  const {c,v,logs=[]}=item;
-  const recent=logs.filter(l=>Number(item.s.day)-Number(l.day)<=3 && Number(item.s.day)-Number(l.day)>=0);
-  const out=[];
-  const high=recent.filter(l=>l.humidity=== "muito_umida" || l.humidity === "Muito úmido" || l.condition === "Muito úmido").length;
-  const dry=recent.filter(l=>l.humidity=== "seca" || l.humidity === "Seco" || l.condition === "Seco").length;
-  const lowAir=recent.filter(l=>l.ventilation=== "baixa" || l.ventilation === "Baixa").length;
-  const mold=recent.filter(l=>l.condition === "Suspeita de mofo").length;
-  const leggy=recent.filter(l=>l.condition === "Alongado").length;
-  const temps=recent.map(l=>Number(l.temperature)).filter(Number.isFinite);
-  const avg=temps.length ? temps.reduce((a,b)=>a+b,0)/temps.length : null;
+  const { c, v, logs = [] } = item;
+  const currentDay = Number(item.s?.day ?? 0);
 
-  if(mold) out.push({priority:4,type:"danger",icon:"🚨",title:"Investigue sinais de contaminação",text:"Você registrou suspeita de mofo. Não consuma enquanto houver dúvida; inspecione cuidadosamente o cultivo e descarte se a contaminação for confirmada.",evidence:`${mold} registro(s) recente(s)`});
-  if(high>=2 && lowAir>=1) out.push({priority:4,type:"danger",icon:"💦",title:"Umidade alta + pouca ventilação",text:"Os registros recentes sugerem ambiente úmido e pouco ventilado. Evite excesso de água e melhore suavemente a circulação de ar.",evidence:`${high}x umidade alta · ${lowAir}x ventilação baixa`});
-  else if(high>=2) out.push({priority:3,type:"warning",icon:"💧",title:"Umidade elevada repetidamente",text:"O cultivo foi registrado como muito úmido em dias recentes. Verifique a umidade real antes da próxima irrigação.",evidence:`${high} registros de umidade alta`});
-  if(dry>=2) out.push({priority:3,type:"warning",icon:"💧",title:"O cultivo está ficando seco",text:"A umidade foi registrada como seca repetidamente. Verifique o substrato e ajuste a irrigação conforme a necessidade.",evidence:`${dry} registros secos`});
-  if(leggy>=2) out.push({priority:3,type:"warning",icon:"☀️",title:"Crescimento alongado",text:"O cultivo foi registrado como alongado mais de uma vez. Confira distância, intensidade e uniformidade da luz.",evidence:`${leggy} registros de alongamento`});
-  const tmin=Number(v?.environment?.temperature?.min), tmax=Number(v?.environment?.temperature?.max);
-  if(avg!==null && Number.isFinite(tmin) && Number.isFinite(tmax) && (avg<tmin || avg>tmax)) out.push({priority:2,type:"info",icon:"🌡️",title:"Temperatura fora da referência",text:`A média recente está fora da faixa de referência desta variedade. Observe o desenvolvimento antes de fazer mudanças bruscas.`,evidence:`média ${avg.toFixed(1)} °C`});
-  if(item.s.harvestWindow) out.push({priority:2,type:"ready",icon:"✂️",title:"Você entrou na janela de colheita",text:"Compare altura, cor, firmeza e aparência com os sinais de colheita da variedade e registre o resultado quando decidir colher.",evidence:`Dia ${item.s.day}`});
-  if(!out.length) out.push({priority:0,type:"ok",icon:"✨",title:"Cultivo sem alertas importantes",text:"Os registros recentes não indicam um padrão que exija intervenção. Continue observando e registrando.",evidence:"análise dos registros recentes"});
-  return out.sort((a,b)=>b.priority-a.priority);
+  const recent = logs
+    .filter(l => {
+      const d = Number(l.day ?? 0);
+      return currentDay - d >= 0 && currentDay - d <= 3;
+    })
+    .sort((a, b) => Number(b.day ?? 0) - Number(a.day ?? 0));
+
+  const out = [];
+
+  const highHumidity = recent.filter(l =>
+    l.humidity === "muito_umida" ||
+    l.humidity === "Muito úmido" ||
+    l.condition === "Muito úmido"
+  );
+
+  const dry = recent.filter(l =>
+    l.humidity === "seca" ||
+    l.humidity === "Seco" ||
+    l.condition === "Seco"
+  );
+
+  const lowAir = recent.filter(l =>
+    l.ventilation === "baixa" ||
+    l.ventilation === "Baixa"
+  );
+
+  const mold = recent.filter(l =>
+    l.condition === "Suspeita de mofo"
+  );
+
+  const leggy = recent.filter(l =>
+    l.condition === "Alongado"
+  );
+
+  const temperatures = recent
+    .map(l => Number(l.temperature))
+    .filter(Number.isFinite);
+
+  const irrigations = recent
+    .map(l => Number(l.irrigationMl))
+    .filter(n => Number.isFinite(n) && n > 0);
+
+  const totalIrrigation = irrigations.reduce((sum, n) => sum + n, 0);
+  const averageTemperature = temperatures.length
+    ? temperatures.reduce((a, b) => a + b, 0) / temperatures.length
+    : null;
+
+  /*
+   * 1. RISCO DE CONTAMINAÇÃO
+   */
+  if (mold.length) {
+    out.push({
+      priority: 4,
+      type: "danger",
+      icon: "🚨",
+      title: "Investigue sinais de contaminação",
+      text: "Há registro de suspeita de mofo. Inspecione cuidadosamente o cultivo e não consuma enquanto houver dúvida.",
+      evidence: `${mold.length} registro(s) recente(s)`
+    });
+  }
+
+  /*
+   * 2. UMIDADE + VENTILAÇÃO
+   */
+  if (highHumidity.length >= 2 && lowAir.length >= 1) {
+    out.push({
+      priority: 4,
+      type: "danger",
+      icon: "💦",
+      title: "Umidade alta + pouca ventilação",
+      text: "O histórico recente combina umidade elevada com pouca ventilação. Evite nova irrigação desnecessária e melhore suavemente a circulação de ar.",
+      evidence: `${highHumidity.length}x umidade alta · ${lowAir.length}x ventilação baixa`
+    });
+  } else if (highHumidity.length >= 2) {
+    out.push({
+      priority: 3,
+      type: "warning",
+      icon: "💧",
+      title: "Umidade elevada repetidamente",
+      text: "O cultivo foi registrado como muito úmido em dias recentes. Verifique o substrato antes da próxima irrigação.",
+      evidence: `${highHumidity.length} registros de umidade alta`
+    });
+  }
+
+  /*
+   * 3. CULTIVO SECO
+   */
+  if (dry.length >= 2) {
+    out.push({
+      priority: 3,
+      type: "warning",
+      icon: "💧",
+      title: "O cultivo está ficando seco",
+      text: "A umidade foi registrada como baixa repetidamente. Verifique o substrato e ajuste a irrigação conforme a necessidade.",
+      evidence: `${dry.length} registros secos`
+    });
+  }
+
+  /*
+   * 4. VENTILAÇÃO BAIXA
+   */
+  if (lowAir.length >= 2 && highHumidity.length === 0) {
+    out.push({
+      priority: 2,
+      type: "warning",
+      icon: "🌬️",
+      title: "Ventilação merece atenção",
+      text: "A ventilação foi registrada como baixa em mais de um momento. Observe a circulação de ar e a condição das folhas.",
+      evidence: `${lowAir.length} registros de ventilação baixa`
+    });
+  }
+
+  /*
+   * 5. CRESCIMENTO ALONGADO
+   */
+  if (leggy.length >= 1) {
+    out.push({
+      priority: leggy.length >= 2 ? 3 : 2,
+      type: "warning",
+      icon: "☀️",
+      title: "Crescimento alongado observado",
+      text: "Foi registrado crescimento alongado. Observe a iluminação e a uniformidade do desenvolvimento antes de fazer mudanças bruscas.",
+      evidence: `${leggy.length} registro(s) de alongamento`
+    });
+  }
+
+  /*
+   * 6. IRRIGAÇÃO + UMIDADE
+   */
+  if (highHumidity.length >= 1 && totalIrrigation > 0) {
+    out.push({
+      priority: 2,
+      type: "info",
+      icon: "💦",
+      title: "Observe a relação entre irrigação e umidade",
+      text: "Há registro de irrigação junto com umidade elevada. Antes de irrigar novamente, confirme a condição real do substrato.",
+      evidence: `${totalIrrigation} mL registrados · ${highHumidity.length} registro(s) úmido(s)`
+    });
+  }
+
+  /*
+   * 7. TEMPERATURA — apenas informação.
+   *
+   * O catálogo atual usa "moderate", não uma faixa numérica.
+   * Portanto não vamos afirmar que uma temperatura está
+   * "fora da referência" sem uma faixa confiável.
+   */
+  if (averageTemperature !== null) {
+    out.push({
+      priority: 1,
+      type: "info",
+      icon: "🌡️",
+      title: "Temperatura registrada",
+      text: "A temperatura foi registrada no acompanhamento recente. Use esse dado junto com a evolução do cultivo para identificar padrões.",
+      evidence: `média recente ${averageTemperature.toFixed(1)} °C`
+    });
+  }
+
+  /*
+   * 8. JANELA DE COLHEITA
+   */
+  if (item.s.harvestWindow) {
+    out.push({
+      priority: 2,
+      type: "ready",
+      icon: "✂️",
+      title: "Você entrou na janela de colheita",
+      text: "Compare altura, cor, firmeza e aparência com os sinais de colheita da variedade e registre o resultado quando decidir colher.",
+      evidence: `Dia ${currentDay}`
+    });
+  }
+
+  /*
+   * 9. NENHUM ALERTA
+   */
+  if (!out.length) {
+    out.push({
+      priority: 0,
+      type: "ok",
+      icon: "✨",
+      title: "Tudo tranquilo",
+      text: "Os registros recentes não indicam um padrão que exija intervenção. Continue observando e registrando.",
+      evidence: "análise dos registros recentes"
+    });
+  }
+
+  return out.sort((a, b) => b.priority - a.priority);
 }
 
 function renderIntelligencePanel(items) {
