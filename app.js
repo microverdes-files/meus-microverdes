@@ -373,8 +373,13 @@ async function renderCultivationDetail(id) {
   const c = all.find(x => x.id === id);
   if (!c) return;
   const v = getVarietyById(c.varietyId);
-  const s = dailyStatus(c);
-  const logs = (await getByIndex("dailyLogs","cultivationId",id)).sort((a,b)=>b.day-a.day);
+  const logs = (await getByIndex("dailyLogs","cultivationId",id)).sort((a,b)=>{
+  const da = Number(a.day ?? 0), db = Number(b.day ?? 0);
+  return db - da || String(b.date || "").localeCompare(String(a.date || ""));
+});
+const day = cultivationDay(c);
+const existingLog = latestLogForDay(logs, day);
+const s = dailyStatus(c, existingLog);
   showView("cultivation");
   $("#cultivationDetail").innerHTML = `
     <button class="back" id="backDashboard">← Voltar</button>
@@ -384,8 +389,7 @@ async function renderCultivationDetail(id) {
         <h2>${escapeHtml(c.name)}</h2>
         <p class="meta">${escapeHtml(v.name)} · Dia ${s.day}</p>
         <div class="actions">
-          <button class="primary" id="addLogBtn">+ Registrar hoje</button>
-          ${s.harvestWindow ? `<button class="secondary" id="harvestBtn">✂️ Registrar colheita</button>` : ""}
+        <button class="primary" id="addLogBtn">${existingLog ? "✏️ Editar registro de hoje" : "+ Registrar hoje"}</button>          ${s.harvestWindow ? `<button class="secondary" id="harvestBtn">✂️ Registrar colheita</button>` : ""}
         </div>
       </div>
       <div class="card">
@@ -405,7 +409,7 @@ async function renderCultivationDetail(id) {
       </div>
     </div>`;
   $("#backDashboard").onclick = async () => { showView("dashboard"); await renderDashboard(); };
-  $("#addLogBtn").onclick = () => showLogModal(c,v,s.day);
+  $("#addLogBtn").onclick = () => showLogModal(c,v,s.day,existingLog);
   if ($("#harvestBtn")) $("#harvestBtn").onclick = () => showHarvestModal(c,v,s.day);
 }
 function todayGuidance(v,s) {
