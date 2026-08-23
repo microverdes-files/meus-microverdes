@@ -704,8 +704,12 @@ const s = dailyStatus(c, existingLog);
   <div class="timeline-item">
     <div>
       <strong>Dia ${l.day} · ${formatDate(l.date)}</strong>
-      <span>${escapeHtml(l.note || "Sem observação.")}</span>
-    </div>
+  <span>
+    ${escapeHtml(l.note || "Sem observação.")}
+    ${l.temperature !== null && l.temperature !== undefined
+      ? ` · 🌡️ ${formatTemperature(l.temperature, await getSetting("temperatureUnit"))}`
+      : ""}
+  </span>    </div>
     <button class="secondary edit-log-btn" data-log-id="${escapeHtml(l.id)}">✏️ Editar</button>
   </div>
 `).join("") : `<p class="meta">Nenhum registro ainda.</p>`}
