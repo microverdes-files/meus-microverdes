@@ -571,7 +571,13 @@ async function renderDashboard() {
       <section class="dashboard-grid">
         <div class="card intelligence-card">
           <div class="section-title compact"><div><span class="eyebrow">INTELIGÊNCIA</span><h3>O que merece atenção</h3></div>🧠</div>
-          ${renderIntelligencePanel(items)}
+          ${(await getSetting("intelligenceAlerts"))
+      ? renderIntelligencePanel(items)
+      : `<div class="good-state">
+          🔕 <strong>Alertas da Inteligência desativados.</strong>
+          <span>Você pode ativá-los novamente em Configurações.</span>
+        </div>`
+    }
         </div>
 
         <div class="card">
