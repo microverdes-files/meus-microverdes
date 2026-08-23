@@ -675,6 +675,7 @@ async function renderCultivationDetail(id) {
 const day = cultivationDay(c);
 const existingLog = latestLogForDay(logs, day);
 const s = dailyStatus(c, existingLog);
+const temperatureUnit = await getSetting("temperatureUnit");
   showView("cultivation");
   $("#cultivationDetail").innerHTML = `
     <button class="back" id="backDashboard">← Voltar</button>
@@ -706,10 +707,11 @@ const s = dailyStatus(c, existingLog);
       <strong>Dia ${l.day} · ${formatDate(l.date)}</strong>
   <span>
     ${escapeHtml(l.note || "Sem observação.")}
-    ${l.temperature !== null && l.temperature !== undefined
-      ? ` · 🌡️ ${formatTemperature(l.temperature, await getSetting("temperatureUnit"))}`
-      : ""}
-  </span>    </div>
+   ${l.temperature !== null && l.temperature !== undefined
+  ? ` · 🌡️ ${formatTemperature(l.temperature, temperatureUnit)}`
+  : ""}
+  </span>    
+  </div>
     <button class="secondary edit-log-btn" data-log-id="${escapeHtml(l.id)}">✏️ Editar</button>
   </div>
 `).join("") : `<p class="meta">Nenhum registro ainda.</p>`}
