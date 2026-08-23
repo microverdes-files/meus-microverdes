@@ -534,19 +534,7 @@ function renderCalendar(items) {
 
 async function renderDashboard() {
 const cultivations = await getAll("cultivations");
-
-const items = [];
-for (const c of cultivations) {
-  const logs = await getCultivationLogs(c.id);
-  const day = cultivationDay(c);
-  const existingLog = latestLogForDay(logs, day);
-
-  items.push({
-    c,
-    v: getVarietyById(c.varietyId),
-    log: existingLog
-  });
-}
+const items = await getTodayOverview(cultivations);
 
   showView("dashboard");
   $("#dashboard").innerHTML = `
