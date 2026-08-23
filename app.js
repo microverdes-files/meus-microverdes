@@ -509,8 +509,6 @@ function renderCalendar(items) {
 }
 
 async function renderDashboard() {
-  const intelligenceSetting = await get("settings", "intelligenceAlerts");
-  const intelligenceAlertsEnabled = intelligenceSetting?.value !== false;
   const cultivations = await getAll("cultivations");
   const items = await getTodayOverview(cultivations);
 
@@ -549,10 +547,7 @@ async function renderDashboard() {
       <section class="dashboard-grid">
         <div class="card intelligence-card">
           <div class="section-title compact"><div><span class="eyebrow">INTELIGÊNCIA</span><h3>O que merece atenção</h3></div>🧠</div>
-          ${intelligenceAlertsEnabled
-            ? renderIntelligencePanel(items)
-            : `<div class="good-state">🔕 <strong>Alertas desativados.</strong><span>Você pode ativá-los novamente em Configurações.</span></div>`
-        }
+          ${renderIntelligencePanel(items)}
         </div>
 
         <div class="card">
@@ -581,7 +576,8 @@ async function renderDashboard() {
   $("#toolCatalog").onclick=()=>showView("catalog");
   $("#quickBackup").onclick=()=>handleExport();
   $("#toolBackup").onclick=()=>handleExport();
-  showSettingsModal();  $("#seeAllCultivations")?.addEventListener("click", () => showView("cultivations"));
+  $("#toolSettings").onclick=()=>alert("As configurações serão adicionadas em uma próxima versão.");
+  $("#seeAllCultivations")?.addEventListener("click", () => showView("cultivations"));
 }
 
 async function renderAllCultivations() {
@@ -811,85 +807,6 @@ async function handleImportFile(e) {
   } finally {
     e.target.value = "";
   }
-}
-
-async function showSettingsModal() {
-  const temperatureSetting = await get("settings", "temperatureUnit");
-  const weightSetting = await get("settings", "weightUnit");
-  const irrigationSetting = await get("settings", "irrigationUnit");
-  const intelligenceSetting = await get("settings", "intelligenceAlerts");
-
-  const temperatureUnit = temperatureSetting?.value || "C";
-  const weightUnit = weightSetting?.value || "g";
-  const irrigationUnit = irrigationSetting?.value || "ml";
-  const intelligenceAlerts = intelligenceSetting?.value !== false;
-
-  $("#modalContent").innerHTML = `
-    <p class="eyebrow">CONFIGURAÇÕES</p>
-    <h2>Preferências do app</h2>
-
-    <form id="settingsForm" class="form-grid">
-
-      <label>
-        Temperatura
-        <select id="settingTemperature">
-          <option value="C" ${temperatureUnit === "C" ? "selected" : ""}>°C — Celsius</option>
-        </select>
-      </label>
-
-      <label>
-        Peso
-        <select id="settingWeight">
-          <option value="g" ${weightUnit === "g" ? "selected" : ""}>g — gramas</option>
-        </select>
-      </label>
-
-      <label>
-        Irrigação
-        <select id="settingIrrigation">
-          <option value="ml" ${irrigationUnit === "ml" ? "selected" : ""}>mL — mililitros</option>
-        </select>
-      </label>
-
-      <label class="check-row">
-        <input id="settingIntelligence" type="checkbox" ${intelligenceAlerts ? "checked" : ""}>
-        <span>Mostrar alertas da Inteligência</span>
-      </label>
-
-      <button class="primary" type="submit">
-        Salvar configurações
-      </button>
-
-    </form>
-  `;
-
-  $("#modal").classList.remove("hidden");
-
-  $("#settingsForm").onsubmit = async e => {
-    e.preventDefault();
-
-    await put("settings", {
-      key: "temperatureUnit",
-      value: $("#settingTemperature").value
-    });
-
-    await put("settings", {
-      key: "weightUnit",
-      value: $("#settingWeight").value
-    });
-
-    await put("settings", {
-      key: "irrigationUnit",
-      value: $("#settingIrrigation").value
-    });
-
-    await put("settings", {
-      key: "intelligenceAlerts",
-      value: $("#settingIntelligence").checked
-    });
-
-    closeModal();
-  };
 }
 
 function closeModal(){ $("#modal").classList.add("hidden"); $("#modalContent").innerHTML=""; }
