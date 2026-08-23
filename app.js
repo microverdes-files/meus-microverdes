@@ -1,5 +1,29 @@
 import { varieties, getVarietyById } from "./data/varieties.js";
-import { add, put, getAll, getByIndex, remove, exportData, importData, validateBackup } from "./db.js";
+import { add, put, get, getAll, getByIndex, remove, exportData, importData, validateBackup } from "./db.js";const SETTINGS_DEFAULTS = {
+  temperatureUnit: "C",
+  weightUnit: "g",
+  irrigationUnit: "ml",
+  intelligenceAlerts: true
+};
+
+async function getSetting(key) {
+  const record = await get("settings", key);
+
+  if (record && Object.prototype.hasOwnProperty.call(record, "value")) {
+    return record.value;
+  }
+
+  return SETTINGS_DEFAULTS[key];
+}
+
+async function saveSetting(key, value) {
+  await put("settings", {
+    key,
+    value,
+    updatedAt: new Date().toISOString()
+  });
+}
+
 const $ = (s) => document.querySelector(s);
 const uid = (prefix) => `${prefix}_${crypto.randomUUID()}`;
 let selectedVariety = null; let deferredInstallPrompt = null;
@@ -576,8 +600,7 @@ async function renderDashboard() {
   $("#toolCatalog").onclick=()=>showView("catalog");
   $("#quickBackup").onclick=()=>handleExport();
   $("#toolBackup").onclick=()=>handleExport();
-  $("#toolSettings").onclick=()=>alert("As configurações serão adicionadas em uma próxima versão.");
-  $("#seeAllCultivations")?.addEventListener("click", () => showView("cultivations"));
+  $("#toolSettings").onclick=()=>showSettingsModal();  $("#seeAllCultivations")?.addEventListener("click", () => showView("cultivations"));
 }
 
 async function renderAllCultivations() {
@@ -809,8 +832,126 @@ async function handleImportFile(e) {
   }
 }
 
+async function showSettingsModal() {
+  const temperatureUnit = await getSetting("temperatureUnit");
+  const weightUnit = await getSetting("weightUnit");
+  const irrigationUnit = await getSetting("irrigationUnit");
+  const intelligenceAlerts = await getSetting("intelligenceAlerts");
+
+  $("#modalContent").innerHTML = `
+    <p class="eyebrow">CONFIGURAÇÕES</p>
+    <h2>Preferências</h2>
+
+    <form id="settingsForm" class="form-grid">
+
+      <label>
+        Temperatura
+        <select id="settingTemperature">
+          <option value="C" ${temperatureUnit === "C" ? "selected" : ""}>°C — Celsius</option>
+          <option value="F" ${temperatureUnit === "F" ? "selected" : ""}>°F — Fahrenheit</option>
+        </select>
+      </label>
+
+      <label>
+        Peso
+        <select id="settingWeight">
+          <option value="g" ${weightUnit === "g" ? "selected" : ""}>g — gramas</option>
+          <option value="oz" ${weightUnit === "oz" ? "selected" : ""}>oz — onças</option>
+        </select>
+      </label>
+
+      <label>
+        Irrigação
+        <select id="settingIrrigation">
+          <option value="ml" ${irrigationUnit === "ml" ? "selected" : ""}>mL — mililitros</option>
+          <option value="l" ${irrigationUnit === "l" ? "selected" : ""}>L — litros</option>
+        </select>
+      </label>
+
+      <label class="check-row">
+        <input
+          id="settingIntelligence"
+          type="checkbox"
+          ${intelligenceAlerts ? "checked" : ""}
+        >
+        <span>Mostrar alertas de inteligência no painel</span>
+      </label>
+
+      <button class="primary" type="submit">
+        Salvar configurações
+      </button>
+
+    </form>
+  `;
+
+  $("#modal").classList.remove("hidden");
+
+  $("#settingsForm").onsubmit = async e => {
+    e.preventDefault();
+
+    await saveSetting(
+      "temperatureUnit",
+      $("#settingTemperature").value
+    );
+
+    await saveSetting(
+      "weightUnit",
+      $("#settingWeight").value
+    );
+
+    await saveSetting(
+      "irrigationUnit",
+      $("#settingIrrigation").value
+    );
+
+    await saveSetting(
+      "intelligenceAlerts",
+      $("#settingIntelligence").checked
+    );
+
+    closeModal();
+
+    await renderDashboard();
+  };
+}
+
 function closeModal(){ $("#modal").classList.add("hidden"); $("#modalContent").innerHTML=""; }
 function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
 function todayISO(){return new Date().toISOString().slice(0,10)}
 function formatDate(iso){return new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"}).format(new Date(iso))}
 function escapeHtml(s){return String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function formatTemperature(value, unit) {
+  const n = Number(value);
+
+  if (!Number.isFinite(n)) return "";
+
+  if (unit === "F") {
+    return `${((n * 9 / 5) + 32).toFixed(1)} °F`;
+  }
+
+  return `${n.toFixed(1)} °C`;
+}
+
+function formatWeight(value, unit) {
+  const n = Number(value);
+
+  if (!Number.isFinite(n)) return "";
+
+  if (unit === "oz") {
+    return `${(n / 28.3495).toFixed(2)} oz`;
+  }
+
+  return `${n.toFixed(1)} g`;
+}
+
+function formatIrrigation(value, unit) {
+  const n = Number(value);
+
+  if (!Number.isFinite(n)) return "";
+
+  if (unit === "l") {
+    return `${(n / 1000).toFixed(2)} L`;
+  }
+
+  return `${n.toFixed(0)} mL`;
+}
