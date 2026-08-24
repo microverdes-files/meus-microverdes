@@ -130,12 +130,22 @@ export function validateBackup(backup) {
     if (!Array.isArray(backup.data[storeName]))
       throw new Error(`Dados inválidos na seção "${storeName}".`);
 
-    for (const record of backup.data[storeName]) {
-      if (!record || typeof record !== "object" || typeof record.id !== "string")
-        throw new Error(`Registro inválido em "${storeName}".`);
-    }
+   for (const record of backup.data[storeName]) {
+  if (!record || typeof record !== "object") {
+    throw new Error(`Registro inválido em "${storeName}".`);
   }
 
+  if (storeName === STORES.settings) {
+    if (typeof record.key !== "string" || !record.key.trim()) {
+      throw new Error(`Registro inválido em "${storeName}".`);
+    }
+  } else {
+    if (typeof record.id !== "string" || !record.id.trim()) {
+      throw new Error(`Registro inválido em "${storeName}".`);
+    }
+  }
+}
+    
   return true;
 }
 
