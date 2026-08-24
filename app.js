@@ -804,12 +804,12 @@ function showLogModal(c, v, day, existing = null) {
     </form>`;
   $("#modal").classList.remove("hidden");
   $("#logForm").onsubmit=async e=>{
-    e.preventDefault();
-    const record=existing || {id:uid("log"),cultivationId:c.id,day,date:new Date().toISOString(),createdAt:new Date().toISOString()};
-    const completedActions=actions.filter((a,i)=>document.querySelector(`[data-action-index="${i}"]`)?.checked);
-    await put("dailyLogs",{...record,condition:$("#logCondition").value,humidity:$("#logHumidity").value,ventilation:$("#logVentilation").value,temperature:$("#logTemperature").value?Number($("#logTemperature").value):null,irrigationMl:$("#logIrrigation").value?Number($("#logIrrigation").value):null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,updatedAt:new Date().toISOString()});
-    closeModal(); await renderCultivationDetail(c.id);
-  };
+  e.preventDefault();
+  const record=existing || {id:uid("log"),cultivationId:c.id,day,date:new Date().toISOString(),createdAt:new Date().toISOString()};
+  const completedActions=actions.filter((a,i)=>document.querySelector(`[data-action-index="${i}"]`)?.checked);
+  await put("dailyLogs",{...record,condition:$("#logCondition").value,humidity:$("#logHumidity").value,ventilation:$("#logVentilation").value,temperature:$("#logTemperature").value?Number($("#logTemperature").value):null,irrigationMl:$("#logIrrigation").value?Number($("#logIrrigation").value):null,weight:$("#logWeight").value?Number($("#logWeight").value):null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,updatedAt:new Date().toISOString()});
+  closeModal(); await renderCultivationDetail(c.id);
+};
 }
 
 function showHarvestModal(c,v,day) {
