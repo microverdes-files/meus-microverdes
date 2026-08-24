@@ -590,8 +590,16 @@ const items = await getTodayOverview(cultivations);
         <div class="section-title"><div><span class="eyebrow">ACESSO RÁPIDO</span><h2>Ferramentas</h2></div></div>
         <div class="tools-grid">
           <button class="tool-card" id="toolCatalog"><span>🌿</span><strong>Catálogo</strong><small>Variedades e protocolos</small></button>
-          <button class="tool-card" id="toolBackup"><span>💾</span><strong>Backup</strong><small>Exportar ou importar</small></button>
-          <button class="tool-card" id="toolSettings"><span>⚙️</span><strong>Configurações</strong><small>Preferências do app</small></button>
+  <div class="tool-card">
+    <span>💾</span>
+    <strong>Backup</strong>
+    <small>Salvar ou restaurar seus dados</small>
+    <div class="backup-actions">
+      <button class="secondary" id="toolBackup" type="button">Exportar</button>
+      <button class="secondary" id="toolImport" type="button">Importar</button>
+    </div>
+  </div>          
+      <button class="tool-card" id="toolSettings"><span>⚙️</span><strong>Configurações</strong><small>Preferências do app</small></button>
         </div>
       </section>
     </div>`;
@@ -606,6 +614,7 @@ const items = await getTodayOverview(cultivations);
   $("#toolCatalog").onclick=()=>showView("catalog");
   $("#quickBackup").onclick=()=>handleExport();
   $("#toolBackup").onclick=()=>handleExport();
+  $("#toolImport").onclick=()=>$("#importFile")?.click();
   $("#toolSettings").onclick=()=>showSettingsModal();  $("#seeAllCultivations")?.addEventListener("click", () => showView("cultivations"));
 }
 
