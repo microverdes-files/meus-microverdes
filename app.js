@@ -762,7 +762,8 @@ function todayGuidance(v,s) {
   }
   return out;
 }
-function showLogModal(c, v, day, existing = null) {
+async function showLogModal(c, v, day, existing = null) {
+  const weightUnit = await getSetting("weightUnit");
   const val = key => existing?.[key] ?? "";
   const selected = (key, value) => val(key) === value ? "selected" : "";
   const checked = key => val(key) ? "checked" : "";
