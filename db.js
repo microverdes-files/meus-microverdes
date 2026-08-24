@@ -114,38 +114,44 @@ export async function exportData() {
 }
 
 export function validateBackup(backup) {
-  if (!backup || typeof backup !== "object")
+  if (!backup || typeof backup !== "object") {
     throw new Error("Arquivo de backup inválido.");
+  }
 
-  if (backup.format !== "meus-microverdes-backup")
+  if (backup.format !== "meus-microverdes-backup") {
     throw new Error("Este arquivo não é um backup do Meus Microverdes.");
+  }
 
-  if (backup.formatVersion !== 1)
+  if (backup.formatVersion !== 1) {
     throw new Error(`Versão de backup não suportada: ${backup.formatVersion}.`);
+  }
 
-  if (!backup.data || typeof backup.data !== "object")
+  if (!backup.data || typeof backup.data !== "object") {
     throw new Error("O backup não contém dados.");
+  }
 
   for (const storeName of ALL_STORES) {
-    if (!Array.isArray(backup.data[storeName]))
+    if (!Array.isArray(backup.data[storeName])) {
       throw new Error(`Dados inválidos na seção "${storeName}".`);
+    }
 
-   for (const record of backup.data[storeName]) {
-  if (!record || typeof record !== "object") {
-    throw new Error(`Registro inválido em "${storeName}".`);
+    for (const record of backup.data[storeName]) {
+      if (!record || typeof record !== "object") {
+        throw new Error(`Registro inválido em "${storeName}".`);
+      }
+
+      if (storeName === STORES.settings) {
+        if (typeof record.key !== "string" || !record.key.trim()) {
+          throw new Error(`Registro inválido em "${storeName}".`);
+        }
+      } else {
+        if (typeof record.id !== "string" || !record.id.trim()) {
+          throw new Error(`Registro inválido em "${storeName}".`);
+        }
+      }
+    }
   }
 
-  if (storeName === STORES.settings) {
-    if (typeof record.key !== "string" || !record.key.trim()) {
-      throw new Error(`Registro inválido em "${storeName}".`);
-    }
-  } else {
-    if (typeof record.id !== "string" || !record.id.trim()) {
-      throw new Error(`Registro inválido em "${storeName}".`);
-    }
-  }
-}
-    
   return true;
 }
 
