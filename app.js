@@ -685,6 +685,7 @@ const day = cultivationDay(c);
 const existingLog = latestLogForDay(logs, day);
 const s = dailyStatus(c, existingLog);
 const temperatureUnit = await getSetting("temperatureUnit");
+const weightUnit = await getSetting("weightUnit");
 const irrigationUnit = await getSetting("irrigationUnit");
   showView("cultivation");
   $("#cultivationDetail").innerHTML = `
@@ -722,6 +723,9 @@ const irrigationUnit = await getSetting("irrigationUnit");
     : ""}
   ${l.irrigationMl !== null && l.irrigationMl !== undefined
     ? ` · 💧 ${formatIrrigation(l.irrigationMl, irrigationUnit)}`
+    : ""}
+  ${l.weight !== null && l.weight !== undefined
+    ? ` · ⚖️ ${weightUnit === "oz" ? (Number(l.weight) * 0.035274).toFixed(2) : l.weight} ${weightUnit}`
     : ""}
 </span>  
   </div>
@@ -795,7 +799,7 @@ function showLogModal(c, v, day, existing = null) {
       <label>Ventilação<select id="logVentilation">${ventilationHtml}</select></label>
       <label>Temperatura (°C)<input id="logTemperature" type="number" step="0.1" min="-10" max="60" value="${escapeHtml(temperature)}" placeholder="Ex.: 24,5"></label>
       <label>Irrigação<input id="logIrrigation" type="number" min="0" step="1" value="${escapeHtml(irrigation)}" placeholder="mL (opcional)"></label>
-      <label>Peso<input id="logWeight" type="number" min="0" step="0.1" value="${escapeHtml(weight)}" placeholder="g (opcional)"></label>
+      <label>Peso (${weightUnit})<input id="logWeight" type="number" min="0" step="0.1" value="${escapeHtml(weight)}" placeholder="${weightUnit} (opcional)"></label>
       <label>Como irrigou<select id="logIrrigationType">${irrigationOptions}</select></label>
       ${checkedActions ? `<div><strong>Checklist de hoje</strong><div class="check-list">${checkedActions}</div></div>` : ""}
       <label>Observação<textarea id="logNote" rows="4" placeholder="O que você observou hoje?">${escapeHtml(note)}</textarea></label>
