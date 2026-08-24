@@ -764,6 +764,7 @@ function showLogModal(c, v, day, existing = null) {
   const checked = key => val(key) ? "checked" : "";
   const options=(items,key)=>items.map(([value,label])=>`<option value="${value}" ${selected(key,value)}>${label}</option>`).join("");
   const irrigation = Number.isFinite(Number(val("irrigationMl"))) ? val("irrigationMl") : "";
+  const weight = Number.isFinite(Number(val("weight"))) ? val("weight") : "";
   const temperature = Number.isFinite(Number(val("temperature"))) ? val("temperature") : "";
   const humidity = val("humidity") || "adequada";
   const ventilation = val("ventilation") || "adequada";
