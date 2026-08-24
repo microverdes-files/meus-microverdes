@@ -1,4 +1,4 @@
-const CACHE = "meus-microverdes-v7";
+const CACHE = "meus-microverdes-v8";
 
 const ASSETS = [
   "./",
