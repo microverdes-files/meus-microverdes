@@ -774,7 +774,11 @@ async function showLogModal(c, v, day, existing = null) {
     ? (Number(val("weight")) * 0.035274).toFixed(2)
     : val("weight")
   : "";
-  const temperature = Number.isFinite(Number(val("temperature"))) ? val("temperature") : "";
+const temperature = Number.isFinite(Number(val("temperature")))
+  ? (await getSetting("temperatureUnit")) === "F"
+    ? ((Number(val("temperature")) * 9 / 5) + 32).toFixed(1)
+    : val("temperature")
+  : "";
   const humidity = val("humidity") || "adequada";
   const ventilation = val("ventilation") || "adequada";
   const condition = val("condition") || "Saudável";
@@ -816,7 +820,11 @@ async function showLogModal(c, v, day, existing = null) {
   e.preventDefault();
   const record=existing || {id:uid("log"),cultivationId:c.id,day,date:new Date().toISOString(),createdAt:new Date().toISOString()};
   const completedActions=actions.filter((a,i)=>document.querySelector(`[data-action-index="${i}"]`)?.checked);
-  await put("dailyLogs",{...record,condition:$("#logCondition").value,humidity:$("#logHumidity").value,ventilation:$("#logVentilation").value,temperature:$("#logTemperature").value?Number($("#logTemperature").value):null,irrigationMl:$("#logIrrigation").value?Number($("#logIrrigation").value):null,weight:$("#logWeight").value?Number($("#logWeight").value):null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,updatedAt:new Date().toISOString()});
+  await put("dailyLogs",{...record,condition:$("#logCondition").value,humidity:$("#logHumidity").value,ventilation:$("#logVentilation").value,temperature:$("#logTemperature").value
+  ? temperatureUnit === "F"
+    ? (Number($("#logTemperature").value) - 32) * 5 / 9
+    : Number($("#logTemperature").value)
+  : null,irrigationMl:$("#logIrrigation").value?Number($("#logIrrigation").value):null,weight:$("#logWeight").value?Number($("#logWeight").value):null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,updatedAt:new Date().toISOString()});
   closeModal(); await renderCultivationDetail(c.id);
 };
 }
