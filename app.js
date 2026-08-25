@@ -763,6 +763,7 @@ function todayGuidance(v,s) {
   return out;
 }
 async function showLogModal(c, v, day, existing = null) {
+  const temperatureUnit = await getSetting("temperatureUnit");
   const weightUnit = await getSetting("weightUnit");
   const val = key => existing?.[key] ?? "";
   const selected = (key, value) => val(key) === value ? "selected" : "";
