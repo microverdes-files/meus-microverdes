@@ -718,16 +718,19 @@ const irrigationUnit = await getSetting("irrigationUnit");
       <strong>Dia ${l.day} · ${formatDate(l.date)}</strong>
   <span>
   ${escapeHtml(l.note || "Sem observação.")}
+  ${l.condition ? ` · 🌱 ${escapeHtml(l.condition)}` : ""}
+  ${l.humidity ? ` · 💧 ${escapeHtml(l.humidity)}` : ""}
+  ${l.ventilation ? ` · 🌬️ ${escapeHtml(l.ventilation)}` : ""}
   ${l.temperature !== null && l.temperature !== undefined
     ? ` · 🌡️ ${formatTemperature(l.temperature, temperatureUnit)}`
     : ""}
   ${l.irrigationMl !== null && l.irrigationMl !== undefined
-    ? ` · 💧 ${formatIrrigation(l.irrigationMl, irrigationUnit)}`
+    ? ` · 🚿 ${formatIrrigation(l.irrigationMl, irrigationUnit)}`
     : ""}
   ${l.weight !== null && l.weight !== undefined
     ? ` · ⚖️ ${weightUnit === "oz" ? (Number(l.weight) * 0.035274).toFixed(2) : l.weight} ${weightUnit}`
     : ""}
-</span>  
+</span>
   </div>
     <button class="secondary edit-log-btn" data-log-id="${escapeHtml(l.id)}">✏️ Editar</button>
   </div>
