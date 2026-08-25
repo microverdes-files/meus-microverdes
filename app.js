@@ -305,10 +305,17 @@ text: lowAir.length === 1
   /*
    * 9. NENHUM ALERTA
    */
-const pendingActions = Math.max(
-  0,
-  Number(item.s?.totalActions ?? 0) - Number(item.s?.completedCount ?? 0)
-);
+const phaseActions =
+  item.v?.dailyEngine?.phases?.[item.s?.phase]?.actions || [];
+
+const completedActions = Array.isArray(item.log?.completedActions)
+  ? item.log.completedActions
+  : [];
+
+const pendingActionNames = phaseActions
+  .filter(action => !completedActions.includes(action));
+
+const pendingActions = pendingActionNames.length;
 
 if (pendingActions > 0) {
   const actionLabels = {
@@ -325,15 +332,6 @@ if (pendingActions > 0) {
     evaluate_harvest_signals: "Avaliar sinais de colheita",
     record_harvest_if_ready: "Registrar colheita se estiver pronto"
   };
-
-  const phaseActions =
-    item.v?.dailyEngine?.phases?.[item.s?.phase]?.actions || [];
-
-  const completedActions = Array.isArray(item.logs)
-    ? item.logs
-        .filter(l => Number(l.day) === Number(item.s?.day))
-        .flatMap(l => Array.isArray(l.completedActions) ? l.completedActions : [])
-    : [];
 
   const pendingActionNames = phaseActions
     .filter(action => !completedActions.includes(action))
