@@ -545,12 +545,20 @@ function renderCalendar(items) {
   const days=[];
   for(let i=0;i<7;i++){
     const date=new Date(); date.setHours(0,0,0,0); date.setDate(date.getDate()+i);
-    let tasks=0, harvest=0;
-    for(const item of items){
-      const targetDay=item.s.day+i;
-      const phase=getEnginePhase(item.v,targetDay);
-      const acts=item.v?.dailyEngine?.phases?.[phase]?.actions || [];
-      tasks+=acts.length;
+ let tasks=0, harvest=0;
+ for(const item of items){
+   const targetDay=item.s.day+i;
+   const phase=getEnginePhase(item.v,targetDay);
+   const acts=item.v?.dailyEngine?.phases?.[phase]?.actions || [];
+
+  if(i === 0){
+    const completed = Array.isArray(item.log?.completedActions)
+      ? item.log.completedActions
+      : [];
+    tasks += acts.filter(action => !completed.includes(action)).length;
+  } else {
+    tasks += acts.length;
+  }
       if(item.v?.timing?.harvestDays && targetDay>=item.v.timing.harvestDays.min && targetDay<=item.v.timing.harvestDays.max) harvest++;
     }
     days.push({date,tasks,harvest});
