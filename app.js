@@ -727,8 +727,22 @@ const irrigationUnit = await getSetting("irrigationUnit");
   ${l.irrigationMl !== null && l.irrigationMl !== undefined
     ? ` · 🚿 ${formatIrrigation(l.irrigationMl, irrigationUnit)}`
     : ""}
+
+  ${l.irrigationType && l.irrigationType !== "nenhuma"
+    ? ` · 🪣 ${escapeHtml(
+        l.irrigationType === "spray" ? "Borrifador" :
+        l.irrigationType === "regador" ? "Regador" :
+        l.irrigationType === "fundo" ? "Por baixo" :
+        l.irrigationType
+      )}`
+    : ""}
+
   ${l.weight !== null && l.weight !== undefined
     ? ` · ⚖️ ${weightUnit === "oz" ? (Number(l.weight) * 0.035274).toFixed(2) : l.weight} ${weightUnit}`
+    : ""}
+
+  ${Array.isArray(l.completedActions) && l.completedActions.length
+    ? ` · ✅ ${l.completedActions.length} ação(ões) concluída(s)`
     : ""}
 </span>
   </div>
