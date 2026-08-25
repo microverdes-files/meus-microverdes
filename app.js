@@ -466,9 +466,32 @@ function renderTodayHero(items) {
 }
 
 function cultivationCard(item) {
-  const {c,v,s,attention}=item;
+  const {c,v,s,attention,log}=item;
   const progress=progressFor(v,s.day);
   const pending=Math.max(0,s.totalActions-s.completedCount);
+
+  const actions = v?.dailyEngine?.phases?.[s.phase]?.actions || [];
+  const completed = Array.isArray(log?.completedActions) ? log.completedActions : [];
+
+  const actionLabels = {
+    check_emergence:"Observar emergência",
+    monitor_humidity:"Verificar umidade",
+    keep_cover_if_needed:"Manter cobertura se necessário",
+    start_light_when_established:"Iniciar luz quando estabelecido",
+    increase_airflow:"Aumentar circulação",
+    provide_light:"Fornecer luz",
+    control_humidity:"Controlar umidade",
+    maintain_airflow:"Manter ventilação",
+    check_for_mold:"Verificar mofo",
+    check_for_leggy_growth:"Verificar alongamento",
+    evaluate_harvest_signals:"Avaliar sinais de colheita",
+    record_harvest_if_ready:"Registrar colheita se estiver pronto"
+  };
+
+  const pendingActions = actions
+    .filter(a => !completed.includes(a))
+    .map(a => actionLabels[a] || a.replaceAll("_"," "));
+
   return `
     <article class="cultivation-card" data-cultivation-id="${escapeHtml(c.id)}">
       <button class="card-main" type="button">
@@ -480,11 +503,22 @@ function cultivationCard(item) {
           </div>
           <div class="cultivation-day">D${s.day}</div>
         </div>
+
         <div class="mini-progress"><span style="width:${progress}%"></span></div>
+
         <div class="cultivation-footer">
           <span>${pending ? `✓ ${pending} tarefa(s) pendente(s)` : "✓ Tudo em dia"}</span>
           <strong>${progress}%</strong>
         </div>
+
+        ${pendingActions.length ? `
+          <div class="pending-actions">
+            <strong>O que fazer hoje:</strong>
+            <ul>
+              ${pendingActions.map(a => `<li>${escapeHtml(a)}</li>`).join("")}
+            </ul>
+          </div>
+        ` : ""}
       </button>
     </article>`;
 }
