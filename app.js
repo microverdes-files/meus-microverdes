@@ -751,6 +751,75 @@ const irrigationUnit = await getSetting("irrigationUnit");
         <div class="notice">Os prazos são estimativas. Temperatura, luz, umidade, sementes, substrato e método de cultivo podem alterar o desenvolvimento.</div>
       </div>
       <div class="card">
+        <h3>📈 Evolução</h3>
+        <div class="today-metrics">
+          <div>
+            <strong>${logs.length}</strong>
+            <span>registros</span>
+          </div>
+          <div>
+            <strong>${
+              logs.filter(l => l.temperature !== null && l.temperature !== undefined && l.temperature !== "").length
+            }</strong>
+            <span>temperaturas</span>
+          </div>
+          <div>
+            <strong>${
+              logs.filter(l => l.irrigationMl !== null && l.irrigationMl !== undefined && l.irrigationMl !== "").length
+            }</strong>
+            <span>irrigações</span>
+          </div>
+          <div>
+            <strong>${
+              logs.filter(l => l.weight !== null && l.weight !== undefined && l.weight !== "").length
+            }</strong>
+            <span>pesagens</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>Últimos dados registrados</strong>
+          <span>
+            ${
+              (() => {
+                const latestTemperature = logs.find(l =>
+                  l.temperature !== null &&
+                  l.temperature !== undefined &&
+                  l.temperature !== ""
+                );
+
+                const latestIrrigation = logs.find(l =>
+                  l.irrigationMl !== null &&
+                  l.irrigationMl !== undefined &&
+                  l.irrigationMl !== ""
+                );
+
+                const latestWeight = logs.find(l =>
+                  l.weight !== null &&
+                  l.weight !== undefined &&
+                  l.weight !== ""
+                );
+
+                return [
+                  latestTemperature
+                    ? `🌡️ ${formatTemperature(latestTemperature.temperature, temperatureUnit)}`
+                    : null,
+                  latestIrrigation
+                    ? `🚿 ${formatIrrigation(latestIrrigation.irrigationMl, irrigationUnit)}`
+                    : null,
+                  latestWeight
+                    ? `⚖️ ${weightUnit === "oz"
+                        ? (Number(latestWeight.weight) * 0.035274).toFixed(2)
+                        : latestWeight.weight} ${weightUnit}`
+                    : null
+                ].filter(Boolean).join(" · ") || "Ainda não há dados quantitativos registrados.";
+              })()
+            }
+          </span>
+        </div>
+      </div>
+      
+      <div class="card">
         <h3>Diário</h3>
         ${logs.length ? logs.map(l=>`
   <div class="timeline-item">
