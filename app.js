@@ -765,6 +765,7 @@ function todayGuidance(v,s) {
 async function showLogModal(c, v, day, existing = null) {
   const temperatureUnit = await getSetting("temperatureUnit");
   const weightUnit = await getSetting("weightUnit");
+  const irrigationUnit = await getSetting("irrigationUnit");
   const val = key => existing?.[key] ?? "";
   const selected = (key, value) => val(key) === value ? "selected" : "";
   const checked = key => val(key) ? "checked" : "";
@@ -808,7 +809,7 @@ const temperature = Number.isFinite(Number(val("temperature")))
       <label>Umidade<select id="logHumidity">${humidityHtml}</select></label>
       <label>Ventilação<select id="logVentilation">${ventilationHtml}</select></label>
       <label>Temperatura (${temperatureUnit === "F" ? "°F" : "°C"})<input id="logTemperature" type="number" step="0.1" min="${temperatureUnit === "F" ? "14" : "-10"}" max="${temperatureUnit === "F" ? "140" : "60"}" value="${escapeHtml(temperature)}" placeholder="${temperatureUnit === "F" ? "Ex.: 75,2" : "Ex.: 24,5"}"></label>
-      <label>Irrigação<input id="logIrrigation" type="number" min="0" step="1" value="${escapeHtml(irrigation)}" placeholder="mL (opcional)"></label>
+      <label>Irrigação (${irrigationUnit === "l" ? "L" : "mL"})<input id="logIrrigation" type="number" min="0" step="${irrigationUnit === "l" ? "0.001" : "1"}" value="${escapeHtml(irrigation)}" placeholder="${irrigationUnit === "l" ? "L (opcional)" : "mL (opcional)"}"></label>
       <label>Peso (${weightUnit})<input id="logWeight" type="number" min="0" step="0.1" value="${escapeHtml(weight)}" placeholder="${weightUnit} (opcional)"></label>
       <label>Como irrigou<select id="logIrrigationType">${irrigationOptions}</select></label>
       ${checkedActions ? `<div><strong>Checklist de hoje</strong><div class="check-list">${checkedActions}</div></div>` : ""}
@@ -825,7 +826,11 @@ const temperature = Number.isFinite(Number(val("temperature")))
   ? temperatureUnit === "F"
     ? (Number($("#logTemperature").value) - 32) * 5 / 9
     : Number($("#logTemperature").value)
-  : null,irrigationMl:$("#logIrrigation").value?Number($("#logIrrigation").value):null,weight:$("#logWeight").value?Number($("#logWeight").value):null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,updatedAt:new Date().toISOString()});
+  : null,irrigationMl:$("#logIrrigation").value
+  ? irrigationUnit === "l"
+    ? Number($("#logIrrigation").value) * 1000
+    : Number($("#logIrrigation").value)
+  : null,weight:$("#logWeight").value?Number($("#logWeight").value):null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,updatedAt:new Date().toISOString()});
   closeModal(); await renderCultivationDetail(c.id);
 };
 }
