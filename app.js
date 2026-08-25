@@ -790,7 +790,7 @@ const temperature = Number.isFinite(Number(val("temperature")))
   const condition = val("condition") || "Saudável";
   const note = val("note");
   const actions = v?.dailyEngine?.phases?.[getEnginePhase(v,day)]?.actions || [];
-  const completed = Array.isArray(existing?.completedActions) ? existing.completedActions : [];
+  const checkedActions = Array.isArray(existing?.completedActions) ? existing.completedActions : [];
   const actionLabels = {
     check_emergence:"Observar emergência", monitor_humidity:"Verificar umidade", keep_cover_if_needed:"Manter cobertura se necessário",
     start_light_when_established:"Iniciar luz quando estabelecido", increase_airflow:"Aumentar circulação", provide_light:"Fornecer luz",
