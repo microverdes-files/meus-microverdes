@@ -807,7 +807,7 @@ const temperature = Number.isFinite(Number(val("temperature")))
       <label>Condição do cultivo<select id="logCondition">${conditionHtml}</select></label>
       <label>Umidade<select id="logHumidity">${humidityHtml}</select></label>
       <label>Ventilação<select id="logVentilation">${ventilationHtml}</select></label>
-      <label>Temperatura (°C)<input id="logTemperature" type="number" step="0.1" min="-10" max="60" value="${escapeHtml(temperature)}" placeholder="Ex.: 24,5"></label>
+      <label>Temperatura (${temperatureUnit === "F" ? "°F" : "°C"})<input id="logTemperature" type="number" step="0.1" min="${temperatureUnit === "F" ? "14" : "-10"}" max="${temperatureUnit === "F" ? "140" : "60"}" value="${escapeHtml(temperature)}" placeholder="${temperatureUnit === "F" ? "Ex.: 75,2" : "Ex.: 24,5"}"></label>
       <label>Irrigação<input id="logIrrigation" type="number" min="0" step="1" value="${escapeHtml(irrigation)}" placeholder="mL (opcional)"></label>
       <label>Peso (${weightUnit})<input id="logWeight" type="number" min="0" step="0.1" value="${escapeHtml(weight)}" placeholder="${weightUnit} (opcional)"></label>
       <label>Como irrigou<select id="logIrrigationType">${irrigationOptions}</select></label>
