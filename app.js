@@ -770,7 +770,11 @@ async function showLogModal(c, v, day, existing = null) {
   const selected = (key, value) => val(key) === value ? "selected" : "";
   const checked = key => val(key) ? "checked" : "";
   const options=(items,key)=>items.map(([value,label])=>`<option value="${value}" ${selected(key,value)}>${label}</option>`).join("");
-  const irrigation = Number.isFinite(Number(val("irrigationMl"))) ? val("irrigationMl") : "";
+  const irrigation = Number.isFinite(Number(val("irrigationMl")))
+  ? (irrigationUnit === "l"
+    ? Number(val("irrigationMl")) / 1000
+    : Number(val("irrigationMl")))
+  : "";
   const weight = Number.isFinite(Number(val("weight")))
   ? (await getSetting("weightUnit")) === "oz"
     ? (Number(val("weight")) * 0.035274).toFixed(2)
