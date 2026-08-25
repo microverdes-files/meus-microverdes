@@ -468,11 +468,11 @@ function renderTodayHero(items) {
 function cultivationCard(item) {
   const {c,v,s,attention,log}=item;
   const progress=progressFor(v,s.day);
-  const pending=Math.max(0,s.totalActions-s.completedCount);
-
-  const actions = v?.dailyEngine?.phases?.[s.phase]?.actions || [];
   const completed = Array.isArray(log?.completedActions) ? log.completedActions : [];
-
+  const pending=Math.max(0,s.totalActions-completed.length);
+  
+  const actions = v?.dailyEngine?.phases?.[s.phase]?.actions || [];
+  
   const actionLabels = {
     check_emergence:"Observar emergência",
     monitor_humidity:"Verificar umidade",
