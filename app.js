@@ -800,7 +800,7 @@ const temperature = Number.isFinite(Number(val("temperature")))
   const conditionOpts=[["Saudável","Saudável"],["Seco","Seco"],["Muito úmido","Muito úmido"],["Alongado","Alongado"],["Suspeita de mofo","Suspeita de mofo"]];
   const humidityOpts=[["adequada","Adequada"],["muito_umida","Muito úmida"],["seca","Seca"]];
   const ventilationOpts=[["adequada","Adequada"],["baixa","Baixa"],["alta","Alta"]];
-  const checkedActions = actions.map((a,i)=>`<label class="check-row"><input type="checkbox" data-action-index="${i}" ${completed.includes(a)?"checked":""}><span>${escapeHtml(actionLabels[a] || a.replaceAll("_"," "))}</span></label>`).join("");
+  const checkedActionsHtml = actions.map((a,i)=>`<label class="check-row"><input type="checkbox" data-action-index="${i}" ${checkedActions.includes(a)?"checked":""}><span>${escapeHtml(actionLabels[a] || a.replaceAll("_"," "))}</span></label>`).join("");
   const conditionHtml=conditionOpts.map(([value,label])=>`<option value="${escapeHtml(value)}" ${condition===value?"selected":""}>${label}</option>`).join("");
   const humidityHtml=options(humidityOpts,"humidity");
   const ventilationHtml=options(ventilationOpts,"ventilation");
