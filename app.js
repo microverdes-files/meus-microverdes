@@ -910,6 +910,7 @@ async function showLogModal(c, v, day, existing = null) {
   const weightUnit = await getSetting("weightUnit");
   const irrigationUnit = await getSetting("irrigationUnit");
   const val = key => existing?.[key] ?? "";
+  console.log("PESO EXISTENTE:", existing?.weight);
   const selected = (key, value) => val(key) === value ? "selected" : "";
   const checked = key => val(key) ? "checked" : "";
   const options=(items,key)=>items.map(([value,label])=>`<option value="${value}" ${selected(key,value)}>${label}</option>`).join("");
