@@ -472,7 +472,7 @@ function cultivationCard(item) {
   const actions = v?.dailyEngine?.phases?.[s.phase]?.actions || [];
   
   const actionLabels = {
-    check_emergence:"Observar emergência",
+    check_emergence:"Observar se há emergência",
     monitor_humidity:"Verificar umidade",
     keep_cover_if_needed:"Manter cobertura se necessário",
     start_light_when_established:"Iniciar luz quando estabelecido",
@@ -935,7 +935,7 @@ const temperature = Number.isFinite(Number(val("temperature")))
   const actions = v?.dailyEngine?.phases?.[getEnginePhase(v,day)]?.actions || [];
   const checkedActions = Array.isArray(existing?.completedActions) ? existing.completedActions : [];
   const actionLabels = {
-    check_emergence:"Observar emergência", monitor_humidity:"Verificar umidade", keep_cover_if_needed:"Manter cobertura se necessário",
+    check_emergence:"Observar se há emergência", monitor_humidity:"Verificar umidade", keep_cover_if_needed:"Manter cobertura se necessário",
     start_light_when_established:"Iniciar luz quando estabelecido", increase_airflow:"Aumentar circulação", provide_light:"Fornecer luz",
     control_humidity:"Controlar umidade", maintain_airflow:"Manter ventilação", check_for_mold:"Verificar mofo",
     check_for_leggy_growth:"Verificar alongamento", evaluate_harvest_signals:"Avaliar sinais de colheita", record_harvest_if_ready:"Registrar colheita se estiver pronto"
