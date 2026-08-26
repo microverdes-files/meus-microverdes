@@ -797,7 +797,8 @@ const irrigationUnit = await getSetting("irrigationUnit");
                 const latestWeight = logs.find(l =>
                   l.weight !== null &&
                   l.weight !== undefined &&
-                  l.weight !== ""
+                  l.weight !== "" &&
+                  Number(l.weight) > 0
                 );
 
                 return [
