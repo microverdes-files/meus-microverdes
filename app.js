@@ -910,7 +910,6 @@ async function showLogModal(c, v, day, existing = null) {
   const weightUnit = await getSetting("weightUnit");
   const irrigationUnit = await getSetting("irrigationUnit");
   const val = key => existing?.[key] ?? "";
-  console.log("PESO EXISTENTE:", existing?.weight);
   const selected = (key, value) => val(key) === value ? "selected" : "";
   const checked = key => val(key) ? "checked" : "";
   const options=(items,key)=>items.map(([value,label])=>`<option value="${value}" ${selected(key,value)}>${label}</option>`).join("");
@@ -979,7 +978,7 @@ const temperature = Number.isFinite(Number(val("temperature")))
   ? irrigationUnit === "l"
     ? Number($("#logIrrigation").value) * 1000
     : Number($("#logIrrigation").value)
-  : null,weight:$("#logWeight").value?Number($("#logWeight").value):null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,updatedAt:new Date().toISOString()});
+  : null,weight:$("#logWeight").value.trim() !== "" ? Number($("#logWeight").value) : null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,updatedAt:new Date().toISOString()});
   closeModal(); await renderCultivationDetail(c.id);
 };
 }
