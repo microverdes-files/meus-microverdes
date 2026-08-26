@@ -918,10 +918,11 @@ async function showLogModal(c, v, day, existing = null) {
     ? Number(val("irrigationMl")) / 1000
     : Number(val("irrigationMl")))
   : "";
-  const weight = Number.isFinite(Number(val("weight")))
+const weightValue = val("weight");
+const weight = weightValue !== "" && Number.isFinite(Number(weightValue))
   ? (await getSetting("weightUnit")) === "oz"
-    ? (Number(val("weight")) * 0.035274).toFixed(2)
-    : val("weight")
+    ? (Number(weightValue) * 0.035274).toFixed(2)
+    : weightValue
   : "";
 const temperature = Number.isFinite(Number(val("temperature")))
   ? (await getSetting("temperatureUnit")) === "F"
