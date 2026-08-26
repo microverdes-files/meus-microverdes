@@ -735,9 +735,11 @@ const irrigationUnit = await getSetting("irrigationUnit");
         <span class="badge">${escapeHtml(s.phaseLabel)}</span>
         <h2>${escapeHtml(c.name)}</h2>
         <p class="meta">${escapeHtml(v.name)} · Dia ${s.day}</p>
-        <div class="actions">
-        <button class="primary" id="addLogBtn">${existingLog ? "✏️ Editar registro de hoje" : "+ Registrar hoje"}</button>          ${s.harvestWindow ? `<button class="secondary" id="harvestBtn">✂️ Registrar colheita</button>` : ""}
-        </div>
+       <div class="actions">
+        <button class="primary" id="addLogBtn">${existingLog ? "✏️ Editar registro de hoje" : "+ Registrar hoje"}</button>
+        ${s.harvestWindow ? `<button class="secondary" id="harvestBtn">✂️ Registrar colheita</button>` : ""}
+        <button class="secondary" id="deleteCultivationBtn">🗑️ Excluir cultivo</button>
+      </div>
       </div>
       <div class="card">
         <h3>Orientação de hoje</h3>
@@ -864,6 +866,20 @@ const irrigationUnit = await getSetting("irrigationUnit");
   $("#backDashboard").onclick = async () => { showView("dashboard"); await renderDashboard(); };
   $("#addLogBtn").onclick = () => showLogModal(c,v,s.day,existingLog);
   if ($("#harvestBtn")) $("#harvestBtn").onclick = () => showHarvestModal(c,v,s.day);
+ $("#deleteCultivationBtn").onclick = async () => {
+  if (!confirm(`Excluir o cultivo "${c.name}"? Esta ação não pode ser desfeita.`)) return;
+
+  const logsToDelete = await getByIndex("dailyLogs", "cultivationId", c.id);
+
+  for (const log of logsToDelete) {
+    await remove("dailyLogs", log.id);
+  }
+
+  await remove("cultivations", c.id);
+
+  showView("dashboard");
+  await renderDashboard();
+}; 
 document.querySelectorAll(".edit-log-btn").forEach(btn => {
   btn.onclick = () => {
     const log = logs.find(l => l.id === btn.dataset.logId);
