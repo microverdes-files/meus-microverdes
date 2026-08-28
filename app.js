@@ -575,6 +575,7 @@ function renderCalendar(items) {
 async function renderDashboard() {
 const cultivations = await getAll("cultivations");
 const items = await getTodayOverview(cultivations);
+const harvests = await getAll("harvests");
 
   showView("dashboard");
   $("#dashboard").innerHTML = `
