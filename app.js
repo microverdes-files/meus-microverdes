@@ -603,6 +603,65 @@ const harvests = await getAll("harvests");
         </div>
       </section>
 
+            <section class="dashboard-section">
+        <div class="section-title">
+          <div>
+            <span class="eyebrow">HISTÓRICO</span>
+            <h2>Colheitas</h2>
+          </div>
+        </div>
+
+        <div class="cultivation-list">
+          ${
+            harvests.length
+              ? harvests
+                  .slice()
+                  .sort((a,b) => String(b.date || "").localeCompare(String(a.date || "")))
+                  .map(h => {
+                    const cultivation = cultivations.find(c => c.id === h.cultivationId);
+                    const variety = getVarietyById(h.varietyId);
+
+                    return `
+                      <div class="cultivation-card">
+                        <div class="card-main">
+                          <div class="cultivation-head">
+                            <div>
+                              <span class="badge">🌾 Colhida</span>
+                              <h3>${escapeHtml(cultivation?.name || variety?.name || "Cultivo")}</h3>
+                              <p>
+                                ${variety ? escapeHtml(variety.name) : ""}
+                                · Dia ${h.day}
+                                · ${formatDate(h.date)}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div class="cultivation-footer">
+                            <span>⚖️ ${h.weightGrams !== null && h.weightGrams !== undefined ? `${h.weightGrams} g` : "Peso não informado"}</span>
+                            <strong>⭐ ${h.rating}/5</strong>
+                          </div>
+
+                          ${
+                            h.note
+                              ? `<p class="meta">${escapeHtml(h.note)}</p>`
+                              : ""
+                          }
+                        </div>
+                      </div>
+                    `;
+                  })
+                  .join("")
+              : `
+                <div class="empty-state">
+                  <div>🌱</div>
+                  <h3>Nenhuma colheita registrada</h3>
+                  <p>Quando você registrar uma colheita, ela aparecerá aqui.</p>
+                </div>
+              `
+          }
+        </div>
+      </section>
+
       <section class="dashboard-section">
         <div class="section-title"><div><span class="eyebrow">PLANEJAMENTO</span><h2>Próximos 7 dias</h2></div></div>
         <div class="calendar-strip">${renderCalendar(items)}</div>
