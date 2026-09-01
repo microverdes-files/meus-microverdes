@@ -65,6 +65,6 @@ body{background:#f5f7f3;padding-bottom:78px}.app-shell{max-width:920px;margin:0 
 .photo-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
 .photo-preview img{width:76px;height:76px;object-fit:cover;border-radius:10px;border:1px solid var(--border,#d8e3d8)}
 .log-photos{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.log-photo{padding:0;border:0;background:none;cursor:pointer;border-radius:10px;overflow:hidden}
-.log-photo img{display:block;width:86px;height:86px;object-fit:cover;border-radius:10px;border:1px solid var(--border,#d8e3d8)}
+.log-photo{display:block;flex:0 0 86px;width:86px;height:86px;min-width:86px;min-height:86px;max-width:86px;max-height:86px;padding:0;border:0;background:none;cursor:pointer;border-radius:10px;overflow:hidden}
+.log-photo img{display:block!important;width:86px!important;height:86px!important;min-width:86px!important;min-height:86px!important;max-width:86px!important;max-height:86px!important;aspect-ratio:1/1;object-fit:cover;border-radius:10px;border:1px solid var(--border,#d8e3d8)}
 .log-photo:focus-visible{outline:2px solid var(--accent,#2f6b3f);outline-offset:2px}
