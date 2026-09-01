@@ -28,7 +28,40 @@ const $ = (s) => document.querySelector(s);
 const uid = (prefix) => `${prefix}_${crypto.randomUUID()}`;
 let selectedVariety = null; let deferredInstallPrompt = null;
 document.addEventListener("DOMContentLoaded", init);
-async function init(){bindNavigation();bindActions();renderCatalog();await renderDashboard();if("serviceWorker"in navigator){try{await navigator.serviceWorker.register("./sw.js")}catch(e){console.warn("SW:",e)}}window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstallPrompt=e;$("#installBtn")?.classList.remove("hidden")});$("#installBtn")?.addEventListener("click",async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();deferredInstallPrompt=null;$("#installBtn")?.classList.add("hidden")})}
+function isStandalone(){return window.matchMedia?.("(display-mode: standalone)").matches || window.navigator.standalone === true;}
+function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);}
+function showInstallHelp(){
+  const ios = isIOS();
+  const android = /android/i.test(navigator.userAgent);
+  const content = ios
+    ? `<div class="section-title"><div><p class="eyebrow">INSTALAR</p><h2>Levar o app para a tela inicial</h2></div></div><p>No Safari, toque em <strong>Compartilhar</strong> e depois em <strong>Adicionar à Tela de Início</strong>.</p><p>Depois toque em <strong>Adicionar</strong>. O Meus Microverdes ficará disponível como um aplicativo.</p>`
+    : android
+      ? `<div class="section-title"><div><p class="eyebrow">INSTALAR</p><h2>Instalar no celular</h2></div></div><p>No Chrome, toque no menu <strong>⋮</strong> e procure <strong>Instalar app</strong> ou <strong>Adicionar à tela inicial</strong>.</p><p>Confirme em <strong>Instalar</strong>.</p>`
+      : `<div class="section-title"><div><p class="eyebrow">INSTALAR</p><h2>Instalar o Meus Microverdes</h2></div></div><p>Se o navegador oferecer a opção <strong>Instalar</strong>, confirme para adicionar o Meus Microverdes aos seus aplicativos.</p>`;
+  $("#modalContent").innerHTML = content;
+  $("#modal").classList.remove("hidden");
+}
+async function handleInstall(){
+  if (isStandalone()) return;
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    try { await deferredInstallPrompt.userChoice; } catch {}
+    deferredInstallPrompt = null;
+    $("#installBtn")?.classList.add("hidden");
+    return;
+  }
+  showInstallHelp();
+}
+async function init(){bindNavigation();bindActions();renderCatalog();await renderDashboard();if("serviceWorker"in navigator){try{await navigator.serviceWorker.register("./sw.js")}catch(e){console.warn("SW:",e)}}
+  const installBtn = $("#installBtn");
+  if (installBtn) {
+    installBtn.textContent = "📲 Instalar";
+    installBtn.classList.toggle("hidden", isStandalone());
+    installBtn.addEventListener("click", handleInstall);
+  }
+  window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstallPrompt=e;$("#installBtn")?.classList.remove("hidden")});
+  window.addEventListener("appinstalled",()=>{$("#installBtn")?.classList.add("hidden");deferredInstallPrompt=null});
+}
 function bindNavigation(){document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",async()=>{showView(btn.dataset.view);if(btn.dataset.view==="dashboard")await renderDashboard();if(btn.dataset.view==="catalog")renderCatalog();if(btn.dataset.view==="cultivations")await renderAllCultivations()}))}
 function showView(name){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));const target=$("#"+name);if(!target)return;target.classList.add("active");document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.view===name))}
 function bindActions(){$("#newCultivationBtn")?.addEventListener("click",()=>showNewCultivationModal());$("#closeModal")?.addEventListener("click",closeModal);$("#modal")?.addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});$("#difficultyFilter")?.addEventListener("change",renderCatalog);$("#exportBtn")?.addEventListener("click",handleExport);$("#importBtn")?.addEventListener("click",()=>$("#importFile")?.click());$("#importFile")?.addEventListener("change",handleImportFile)}
