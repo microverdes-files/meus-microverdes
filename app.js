@@ -787,6 +787,7 @@ const s = dailyStatus(c, existingLog);
 const temperatureUnit = await getSetting("temperatureUnit");
 const weightUnit = await getSetting("weightUnit");
 const irrigationUnit = await getSetting("irrigationUnit");
+const logPhotoHtml = Object.fromEntries(await Promise.all(logs.map(async l => [l.id, await renderLogPhotos(l.id)])));
   showView("cultivation");
   $("#cultivationDetail").innerHTML = `
     <button class="back" id="backDashboard">← Voltar</button>
@@ -1012,7 +1013,6 @@ function bindPhotoPreview() {
 }
 
 async function showLogModal(c, v, day, existing = null) {
-  const logPhotoHtml = Object.fromEntries(await Promise.all(logs.map(async l => [l.id, await renderLogPhotos(l.id)])));
   const temperatureUnit = await getSetting("temperatureUnit");
   const weightUnit = await getSetting("weightUnit");
   const irrigationUnit = await getSetting("irrigationUnit");
@@ -1070,6 +1070,14 @@ const temperature = Number.isFinite(Number(val("temperature")))
       <label>Como irrigou<select id="logIrrigationType">${irrigationOptions}</select></label>
       ${checkedActionsHtml ? `<div><strong>Checklist de hoje</strong><div class="check-list">${checkedActionsHtml}</div></div>` : ""}
       <label>Observação<textarea id="logNote" rows="4" placeholder="O que você observou hoje?">${escapeHtml(note)}</textarea></label>
+      <div class="photo-field">
+        <strong>📷 Foto do cultivo</strong>
+        <p class="meta">Opcional. Tire uma foto ou escolha uma da galeria${photosHint ? `.${photosHint}` : "."}</p>
+        <label class="secondary photo-pick">Adicionar foto
+          <input id="logPhoto" type="file" accept="image/*" capture="environment">
+        </label>
+        <div id="logPhotoPreview" class="photo-preview">${existingPhotos.map(photo=>`<img src="${escapeHtml(photo.dataUrl)}" alt="Foto atual do cultivo">`).join("")}</div>
+      </div>
       <button class="primary" type="submit">Salvar registro</button>
       <p class="meta">Fotos podem ser adicionadas na tela do cultivo${photosHint}.</p>
     </form>`;
