@@ -917,6 +917,7 @@ const irrigationUnit = await getSetting("irrigationUnit");
     ? ` · ✅ ${l.completedActions.length} ação(ões) concluída(s)`
     : ""}
 </span>
+  ${logPhotoHtml[l.id] || ""}
   </div>
     <button class="secondary edit-log-btn" data-log-id="${escapeHtml(l.id)}">✏️ Editar</button>
   </div>
@@ -932,8 +933,12 @@ const irrigationUnit = await getSetting("irrigationUnit");
   const logsToDelete = await getByIndex("dailyLogs", "cultivationId", c.id);
 
   for (const log of logsToDelete) {
+    const photosToDelete = await getByIndex("photos", "dailyLogId", log.id);
+    for (const photo of photosToDelete) await remove("photos", photo.id);
     await remove("dailyLogs", log.id);
   }
+  const cultivationPhotos = await getByIndex("photos", "cultivationId", c.id);
+  for (const photo of cultivationPhotos) await remove("photos", photo.id);
 
   await remove("cultivations", c.id);
 
@@ -945,7 +950,8 @@ document.querySelectorAll(".edit-log-btn").forEach(btn => {
     const log = logs.find(l => l.id === btn.dataset.logId);
     if (log) showLogModal(c, v, log.day, log);
   };
-});  
+});
+bindPhotoPreview();
 }
 function todayGuidance(v,s) {
   const out = [];
@@ -965,7 +971,48 @@ function todayGuidance(v,s) {
   }
   return out;
 }
+async function fileToCompressedDataUrl(file, maxSize = 1280, quality = 0.78) {
+  if (!file || !file.type?.startsWith("image/")) throw new Error("Selecione uma imagem válida.");
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, maxSize / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+  const ctx = canvas.getContext("2d", {alpha:false});
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close?.();
+  return canvas.toDataURL("image/jpeg", quality);
+}
+
+async function getPhotosForLog(logId) {
+  return (await getByIndex("photos", "dailyLogId", logId)).sort((a,b)=>new Date(a.date)-new Date(b.date));
+}
+
+async function renderLogPhotos(logId) {
+  const photos = await getPhotosForLog(logId);
+  if (!photos.length) return "";
+  return `<div class="log-photos">${photos.map(photo => `
+    <button class="log-photo" type="button" data-photo-src="${escapeHtml(photo.dataUrl)}" aria-label="Ver foto do dia">
+      <img src="${escapeHtml(photo.dataUrl)}" alt="Foto do cultivo" loading="lazy">
+    </button>`).join("")}</div>`;
+}
+
+function bindPhotoPreview() {
+  document.querySelectorAll(".log-photo").forEach(btn => {
+    btn.onclick = () => {
+      const src = btn.dataset.photoSrc;
+      if (!src) return;
+      const win = window.open("", "_blank");
+      if (win) {
+        win.document.write(`<title>Foto — Meus Microverdes</title><style>body{margin:0;background:#101410;display:grid;place-items:center;min-height:100vh}img{max-width:100%;max-height:100vh;object-fit:contain}</style><img src="${src}" alt="Foto do cultivo">`);
+        win.document.close();
+      }
+    };
+  });
+}
+
 async function showLogModal(c, v, day, existing = null) {
+  const logPhotoHtml = Object.fromEntries(await Promise.all(logs.map(async l => [l.id, await renderLogPhotos(l.id)])));
   const temperatureUnit = await getSetting("temperatureUnit");
   const weightUnit = await getSetting("weightUnit");
   const irrigationUnit = await getSetting("irrigationUnit");
@@ -1010,7 +1057,8 @@ const temperature = Number.isFinite(Number(val("temperature")))
   const ventilationHtml=options(ventilationOpts,"ventilation");
   const irrigationType=val("irrigationType")||"nenhuma";
   const irrigationOptions=[["nenhuma","Nenhuma"],["spray","Borrifador"],["regador","Regador"],["fundo","Por baixo"]].map(([x,l])=>`<option value="${x}" ${irrigationType===x?"selected":""}>${l}</option>`).join("");
-  const photosHint = existing?.photoCount ? ` · ${existing.photoCount} foto(s)` : "";
+  const existingPhotos = existing ? await getPhotosForLog(existing.id) : [];
+  const photosHint = existingPhotos.length ? ` · ${existingPhotos.length} foto(s)` : "";
   $("#modalContent").innerHTML=`<p class="eyebrow">DIÁRIO · DIA ${day}</p><h2>Registrar observação</h2>
     <form id="logForm" class="form-grid">
       <label>Condição do cultivo<select id="logCondition">${conditionHtml}</select></label>
@@ -1026,11 +1074,23 @@ const temperature = Number.isFinite(Number(val("temperature")))
       <p class="meta">Fotos podem ser adicionadas na tela do cultivo${photosHint}.</p>
     </form>`;
   $("#modal").classList.remove("hidden");
+  $("#logPhoto")?.addEventListener("change", async e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const dataUrl = await fileToCompressedDataUrl(file);
+      $("#logPhotoPreview").innerHTML = `<img src="${escapeHtml(dataUrl)}" alt="Pré-visualização da foto">`;
+      $("#logForm").dataset.photoDataUrl = dataUrl;
+    } catch (err) {
+      alert(err.message || "Não foi possível carregar a foto.");
+      e.target.value = "";
+    }
+  });
   $("#logForm").onsubmit=async e=>{
   e.preventDefault();
   const record=existing || {id:uid("log"),cultivationId:c.id,day,date:new Date().toISOString(),createdAt:new Date().toISOString()};
   const completedActions=actions.filter((a,i)=>document.querySelector(`[data-action-index="${i}"]`)?.checked);
-  await put("dailyLogs",{...record,condition:$("#logCondition").value,humidity:$("#logHumidity").value,ventilation:$("#logVentilation").value,temperature:$("#logTemperature").value
+  const savedLog = {...record,condition:$("#logCondition").value,humidity:$("#logHumidity").value,ventilation:$("#logVentilation").value,temperature:$("#logTemperature").value
   ? temperatureUnit === "F"
     ? (Number($("#logTemperature").value) - 32) * 5 / 9
     : Number($("#logTemperature").value)
@@ -1038,7 +1098,12 @@ const temperature = Number.isFinite(Number(val("temperature")))
   ? irrigationUnit === "l"
     ? Number($("#logIrrigation").value) * 1000
     : Number($("#logIrrigation").value)
-  : null,weight:$("#logWeight").value.trim() !== "" ? Number($("#logWeight").value) : null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,updatedAt:new Date().toISOString()});
+  : null,weight:$("#logWeight").value.trim() !== "" ? Number($("#logWeight").value) : null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,photoCount:existingPhotos.length + ($("#logForm").dataset.photoDataUrl ? 1 : 0),updatedAt:new Date().toISOString()};
+  await put("dailyLogs", savedLog);
+  const photoDataUrl = $("#logForm").dataset.photoDataUrl;
+  if (photoDataUrl) {
+    await add("photos", {id:uid("photo"), cultivationId:c.id, dailyLogId:savedLog.id, date:new Date().toISOString(), dataUrl:photoDataUrl, createdAt:new Date().toISOString()});
+  }
   closeModal(); await renderCultivationDetail(c.id);
 };
 }
