@@ -12,7 +12,7 @@
  */
 
 export const varietiesSchemaVersion = 1;
-export const varietiesDataVersion = "1.0.0";
+export const varietiesDataVersion = '1.1.0';
 
 export const varieties = [
   {
@@ -139,10 +139,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/how-to-grow-radish-microgreens",
+      "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -269,10 +272,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/how-to-grow-broccoli-microgreens",
+      "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -292,7 +298,7 @@ export const varieties = [
       "size": "large",
       "mucilaginous": false,
       "preSoak": {
-        "recommended": true,
+        "recommended": false,
         "required": false
       }
     },
@@ -311,8 +317,8 @@ export const varieties = [
         "rule": "after_established_germination"
       },
       "harvestDays": {
-        "min": 9,
-        "max": 12,
+        "min": 8,
+        "max": 10,
         "type": "estimate"
       }
     },
@@ -400,10 +406,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/how-to-grow-sunflower-microgreens",
+      "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -530,10 +539,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/how-to-grow-pea-microgreens",
+      "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -660,10 +672,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+      "https://extension.psu.edu/the-abcs-of-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -790,10 +805,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+      "https://extension.psu.edu/the-abcs-of-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -919,10 +937,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+      "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -1047,10 +1068,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+      "https://extension.psu.edu/the-abcs-of-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -1060,7 +1084,7 @@ export const varieties = [
     "englishName": "Cilantro",
     "family": "Apiaceae",
     "difficulty": "intermediate",
-    "beginnerRecommended": true,
+    "beginnerRecommended": false,
     "tags": [
       "ciclo_longo",
       "aromatico"
@@ -1069,7 +1093,7 @@ export const varieties = [
       "size": "medium",
       "mucilaginous": false,
       "preSoak": {
-        "recommended": false,
+        "recommended": true,
         "required": false
       }
     },
@@ -1088,7 +1112,7 @@ export const varieties = [
         "rule": "after_established_germination"
       },
       "harvestDays": {
-        "min": 21,
+        "min": 14,
         "max": 28,
         "type": "estimate"
       }
@@ -1176,10 +1200,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/how-to-grow-cilantro-microgreens",
+      "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -1189,7 +1216,7 @@ export const varieties = [
     "englishName": "Basil",
     "family": "Lamiaceae",
     "difficulty": "intermediate",
-    "beginnerRecommended": true,
+    "beginnerRecommended": false,
     "tags": [
       "aromatico",
       "mucilaginoso"
@@ -1305,10 +1332,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/pages/what-is-damping-off-microgreens",
+      "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -1435,10 +1465,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+      "https://extension.psu.edu/growing-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -1566,10 +1599,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+      "https://extension.psu.edu/growing-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -1696,10 +1732,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+      "https://extension.psu.edu/growing-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -1709,7 +1748,7 @@ export const varieties = [
     "englishName": "Amaranth",
     "family": "Amaranthaceae",
     "difficulty": "intermediate",
-    "beginnerRecommended": true,
+    "beginnerRecommended": false,
     "tags": [
       "colorido",
       "semente_muito_pequena"
@@ -1827,10 +1866,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+      "https://extension.psu.edu/growing-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   },
   {
@@ -1965,10 +2007,13 @@ export const varieties = [
       ],
       "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
     },
-    "sources": [],
+    "sources": [
+      "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+      "https://extension.psu.edu/the-abcs-of-microgreens"
+    ],
     "sourcePolicy": {
       "requiredForPublication": true,
-      "note": "Populate with verified sources before publishing technical claims as authoritative."
+      "note": "Sources are internal verification metadata; they are not displayed in the app UI."
     }
   }
 ];

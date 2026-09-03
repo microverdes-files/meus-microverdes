@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "dataVersion": "1.0.0",
+  "dataVersion": "1.1.0",
   "entity": "microgreenVariety",
   "locale": "pt-BR",
-  "updatedAt": "2026-08-21",
+  "updatedAt": "2026-09-02",
   "description": "Catálogo inicial de 15 variedades do Meus Microverdes. Estrutura serializável e adequada para IndexedDB.",
   "varieties": [
     {
@@ -130,10 +130,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/how-to-grow-radish-microgreens",
+        "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -260,10 +263,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/how-to-grow-broccoli-microgreens",
+        "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -283,7 +289,7 @@
         "size": "large",
         "mucilaginous": false,
         "preSoak": {
-          "recommended": true,
+          "recommended": false,
           "required": false
         }
       },
@@ -302,8 +308,8 @@
           "rule": "after_established_germination"
         },
         "harvestDays": {
-          "min": 9,
-          "max": 12,
+          "min": 8,
+          "max": 10,
           "type": "estimate"
         }
       },
@@ -391,10 +397,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/how-to-grow-sunflower-microgreens",
+        "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -521,10 +530,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/how-to-grow-pea-microgreens",
+        "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -651,10 +663,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+        "https://extension.psu.edu/the-abcs-of-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -781,10 +796,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+        "https://extension.psu.edu/the-abcs-of-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -910,10 +928,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+        "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -1038,10 +1059,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+        "https://extension.psu.edu/the-abcs-of-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -1051,7 +1075,7 @@
       "englishName": "Cilantro",
       "family": "Apiaceae",
       "difficulty": "intermediate",
-      "beginnerRecommended": true,
+      "beginnerRecommended": false,
       "tags": [
         "ciclo_longo",
         "aromatico"
@@ -1060,7 +1084,7 @@
         "size": "medium",
         "mucilaginous": false,
         "preSoak": {
-          "recommended": false,
+          "recommended": true,
           "required": false
         }
       },
@@ -1079,7 +1103,7 @@
           "rule": "after_established_germination"
         },
         "harvestDays": {
-          "min": 21,
+          "min": 14,
           "max": 28,
           "type": "estimate"
         }
@@ -1167,10 +1191,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/how-to-grow-cilantro-microgreens",
+        "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -1180,7 +1207,7 @@
       "englishName": "Basil",
       "family": "Lamiaceae",
       "difficulty": "intermediate",
-      "beginnerRecommended": true,
+      "beginnerRecommended": false,
       "tags": [
         "aromatico",
         "mucilaginoso"
@@ -1296,10 +1323,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/pages/what-is-damping-off-microgreens",
+        "https://extension.usu.edu/yardandgarden/research/grow-your-own-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -1426,10 +1456,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+        "https://extension.psu.edu/growing-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -1557,10 +1590,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+        "https://extension.psu.edu/growing-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -1687,10 +1723,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+        "https://extension.psu.edu/growing-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -1700,7 +1739,7 @@
       "englishName": "Amaranth",
       "family": "Amaranthaceae",
       "difficulty": "intermediate",
-      "beginnerRecommended": true,
+      "beginnerRecommended": false,
       "tags": [
         "colorido",
         "semente_muito_pequena"
@@ -1818,10 +1857,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+        "https://extension.psu.edu/growing-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     },
     {
@@ -1956,10 +1998,13 @@
         ],
         "disclaimer": "Timing is an estimate; actual development varies with seed lot, temperature, light, moisture, substrate and cultivation method."
       },
-      "sources": [],
+      "sources": [
+        "https://onthegrow.net/blogs/microgreens/types-of-microgreens",
+        "https://extension.psu.edu/the-abcs-of-microgreens"
+      ],
       "sourcePolicy": {
         "requiredForPublication": true,
-        "note": "Populate with verified sources before publishing technical claims as authoritative."
+        "note": "Sources are internal verification metadata; they are not displayed in the app UI."
       }
     }
   ]
