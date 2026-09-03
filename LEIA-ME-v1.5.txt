@@ -1,0 +1,40 @@
+MEUS MICROVERDES — CORREÇÕES TÉCNICAS v1.5
+
+Arquivos incluídos:
+- app.js
+- index.html
+- styles-v2.css
+- data/varieties.js
+- data/varieties.json
+
+O que foi corrigido:
+1. O motor diário agora usa a janela de germinação, blackout e colheita de cada variedade para definir a fase. Isso evita que variedades lentas, como coentro, sejam classificadas como "Colheita" no dia 7 apenas por causa de uma faixa genérica.
+2. Girassol: pré-molho deixou de ser recomendado e a janela foi ajustada para 8–10 dias, seguindo o método atual consultado da On The Grow.
+3. Coentro: janela conservadora de 14–28 dias, pré-molho opcional/recomendado no método atual consultado, e não é mais marcado como primeira escolha para iniciantes.
+4. Manjericão e amaranto não são mais marcados como primeiras opções para iniciantes.
+5. Foram adicionadas fontes internas de verificação ao catálogo. Elas não aparecem na interface do aplicativo.
+6. Peso diário: quando o usuário escolhe oz, o valor agora é convertido para gramas antes de ser salvo, mantendo o banco em unidade-base, como já ocorre com temperatura e irrigação.
+7. varieties.js e varieties.json foram sincronizados na versão de dados 1.1.0.
+
+IMPORTANTE:
+- Não alterar sw.js nesta versão.
+- Não é necessário alterar o banco de dados/IndexedDB para estas mudanças.
+- Faça backup antes de substituir arquivos.
+- No GitHub Web, substitua os arquivos mantendo exatamente os caminhos.
+- Depois faça um único commit.
+
+TESTES automáticos realizados:
+- node --check app.js: OK
+- node --check data/varieties.js: OK
+- varieties.js e varieties.json: sincronizados
+- 15 variedades presentes
+- fase de colheita começa no harvestDays.min de cada variedade
+- peso em oz é convertido para gramas antes de salvar
+
+TESTE manual recomendado após o commit:
+- Abrir Catálogo e conferir as 15 variedades.
+- Criar/abrir um cultivo de Rabanete, Girassol e Coentro e conferir a fase em dias diferentes.
+- Registrar uma observação com temperatura em °F e irrigação em L.
+- Alterar peso para oz, registrar e conferir o histórico.
+- Abrir um registro com foto e confirmar que a foto continua funcionando.
+- Exportar um backup e confirmar que o backup continua funcionando.

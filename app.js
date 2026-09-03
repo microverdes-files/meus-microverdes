@@ -92,14 +92,24 @@ function formatRelativeDay(day) {
 
 function getEnginePhase(v, day) {
   const phases = v?.dailyEngine?.phases || {};
-  const ordered = Object.entries(phases).sort((a,b)=>(a[1].startDay??0)-(b[1].startDay??0));
-  for (const [key, cfg] of ordered) {
-    const start = Number(cfg.startDay ?? 0);
-    const end = Number(cfg.endDay ?? Infinity);
-    if (day >= start && day < end) return key;
-  }
-  if (day >= Number(v?.timing?.harvestDays?.min ?? 9999)) return "harvest";
-  return ordered[0]?.[0] || "growth";
+  const germinationMax = Number(v?.timing?.germinationDays?.max);
+  const blackoutMax = Number(v?.timing?.blackoutDays?.max);
+  const harvestMin = Number(v?.timing?.harvestDays?.min);
+
+  // Use each variety's timing data to decide the phase. The phase objects
+  // remain the source of the actions, but their old generic day ranges are
+  // not allowed to override a variety-specific harvest window.
+  const germinationEnd = Number.isFinite(germinationMax)
+    ? Math.max(1, germinationMax)
+    : Number(phases.germination?.endDay ?? 2);
+  const transitionEnd = Number.isFinite(blackoutMax)
+    ? Math.max(germinationEnd, blackoutMax)
+    : Math.max(germinationEnd, Number(phases.transition?.endDay ?? 4));
+
+  if (day < germinationEnd) return phases.germination ? "germination" : "growth";
+  if (day < transitionEnd) return phases.transition ? "transition" : "growth";
+  if (Number.isFinite(harvestMin) && day >= harvestMin) return phases.harvest ? "harvest" : "growth";
+  return phases.growth ? "growth" : (Object.keys(phases)[0] || "growth");
 }
 
 function phaseLabel(phase) {
@@ -1139,7 +1149,9 @@ const temperature = Number.isFinite(Number(val("temperature")))
   ? irrigationUnit === "l"
     ? Number($("#logIrrigation").value) * 1000
     : Number($("#logIrrigation").value)
-  : null,weight:$("#logWeight").value.trim() !== "" ? Number($("#logWeight").value) : null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,photoCount:existingPhotos.length + ($("#logForm").dataset.photoDataUrl ? 1 : 0),updatedAt:new Date().toISOString()};
+  : null,weight:$("#logWeight").value.trim() !== ""
+    ? (weightUnit === "oz" ? Number($("#logWeight").value) * 28.3495 : Number($("#logWeight").value))
+    : null,irrigationType:$("#logIrrigationType").value,note:$("#logNote").value.trim(),completedActions,completedActionsCount:completedActions.length,photoCount:existingPhotos.length + ($("#logForm").dataset.photoDataUrl ? 1 : 0),updatedAt:new Date().toISOString()};
   await put("dailyLogs", savedLog);
   const photoDataUrl = $("#logForm").dataset.photoDataUrl;
   if (photoDataUrl) {
