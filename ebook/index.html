@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microverdes na Cozinha — Do cultivo ao prato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #e8e0d7;
+            font-family: 'Lato', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            color: #1e2f2b;
+            min-height: 100vh;
+        }
+        .ebook-container {
+            max-width: 1000px;
+            width: 100%;
+            background: #fcf9f6;
+            background-image: radial-gradient(circle at 10% 20%, rgba(235, 245, 235, 0.4) 0%, transparent 50%),
+                              radial-gradient(circle at 90% 80%, rgba(215, 235, 215, 0.3) 0%, transparent 50%);
+            border-radius: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            padding: 3rem 3rem;
+            line-height: 1.7;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .ebook-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" opacity="0.04"><path d="M60 120L80 80l20 20-10 30-30-10zM140 60l20-20 10 30-30 10-10-20zM40 40l30-10 10 20-20 20-20-30z" fill="%233b6e5c"/></svg>');
+            background-size: 180px 180px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .print-page {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(2px);
+            border-radius: 24px;
+            padding: 2rem 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(220, 210, 200, 0.2);
+            transition: all 0.2s;
+            page-break-after: always;
+            page-break-inside: avoid;
+        }
+        .print-page:last-of-type {
+            page-break-after: avoid;
+            margin-bottom: 0;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+            color: #1a3a32;
+        }
+        h1 {
+            font-size: 3.8rem;
+            margin: 0.2rem 0 0.2rem;
+            letter-spacing: -0.04em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        h2 {
+            font-size: 2.4rem;
+            margin: 0 0 1.2rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 4px solid #d4cfc6;
+            color: #1e4c3f;
+            letter-spacing: -0.02em;
+            font-weight: 600;
+        }
+        h3 {
+            font-size: 1.7rem;
+            margin: 1.6rem 0 0.8rem;
+            color: #256553;
+            font-weight: 600;
+        }
+        h4 {
+            font-size: 1.4rem;
+            margin: 0.8rem 0 0.4rem;
+            color: #2b7a63;
+            font-weight: 600;
+        }
+        p {
+            margin: 0.6rem 0;
+            font-size: 1.05rem;
+            color: #2a3d37;
+        }
+        ul, ol {
+            margin: 0.3rem 0 0.8rem 1.8rem;
+            font-size: 1.02rem;
+        }
+        li {
+            margin-bottom: 0.3rem;
+        }
+        .highlight-box {
+            background: rgba(237, 248, 241, 0.85);
+            border-left: 8px solid #3f8a74;
+            padding: 0.8rem 1.8rem;
+            border-radius: 0 20px 20px 0;
+            margin: 1.2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .highlight-box strong {
+            color: #135a4b;
+        }
+        .card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+        .card-item {
+            flex: 1 1 160px;
+            background: rgba(250, 248, 244, 0.85);
+            border-radius: 18px;
+            padding: 0.6rem 1rem;
+            border: 1px solid rgba(210, 200, 190, 0.4);
+            backdrop-filter: blur(2px);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+        }
+        .recipe-block {
+            background: rgba(252, 250, 247, 0.9);
+            border-radius: 24px;
+            padding: 1.2rem 1.8rem;
+            margin: 1.2rem 0;
+            border: 1px solid rgba(225, 215, 205, 0.5);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+            transition: all 0.15s;
+            page-break-inside: avoid;
+        }
+        .recipe-block h4 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            color: #1d5a49;
+            border-bottom: 2px dotted #d4cbc0;
+            padding-bottom: 0.3rem;
+        }
+        .recipe-block ul, .recipe-block ol {
+            margin-left: 1.2rem;
+        }
+        .foto-prato {
+            width: 100%;
+            border-radius: 20px;
+            margin: 1.2rem 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(200, 190, 180, 0.3);
+            transition: all 0.2s;
+        }
+        .sos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem 1.5rem;
+            margin: 0.8rem 0;
+        }
+        .sos-item {
+            background: rgba(248, 245, 240, 0.85);
+            padding: 0.4rem 1rem;
+            border-radius: 12px;
+            border-left: 5px solid #bba89a;
+            backdrop-filter: blur(2px);
+        }
+        .sos-item strong {
+            color: #1f4f43;
+            display: block;
+            font-size: 1.05rem;
+        }
+        hr {
+            border: none;
+            border-top: 2px dashed #d9d0c5;
+            margin: 1.8rem 0;
+        }
+        .meta-note {
+            font-size: 0.95rem;
+            color: #4b6b60;
+            background: rgba(235, 242, 238, 0.8);
+            padding: 0.2rem 1.8rem;
+            border-radius: 50px;
+            display: inline-block;
+            backdrop-filter: blur(2px);
+        }
+        .day-divider {
+            border-top: 1px solid #d9d0c5;
+            margin: 1.2rem 0;
+            opacity: 0.3;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1.2rem 0;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            background: rgba(252, 251, 249, 0.9);
+            border-radius: 18px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #dad3ca;
+            padding: 0.6rem 0.9rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: rgba(232, 241, 235, 0.7);
+            font-weight: 700;
+            color: #1a4035;
+        }
+        .cover-title {
+            font-size: 4.2rem;
+            margin: 0.2rem 0;
+            letter-spacing: -0.05em;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .cover-sub {
+            font-size: 2.8rem;
+            margin-top: -0.2rem;
+            color: #256553;
+            font-weight: 600;
+        }
+        .cover-badge {
+            display: inline-block;
+            background: rgba(235, 245, 240, 0.8);
+            backdrop-filter: blur(2px);
+            padding: 0.4rem 2.2rem;
+            border-radius: 60px;
+            font-weight: 500;
+            color: #1a4035;
+            border: 1px solid rgba(180, 200, 185, 0.3);
+        }
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem 2rem;
+        }
+       @media print {
+    body {
+        background: white;
+        padding: 0;
+        margin: 0;
+        display: block;
+    }
+    .ebook-container {
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0; /* Remove padding externo */
+        background: #fcf9f6;
+        overflow: visible;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .ebook-container::before {
+        display: none;
+    }
+    /* AQUI ESTÁ O SEGREDO: margens internas fixas para cada página */
+    .print-page {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: none;
+        box-shadow: none;
+        border: none; /* Remove a borda para impressão */
+        border-radius: 0; 
+        padding: 2.2cm; /* <-- Margem interna de 2,2 cm em todos os lados */
+        margin: 0; 
+        page-break-after: always;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        min-height: 100vh; /* Garante que cada página ocupe a tela inteira */
+        box-sizing: border-box;
+    }
+    .print-page:last-of-type {
+        page-break-after: avoid;
+        margin-bottom: 0;
+    }
+    /* ... resto do seu código @media print ... */
+}
+            h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            .highlight-box, .recipe-block, .sos-grid, .card-grid {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                background: rgba(245, 248, 245, 0.9);
+            }
+            .foto-prato {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                border: 1px solid #ccc;
+                box-shadow: none;
+            }
+            .recipe-block {
+                background: rgba(250, 248, 244, 0.95);
+                border: 1px solid #d5cdc4;
+            }
+            .highlight-box {
+                background: rgba(237, 248, 241, 0.9);
+            }
+            .card-item {
+                background: rgba(250, 249, 246, 0.9);
+            }
+            .sos-item {
+                background: rgba(248, 245, 240, 0.9);
+            }
+            .cover-badge, .meta-note {
+                background: rgba(235, 245, 240, 0.8);
+            }
+            table {
+                background: rgba(252, 251, 249, 0.95);
+            }
+            .two-col {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 700px) {
+            .ebook-container {
+                padding: 1.2rem 1rem;
+            }
+            .print-page {
+                padding: 1rem 1rem;
+            }
+            h1 {
+                font-size: 2.6rem;
+            }
+            .cover-title {
+                font-size: 2.8rem;
+            }
+            .cover-sub {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            h3 {
+                font-size: 1.4rem;
+            }
+            .sos-grid {
+                grid-template-columns: 1fr;
+            }
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="ebook-container">
+
+    <!-- CAPA -->
+    <div class="print-page" style="text-align: center; padding-top: 1.5rem;">
+        <span class="meta-note">🍽️ do cultivo ao prato</span>
+        <div class="cover-title">MICROVERDES</div>
+        <div class="cover-sub">NA COZINHA</div>
+        <p style="font-size: 1.4rem; color: #3a6b5e; max-width: 550px; margin: 0.8rem auto; font-weight: 400;">Como escolher, combinar, preparar e aproveitar seus microverdes no dia a dia</p>
+        <div style="margin: 1.8rem 0 1rem;">
+            <span class="cover-badge">🌱 7 partes · 42 receitas · menus completos</span>
+        </div>
+        <div style="margin-top: 1.5rem; font-size: 1rem; color: #4f7468;">Guia prático para cozinhar com microverdes</div>
+        <img src="capa.jpg" alt="Bandeja de microverdes variados" class="foto-prato" style="margin-top: 1.8rem;">
+    </div>
+
+    <!-- SUMÁRIO -->
+    <div class="print-page">
+        <h2>Sumário</h2>
+        <div class="two-col">
+            <ul style="list-style: none; padding-left: 0;">
+                <li><strong>PARTE 1</strong> — Do cultivo ao prato</li>
+                <li>▸ Boas-vindas</li>
+                <li>▸ Microverde não é apenas decoração</li>
+                <li>▸ Conheça os sabores</li>
+                <li>▸ Mapa de sabores</li>
+                <li>▸ Quando adicionar</li>
+                <li>▸ Quanto usar</li>
+                <li>▸ Como lavar, secar e conservar</li>
+                <li>▸ 5 erros que fazem perder qualidade</li>
+                <li style="margin-top: 0.8rem;"><strong>PARTE 2</strong> — Receitas dia a dia</li>
+                <li>▸ Café da manhã (5 receitas)</li>
+                <li>▸ Saladas e bowls (3)</li>
+                <li>▸ Sanduíches, wraps (4)</li>
+                <li>▸ Acompanhamentos (3)</li>
+                <li>▸ Pratos principais (4)</li>
+                <li>▸ Sopas e caldos (3)</li>
+                <li>▸ Festas e ocasiões (3)</li>
+            </ul>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="margin-top: 0.8rem;"><strong>PARTE 3</strong> — Microverde como ingrediente</li>
+                <li>▸ Pesto · Molho · Maionese</li>
+                <li>▸ Chimichurri · Manteiga</li>
+                <li>▸ Azeite · Farofa · Pasta</li>
+                <li>▸ Como aproveitar colheita grande</li>
+                <li style="margin-top: 0.8rem;"><strong>PARTE 4</strong> — Microverdes no doce</li>
+                <li style="margin-top: 0.8rem;"><strong>PARTE 5</strong> — Sabor, nutrição e segurança</li>
+                <li style="margin-top: 0.8rem;"><strong>PARTE 6</strong> — Menus prontos</li>
+                <li style="margin-top: 0.8rem;"><strong>PARTE 7</strong> — Consulta rápida</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- PARTE 1 -->
+    <div class="print-page">
+        <h2>PARTE 1 — DO CULTIVO AO PRATO</h2>
+        <h3>Boas-vindas: seus microverdes agora vão para a mesa</h3>
+        <p>Se você chegou até aqui, provavelmente já descobriu uma das coisas mais interessantes dos microverdes: eles são pequenos, mas podem mudar completamente um prato.</p>
+        <p>Depois de acompanhar uma bandeja por vários dias, observar as primeiras folhas surgirem e finalmente colher aquilo que você cultivou, vem uma pergunta muito natural: <strong>“E agora, o que eu faço com tudo isso?”</strong></p>
+        <p>É justamente essa pergunta que este livro pretende responder. Você não precisa transformar cada refeição em um prato sofisticado. Também não precisa colocar microverdes em absolutamente tudo. A ideia é aprender a usá-los de maneira inteligente.</p>
+        <div class="highlight-box">
+            <p><strong>Objetivo:</strong> sair da lógica “vou colocar um punhado por cima” e passar para <em>“qual microverde combina com este prato? Quanto devo usar? Em que momento devo adicioná-lo?”</em></p>
+        </div>
+        <hr>
+        <h3>Microverde não é apenas decoração</h3>
+        <p>É muito fácil olhar para uma bandeja e pensar primeiro na aparência. Eles realmente deixam os pratos mais bonitos. Mas microverdes têm muito mais a oferecer:</p>
+        <ul>
+            <li><strong>Dar sabor</strong> — rúcula, mostarda, rabanete (picância); coentro, manjericão (aroma); ervilha, girassol (suave).</li>
+            <li><strong>Acrescentar textura</strong> — crocância delicada em sanduíches, wraps e saladas.</li>
+            <li><strong>Equilibrar um prato</strong> — frescor e picância para pratos gordurosos ou cremosos.</li>
+            <li><strong>Criar contraste</strong> — quente + fresco, cremoso + crocante, neutro + cor.</li>
+            <li><strong>Tornar-se parte da receita</strong> — pesto, molhos, maionese, manteiga composta, chimichurri, farofa, pastas, recheios, sobremesas.</li>
+        </ul>
+    </div>
+
+    <!-- CONHEÇA OS SABORES -->
+    <div class="print-page">
+        <h3>Conheça os sabores</h3>
+        <p>Nem todo microverde tem o mesmo sabor. Esse é um dos primeiros conhecimentos que você deve desenvolver.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem 1.2rem; margin: 0.8rem 0;">
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Rúcula</strong> — picante, vegetal, levemente amargo. <span style="color: #3f6b5d;">Ovos, massas, carnes, abacate.</span></div>
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Mostarda</strong> — picante, intenso. <span style="color: #3f6b5d;">Carnes, queijos, sanduíches.</span></div>
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Rabanete</strong> — fresco, picante. <span style="color: #3f6b5d;">Saladas, peixes, bowls, abacate.</span></div>
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Ervilha</strong> — suave, doce, crocante. <span style="color: #3f6b5d;">Saladas, frango, wraps.</span></div>
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Girassol</strong> — suave, amanteigado. <span style="color: #3f6b5d;">Sanduíches, bowls, abacate.</span></div>
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Couve</strong> — vegetal, suave. <span style="color: #3f6b5d;">Arroz, feijão, sopas, omeletes.</span></div>
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Coentro</strong> — aromático, cítrico. <span style="color: #3f6b5d;">Feijão, carnes, peixes, molhos.</span></div>
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Manjericão</strong> — herbal, adocicado. <span style="color: #3f6b5d;">Tomate, massas, risotos, pesto.</span></div>
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Beterraba</strong> — terroso, doce. <span style="color: #3f6b5d;">Saladas, queijos, frutas.</span></div>
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Repolho roxo</strong> — suave, crocante. <span style="color: #3f6b5d;">Wraps, sanduíches, saladas.</span></div>
+            <div style="background: rgba(247, 250, 247, 0.8); backdrop-filter: blur(2px); padding: 0.5rem 0.8rem; border-radius: 14px;"><strong>Amaranto</strong> — suave, delicado. <span style="color: #3f6b5d;">Saladas, pratos frios, sobremesas.</span></div>
+        </div>
+        <div class="highlight-box">
+            <p><strong>Regra de ouro:</strong> Prato intenso/gorduroso → rúcula, mostarda, rabanete. Prato delicado → ervilha, girassol, couve. Prato aromático → coentro, manjericão. Aparência → beterraba, amaranto, repolho roxo.</p>
+        </div>
+        <img src="variedade.jpg" alt="Variedade de microverdes com identificação" class="foto-prato">
+    </div>
+
+    <!-- MAPA DE SABORES -->
+    <div class="print-page">
+        <h3>Mapa de sabores</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Microverde</th><th>Sabor predominante</th><th>Melhor uso</th><th>Pratos sugeridos</th></tr></thead>
+                <tbody>
+                    <tr><td>Rúcula</td><td>Picante e vegetal</td><td>Equilibrar gordura</td><td>ovos, massas, carnes, sanduíches</td></tr>
+                    <tr><td>Mostarda</td><td>Picante e intenso</td><td>Contrastar cremosidade</td><td>carnes, queijos, sanduíches</td></tr>
+                    <tr><td>Rabanete</td><td>Fresco e picante</td><td>Dar crocância e frescor</td><td>saladas, peixes, bowls</td></tr>
+                    <tr><td>Ervilha</td><td>Doce e vegetal</td><td>Textura suave</td><td>saladas, wraps, frango</td></tr>
+                    <tr><td>Girassol</td><td>Suave e amanteigado</td><td>Volume e crocância</td><td>sanduíches, bowls</td></tr>
+                    <tr><td>Couve</td><td>Vegetal e suave</td><td>Pratos quentes</td><td>arroz, sopas, omeletes</td></tr>
+                    <tr><td>Coentro</td><td>Cítrico e aromático</td><td>Aromatizar</td><td>feijão, peixes, carnes</td></tr>
+                    <tr><td>Manjericão</td><td>Herbal e fresco</td><td>Aromatizar</td><td>tomate, massas, risotos</td></tr>
+                    <tr><td>Beterraba</td><td>Terroso e levemente doce</td><td>Cor e contraste</td><td>saladas, queijos, frutas</td></tr>
+                    <tr><td>Repolho roxo</td><td>Suave e crocante</td><td>Textura e cor</td><td>wraps, sanduíches, saladas</td></tr>
+                    <tr><td>Amaranto</td><td>Suave</td><td>Cor</td><td>saladas, pratos frios, doces</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <h3>Quando adicionar o microverde?</h3>
+        <ul>
+            <li><strong>Antes de servir (cru):</strong> preserva crocância, frescor, cor. Saladas, sanduíches, wraps.</li>
+            <li><strong>Sobre o prato quente:</strong> calor residual aquece levemente. Ovos, risotos, massas, carnes.</li>
+            <li><strong>Misturado no calor residual:</strong> perde um pouco da estrutura. Omeletes, arroz, massas.</li>
+            <li><strong>Durante o cozimento:</strong> não deve ser regra. Prefira adicionar no final.</li>
+            <li><strong>Processado:</strong> pesto, molhos, maionese, chimichurri, manteiga, pasta.</li>
+        </ul>
+        <img src="prato-quente.jpg" alt="Microverde sendo adicionado sobre um prato quente" class="foto-prato">
+    </div>
+
+    <!-- QUANTO USAR, LAVAR E ERROS -->
+    <div class="print-page">
+        <h3>Quanto usar?</h3>
+        <ul>
+            <li>Finalizar prato individual: 5 a 15 g</li>
+            <li>Salada individual: 10 a 20 g</li>
+            <li>Sanduíche/wrap: 5 a 10 g</li>
+            <li>Prato principal: 5 a 15 g</li>
+            <li>Pesto: 40 a 60 g</li>
+            <li>Molho: 20 a 30 g</li>
+        </ul>
+        <p><em>Regra: microverde picante pede moderação; microverde suave pode aparecer em maior quantidade.</em></p>
+        <hr>
+        <h3>Como lavar, secar e conservar</h3>
+        <ul>
+            <li>Manuseie delicadamente.</li>
+            <li>Não lave muito antes da hora (higienize próximo ao consumo).</li>
+            <li>Seque bem (papel-toalha ou centrífuga).</li>
+            <li>Use recipiente limpo e seco, forrado com papel-toalha.</li>
+            <li>Refrigere (4–5 °C).</li>
+            <li>Descarte se houver mofo, cheiro estranho, viscosidade, manchas.</li>
+        </ul>
+        <hr>
+        <h3>5 erros que fazem o microverde perder qualidade</h3>
+        <ol>
+            <li><strong>Colocar muito cedo</strong> — folhas murcham. Monte próximo do consumo.</li>
+            <li><strong>Colocar em excesso</strong> — especialmente os picantes.</li>
+            <li><strong>Misturar com ingrediente muito quente</strong> — use o calor residual.</li>
+            <li><strong>Guardar molhado</strong> — acelera deterioração.</li>
+            <li><strong>Usar o mesmo microverde em tudo</strong> — aprenda o perfil de cada um.</li>
+        </ol>
+    </div>
+
+    <!-- PARTE 2 — RECEITAS -->
+    <div class="print-page">
+        <h2>PARTE 2 — RECEITAS PARA O DIA A DIA</h2>
+        <h3>CAFÉ DA MANHÃ</h3>
+        <div class="recipe-block">
+            <h4>🍳 Ovos cremosos com rúcula</h4>
+            <p><strong>Rendimento:</strong> 1 porção | <strong>Tempo:</strong> 10 min</p>
+            <ul><li>2 ovos, 1 colher de chá de manteiga, sal, pimenta, 8 g de rúcula, 1 colher de sopa de parmesão.</li></ul>
+            <p><strong>Modo:</strong> Bata os ovos. Aqueça manteiga em fogo baixo. Cozinhe mexendo até cremoso. Retire, adicione parmesão. Finalize com rúcula.</p>
+            <img src="ovos.jpg" alt="Ovos cremosos com rúcula" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🥞 Crepioca de queijo com beterraba</h4>
+            <ul><li>1 ovo, 1 colher de sopa de tapioca, 1 colher de chá de linhaça, sal, 40 g de queijo minas, 10 g de beterraba.</li></ul>
+            <p>Misture ovo, tapioca, linhaça e sal. Doure dos dois lados, recheie com queijo, finalize com beterraba.</p>
+            <img src="crepioca.jpg" alt="Crepioca com beterraba" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🥑 Torrada de abacate com picantes</h4>
+            <ul><li>1 fatia de pão, ½ abacate, suco de limão, sal, 8 g de rúcula/mostarda/rabanete, azeite.</li></ul>
+            <p>Amasse o abacate com limão e sal. Espalhe no pão. Adicione os microverdes, azeite e pimenta.</p>
+            <img src="torrada.jpg" alt="Torrada de abacate" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🥞 Panqueca salgada com microverdes</h4>
+            <ul><li>1 ovo, ½ xícara de leite, ½ xícara de farinha, ½ colher de chá de fermento, sal, cream cheese, 8 g de couve/repolho roxo.</li></ul>
+            <p>Prepare a panqueca, espalhe cream cheese, adicione os microverdes, dobre e sirva.</p>
+            <img src="panqueca.jpg" alt="Panqueca com microverdes" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🍌 Vitamina de banana com manjericão</h4>
+            <ul><li>1 banana, 150 ml de leite, 1 colher de chá de mel, 8-10 g de manjericão, gelo.</li></ul>
+            <p>Bata todos os ingredientes. Sirva imediatamente. O manjericão deve dar aroma, não dominar.</p>
+            <img src="vitamina.jpg" alt="Vitamina de banana com manjericão" class="foto-prato">
+        </div>
+    </div>
+
+    <!-- SALADAS E BOWLS -->
+    <div class="print-page">
+        <h3>SALADAS E BOWLS</h3>
+        <div class="recipe-block">
+            <h4>🥗 Salada de manga com rabanete</h4>
+            <ul><li>½ manga, 2 xícaras de folhas verdes, ½ pepino, ¼ de cebola roxa, 10 g de rabanete, suco de limão, azeite, sal.</li></ul>
+            <p>Corte os ingredientes, misture, tempere, adicione os microverdes no final.</p>
+            <img src="salada-manga.jpg" alt="Salada de manga com rabanete" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🧆 Salada de grão-de-bico com rabanete</h4>
+            <ul><li>1 xícara de grão-de-bico, ½ pepino, 1 tomate, ¼ de cebola, 10-15 g de rabanete, limão, azeite, cominho, sal.</li></ul>
+            <p>Misture os ingredientes, tempere, acrescente o microverde e sirva.</p>
+            <img src="salada-grao.jpg" alt="Salada de grão-de-bico" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🥣 Bowl brasileiro</h4>
+            <ul><li>1 xícara de quinoa, ½ xícara de feijão-preto, ½ xícara de milho, ½ abacate, 1 tomate, 10 g de couve, 5 g de rabanete, 5 g de girassol, limão, azeite, sal.</li></ul>
+            <p>Monte a base de quinoa, distribua os ingredientes, finalize com os três microverdes e tempere.</p>
+            <img src="bowl.jpg" alt="Bowl brasileiro" class="foto-prato">
+        </div>
+    </div>
+
+    <!-- SANDUÍCHES, WRAPS -->
+    <div class="print-page">
+        <h3>SANDUÍCHES, WRAPS E LANCHES</h3>
+        <div class="recipe-block">
+            <h4>🥪 Sanduíche de frango cremoso</h4>
+            <ul><li>2 fatias de pão, 100 g de frango, 1 colher de iogurte, cenoura ralada, 8 g de couve, 5 g de repolho roxo.</li></ul>
+            <p>Misture frango com iogurte, monte o sanduíche com cenoura e microverdes.</p>
+            <img src="sanduiche-frango.jpg" alt="Sanduíche de frango" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🌯 Wrap de homus e girassol</h4>
+            <ul><li>1 tortilha, 3 colheres de homus, vegetais, 10 g de girassol.</li></ul>
+            <p>Espalhe homus, distribua vegetais, adicione girassol, enrole.</p>
+            <img src="wrap.jpg" alt="Wrap de homus" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🧀 Tapioca de queijo coalho e rúcula</h4>
+            <ul><li>3 colheres de tapioca, 50 g de queijo coalho, 4 fatias de tomate, 8 g de rúcula/mostarda.</li></ul>
+            <p>Prepare a tapioca, grelhe o queijo, monte com tomate e microverdes.</p>
+            <img src="tapioca.jpg" alt="Tapioca com rúcula" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🥪 Misto quente com mostarda</h4>
+            <ul><li>2 fatias de pão, 2 fatias de queijo, 2 de presunto, 8 g de mostarda.</li></ul>
+            <p>Doure o misto, abra, adicione os microverdes e feche.</p>
+            <img src="misto.jpg" alt="Misto quente" class="foto-prato">
+        </div>
+    </div>
+
+    <!-- ACOMPANHAMENTOS -->
+    <div class="print-page">
+        <h3>ACOMPANHAMENTOS E PREPARAÇÕES BRASILEIRAS</h3>
+        <div class="recipe-block">
+            <h4>Farofa crocante com microverdes</h4>
+            <ul><li>2 xícaras de farinha de mandioca, 2 colheres de manteiga, ½ cebola, 1 dente de alho, 30 g de couve/mostarda.</li></ul>
+            <p>Refogue, adicione a farinha, doure. Desligue, espere 1 minuto, acrescente os microverdes picados.</p>
+            <img src="farofa.jpg" alt="Farofa com microverdes" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>Arroz com microverde de couve</h4>
+            <ul><li>2 xícaras de arroz cozido, 10 g de couve, 1 colher de azeite, alho, sal.</li></ul>
+            <p>Aqueça o arroz, desligue, acrescente azeite e misture os microverdes delicadamente.</p>
+            <img src="arroz.jpg" alt="Arroz com couve" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>Iogurte salgado com pepino e coentro</h4>
+            <ul><li>1 pote de iogurte, ½ pepino, ½ dente de alho, 10 g de coentro, limão, sal, azeite.</li></ul>
+            <p>Rale o pepino, retire o excesso de água, misture com iogurte e temperos. Finalize com coentro.</p>
+            <img src="iogurte.jpg" alt="Iogurte com coentro" class="foto-prato">
+        </div>
+    </div>
+
+    <!-- PRATOS PRINCIPAIS -->
+    <div class="print-page">
+        <h3>PRATOS PRINCIPAIS</h3>
+        <div class="recipe-block">
+            <h4>🍗 Frango grelhado com ervilha</h4>
+            <ul><li>1 filé de frango, 15 g de ervilha, 1 colher de chá de mel, limão, azeite, alho, sal, pimenta.</li></ul>
+            <p>Tempere o frango, grelhe. Misture mel e limão. Sirva sobre os microverdes.</p>
+            <img src="frango.jpg" alt="Frango com ervilha" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🍚 Risoto de cogumelos com manjericão</h4>
+            <ul><li>1 xícara de arroz arbóreo, 150 g de cogumelos, ½ cebola, 700 ml de caldo, vinho, manteiga, parmesão, 10 g de manjericão.</li></ul>
+            <p>Refogue, adicione arroz, vinho, caldo aos poucos. Finalize com manteiga, parmesão e manjericão.</p>
+            <img src="risoto.jpg" alt="Risoto com manjericão" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🐟 Peixe assado com rabanete</h4>
+            <ul><li>2 filés de peixe branco, limão, alho, sal, azeite, ervas, 10 g de rabanete.</li></ul>
+            <p>Tempere, asse. Finalize com os microverdes.</p>
+            <img src="peixe.jpg" alt="Peixe com rabanete" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🥘 Escondidinho de carne-seca com coentro</h4>
+            <ul><li>300 g de carne-seca, 500 g de mandioca, 2 colheres de manteiga, leite, cebola, 10 g de coentro.</li></ul>
+            <p>Prepare o purê, refogue a carne, monte o escondidinho. Finalize com coentro.</p>
+            <img src="escondidinho.jpg" alt="Escondidinho com coentro" class="foto-prato">
+        </div>
+    </div>
+
+    <!-- SOPAS E FESTAS -->
+    <div class="print-page">
+        <h3>SOPAS E CALDOS</h3>
+        <div class="recipe-block">
+            <h4>🥣 Creme de abóbora com rabanete</h4>
+            <ul><li>500 g de abóbora, ½ cebola, 1 dente de alho, caldo, 10 g de rabanete, sementes, azeite.</li></ul>
+            <p>Cozinhe, bata, sirva com microverdes e sementes.</p>
+            <img src="sopa-abobora.jpg" alt="Creme de abóbora" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🍲 Canja com microverdes de couve</h4>
+            <ul><li>300 g de frango, ½ xícara de arroz, cenoura, cebola, alho, caldo, 10 g de couve.</li></ul>
+            <p>Prepare a canja, sirva com os microverdes sobre o caldo quente.</p>
+            <img src="canja.jpg" alt="Canja com couve" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>Feijoada com finalização de coentro</h4>
+            <p>Sirva a feijoada e acrescente pequena quantidade de coentro sobre cada porção para contraste fresco.</p>
+            <img src="feijoada.jpg" alt="Feijoada com coentro" class="foto-prato">
+        </div>
+        <hr>
+        <h3>FESTAS E OCASIÕES ESPECIAIS</h3>
+        <div class="recipe-block">
+            <h4>Canapés coloridos</h4>
+            <ul><li>Baguete, cream cheese, beterraba, amaranto, repolho roxo, azeite, sal.</li></ul>
+            <p>Torre o pão, espalhe cream cheese, finalize com os microverdes.</p>
+            <img src="canapes.jpg" alt="Canapés coloridos" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>Bruschetta de tomate e manjericão</h4>
+            <ul><li>Pão italiano, tomate, alho, azeite, sal, 10 g de manjericão.</li></ul>
+            <p>Torre o pão, esfregue alho, coloque tomate, finalize com manjericão.</p>
+            <img src="bruschetta.jpg" alt="Bruschetta" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>Torta salgada com jardim de microverdes</h4>
+            <p>Prepare a torta de sua preferência. Depois de assada, cubra com pequenos grupos de microverdes coloridos.</p>
+            <img src="torta.jpg" alt="Torta com microverdes" class="foto-prato">
+        </div>
+    </div>
+
+    <!-- PARTE 3 — INGREDIENTE -->
+    <div class="print-page">
+        <h2>PARTE 3 — QUANDO O MICROVERDE VIRA INGREDIENTE</h2>
+        <div class="recipe-block">
+            <h4>🌿 Pesto de rúcula e manjericão</h4>
+            <ul><li>40-60 g de microverdes, ½ xícara de azeite, 2 colheres de castanhas, 2 colheres de parmesão, 1 dente de alho, sal.</li></ul>
+            <p>Processe todos os ingredientes até a textura desejada. Armazene refrigerado ou congele.</p>
+            <img src="pesto.jpg" alt="Pesto de microverdes" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🥣 Molho verde de coentro</h4>
+            <ul><li>25 g de coentro, ½ xícara de iogurte, suco de 1 limão, 1 colher de azeite, sal, pimenta.</li></ul>
+            <p>Bata todos os ingredientes. Ajuste textura e tempero. Sirva refrigerado.</p>
+            <img src="molho.jpg" alt="Molho verde" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🥄 Maionese de microverdes</h4>
+            <ul><li>½ xícara de maionese, 20 g de rúcula, 10 g de coentro, suco de limão, ½ dente de alho.</li></ul>
+            <p>Processe rapidamente. Use em hambúrgueres, sanduíches, batatas.</p>
+            <img src="maionese.jpg" alt="Maionese de microverdes" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🔥 Chimichurri de microverdes</h4>
+            <ul><li>25 g de rúcula, 15 g de coentro, ½ xícara de azeite, 2 colheres de vinagre, 1 dente de alho, orégano, sal, pimenta.</li></ul>
+            <p>Pique os microverdes, misture com os demais ingredientes, deixe descansar 20-30 min.</p>
+            <img src="chimichurri.jpg" alt="Chimichurri" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🧈 Manteiga composta de mostarda</h4>
+            <ul><li>100 g de manteiga, 15 g de mostarda, raspas de limão, sal.</li></ul>
+            <p>Misture, enrole em papel-filme, refrigere. Use em carnes, pão, legumes.</p>
+            <img src="manteiga.jpg" alt="Manteiga composta" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🫒 Azeite aromatizado</h4>
+            <ul><li>½ xícara de azeite, 15 g de manjericão/coentro, raspas de limão.</li></ul>
+            <p>Misture e mantenha refrigerado. Use em curto prazo.</p>
+            <img src="azeite.jpg" alt="Azeite aromatizado" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>Farofa de microverdes</h4>
+            <p>Use couve, mostarda, rúcula ou coentro. Prepare a farofa normalmente e acrescente os microverdes no final, fora do fogo.</p>
+            <img src="farofa-ing.jpg" alt="Farofa de microverdes" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🧀 Pasta cremosa de microverdes</h4>
+            <ul><li>½ xícara de cream cheese, 20 g de rúcula, 10 g de ervilha, limão, sal, pimenta, azeite.</li></ul>
+            <p>Misture todos os ingredientes. Use em torradas, sanduíches, wraps.</p>
+            <img src="pasta-crem.jpg" alt="Pasta cremosa" class="foto-prato">
+        </div>
+        <h3>Colheu demais. E agora?</h3>
+        <ul>
+            <li><strong>Consumo fresco</strong> — use primeiro os mais delicados.</li>
+            <li><strong>Preparações</strong> — pesto, molho, maionese, pasta, chimichurri.</li>
+            <li><strong>Congelamento</strong> — pesto e algumas manteigas compostas podem ser congeladas.</li>
+            <li><strong>Compartilhamento</strong> — presenteie uma parte da colheita.</li>
+        </ul>
+    </div>
+
+    <!-- PARTE 4 — DOCE -->
+    <div class="print-page">
+        <h2>PARTE 4 — MICROVERDES TAMBÉM PODEM ENTRAR NO DOCE</h2>
+        <div class="recipe-block">
+            <h4>🍓 Iogurte com frutas, mel e microverdes</h4>
+            <ul><li>Iogurte, morangos, mirtilos, mel, castanhas, 3-5 g de beterraba/amaranto.</li></ul>
+            <p>Monte em taça, finalize com os microverdes.</p>
+            <img src="iogurte-frutas.jpg" alt="Iogurte com frutas e microverdes" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🍧 Creme de frutas vermelhas com beterraba</h4>
+            <ul><li>1 banana congelada, ½ xícara de frutas vermelhas, ½ pote de iogurte, 5 g de beterraba, mel opcional.</li></ul>
+            <p>Bata todos os ingredientes. Sirva gelado.</p>
+            <img src="creme-frutas.jpg" alt="Creme de frutas vermelhas" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🧁 Cheesecake no copinho com microverdes coloridos</h4>
+            <ul><li>Base: biscoito + manteiga. Creme: cream cheese, iogurte, mel, baunilha. Finalize com frutas e 3-5 g de amaranto/beterraba.</li></ul>
+            <p>Monte os copos, refrigere, finalize.</p>
+            <img src="cheesecake.jpg" alt="Cheesecake no copinho" class="foto-prato">
+        </div>
+        <div class="recipe-block">
+            <h4>🥣 Smoothie bowl de frutas</h4>
+            <ul><li>1 banana congelada, ½ xícara de morango, 2 colheres de iogurte, granola, frutas frescas, 3-5 g de amaranto/beterraba.</li></ul>
+            <p>Bata, coloque na tigela, decore com granola, frutas e microverdes.</p>
+            <img src="smoothie.jpg" alt="Smoothie bowl" class="foto-prato">
+        </div>
+    </div>
+
+    <!-- PARTE 5 — NUTRIÇÃO E SEGURANÇA -->
+    <div class="print-page">
+        <h2>PARTE 5 — SABOR, NUTRIÇÃO E SEGURANÇA</h2>
+        <h3>O que os microverdes oferecem nutricionalmente?</h3>
+        <p>Microverdes são interessantes não apenas pela aparência e sabor. Estudos mostram quantidades relevantes de vitaminas, carotenoides e outros compostos bioativos. Porém, não existe um único “perfil nutricional” — cada espécie é diferente. Os valores variam conforme espécie, cultivar, substrato, luz, temperatura, idade, condições de cultivo, colheita e armazenamento.</p>
+        <div class="highlight-box">
+            <p><strong>Importante:</strong> um estudo clássico de 2012 analisou 25 tipos e encontrou grande variação. Pesquisas posteriores confirmam que a composição muda de acordo com a espécie e estágio. Microverdes podem ser nutricionalmente interessantes, mas não existe regra de que todo microverde terá mais de todos os nutrientes do que a planta adulta.</p>
+        </div>
+        <h3>E o famoso “X vezes mais nutrientes”?</h3>
+        <p>Frases como “40 vezes mais nutrientes” precisam ser tratadas com cuidado. O número depende do nutriente, espécie, variedade, estudo, estágio da planta adulta, e como a comparação foi feita. Uma forma mais responsável de comunicar: <em>“Pesquisas mostram que determinadas espécies de microverdes podem apresentar concentrações elevadas de vitaminas, carotenoides e outros compostos bioativos, mas os valores variam bastante conforme a espécie e as condições de cultivo.”</em></p>
+        <h3>Como preservar sabor, textura e compostos sensíveis</h3>
+        <p>Três palavras: <strong>fresco, delicado e rápido.</strong> Quanto menos processamento, melhor.</p>
+        <ul>
+            <li>Saladas: cru.</li>
+            <li>Sanduíches: cru, próximo do consumo.</li>
+            <li>Pratos quentes: no final.</li>
+            <li>Molhos: processe rapidamente.</li>
+            <li>Pesto: pequenas quantidades, armazene adequadamente.</li>
+            <li>Congelamento: prefira preparações onde a textura original não seja o objetivo.</li>
+        </ul>
+        <h3>Segurança alimentar</h3>
+        <ul>
+            <li>Use sementes adequadas para alimentos.</li>
+            <li>Mantenha o cultivo limpo, evite contaminação cruzada.</li>
+            <li>Use água adequada, lave as mãos, higienize utensílios.</li>
+            <li>Não consuma microverdes com mofo, cheiro estranho, viscosidade, deterioração, manchas.</li>
+            <li><strong>Na dúvida: não consuma.</strong></li>
+        </ul>
+    </div>
+
+    <!-- PARTE 6 — MENUS -->
+    <div class="print-page">
+        <h2>PARTE 6 — MENUS PRONTOS</h2>
+        <h3>Brunch para 4 pessoas</h3>
+        <ul>
+            <li>Ovos cremosos com rúcula</li>
+            <li>Torradas de abacate com rabanete</li>
+            <li>Iogurte com frutas e amaranto</li>
+            <li>Vitamina de banana com manjericão</li>
+            <li><strong>Total microverdes:</strong> ~75 g (30 g rúcula, 20 g rabanete, 10 g amaranto, 15 g manjericão)</li>
+        </ul>
+        <img src="mesa-brunch.jpg" alt="Mesa de brunch" class="foto-prato">
+        <hr>
+        <h3>Almoço brasileiro para 4</h3>
+        <ul>
+            <li>Salada de grão-de-bico com rabanete</li>
+            <li>Escondidinho de carne-seca</li>
+            <li>Farofa com microverdes de couve</li>
+            <li>Chimichurri de microverdes</li>
+            <li>Creme de frutas vermelhas</li>
+        </ul>
+        <img src="mesa-almoco.jpg" alt="Almoço brasileiro" class="foto-prato">
+        <hr>
+        <h3>Jantar leve</h3>
+        <ul>
+            <li>Creme de abóbora com rabanete</li>
+            <li>Peixe assado com microverdes</li>
+            <li>Bowl de quinoa</li>
+            <li>Molho verde de coentro</li>
+        </ul>
+        <img src="mesa-jantar.jpg" alt="Jantar leve" class="foto-prato">
+        <hr>
+        <h3>Mesa para receber visitas</h3>
+        <ul>
+            <li>Canapés coloridos · Bruschettas · Pasta cremosa · Pão · Queijo · Frutas · Castanhas · Azeite aromatizado · Pesto · Água aromatizada</li>
+        </ul>
+        <img src="mesa-visitas.jpg" alt="Mesa de recepção" class="foto-prato">
+        <hr>
+        <h3>Lista de compras</h3>
+        <ul>
+            <li><strong>Base:</strong> ovos, pão, tapioca, arroz, quinoa, farinha, massas, iogurte, cream cheese, queijo, frango, peixe, carne-seca.</li>
+            <li><strong>Vegetais:</strong> tomate, pepino, cenoura, cebola, abacate, abóbora, mandioca, limão.</li>
+            <li><strong>Frutas:</strong> banana, manga, morango, frutas vermelhas.</li>
+            <li><strong>Despensa:</strong> azeite, mel, castanhas, nozes, parmesão, alho, pimenta, cominho, orégano.</li>
+            <li><strong>Microverdes:</strong> tenha pelo menos 1 picante, 1 suave, 1 aromático, 1 colorido. Combinação inicial versátil: rúcula + girassol + manjericão + beterraba.</li>
+        </ul>
+    </div>
+
+    <!-- PARTE 7 — CONSULTA RÁPIDA -->
+    <div class="print-page">
+        <h2>PARTE 7 — CONSULTA RÁPIDA</h2>
+        <h3>Tenho este microverde. O que faço?</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem;">
+            <div><strong>Rúcula</strong> — ovos, pizza, massa, sanduíche, pesto, carne, abacate.</div>
+            <div><strong>Mostarda</strong> — hambúrguer, queijo, carne, misto quente, manteiga, farofa.</div>
+            <div><strong>Rabanete</strong> — salada, peixe, grão-de-bico, abacate, sopa de abóbora, bowl.</div>
+            <div><strong>Ervilha</strong> — salada, frango, wrap, bowl, sanduíche.</div>
+            <div><strong>Girassol</strong> — wrap, sanduíche, salada, bowl, frango.</div>
+            <div><strong>Couve</strong> — arroz, feijão, farofa, sopa, omelete.</div>
+            <div><strong>Coentro</strong> — feijão, peixe, carne, molho, sopa, pratos nordestinos.</div>
+            <div><strong>Manjericão</strong> — pesto, tomate, massa, risoto, bruschetta, molho.</div>
+            <div><strong>Beterraba</strong> — salada, queijo, iogurte, frutas, sobremesas leves.</div>
+            <div><strong>Repolho roxo</strong> — sanduíche, wrap, salada, taco, canapé.</div>
+            <div><strong>Amaranto</strong> — salada, bowl, frutas, sobremesas, decoração comestível.</div>
+        </div>
+        <hr>
+        <h3>Combinações rápidas</h3>
+        <ul>
+            <li><strong>Carnes:</strong> Rúcula + limão</li>
+            <li><strong>Pratos brasileiros:</strong> Couve + arroz, Coentro + feijão, Mostarda + farofa, Rúcula + carnes assadas</li>
+        </ul>
+        <hr>
+        <h3>Substituições</h3>
+        <ul>
+            <li>Rúcula → mostarda (mantém picância) ou → rabanete (picância + frescor)</li>
+            <li>Ervilha → girassol (suave e crocante)</li>
+            <li>Manjericão → coentro (muda perfil aromático)</li>
+            <li>Beterraba → amaranto (cor e delicadeza)</li>
+            <li>Couve → girassol (suaviza o sabor)</li>
+        </ul>
+        <hr>
+        <h3>Aproveitamento da colheita</h3>
+        <p>Uma mesma bandeja de rúcula pode render: fresca em ovos, em sanduíches, pesto, maionese, e congelamento do pesto. Assim, uma única colheita vira vários ingredientes.</p>
+        <hr>
+        <h3>Palavra final</h3>
+        <p>Cultivar microverdes muda a forma como você olha para a comida. Você não precisa colocar em todas as refeições. Comece provando, conhecendo o sabor, experimentando com um prato que você já conhece. Observe, ajuste. É assim que você deixa de simplesmente “usar microverdes” e começa a <strong>cozinhar com microverdes</strong>. A experiência não termina na colheita. Ela continua na cozinha.</p>
+        <img src="colheita.jpg" alt="Colheita fresca de microverdes" class="foto-prato">
+        <div style="margin-top: 2rem; text-align: center; color: #4f7468; font-size: 0.95rem; border-top: 1px solid #ddd6cc; padding-top: 1.2rem;">
+            <p><strong>Microverdes na Cozinha</strong> — Do cultivo ao prato</p>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
