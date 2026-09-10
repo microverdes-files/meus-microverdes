@@ -841,7 +841,7 @@ const logPhotoHtml = Object.fromEntries(await Promise.all(logs.map(async l => [l
         <p class="meta">${escapeHtml(v.name)} · Dia ${s.day}</p>
        <div class="actions">
         <button class="primary" id="addLogBtn">${existingLog ? "✏️ Editar registro de hoje" : "+ Registrar hoje"}</button>
-        ${s.harvestWindow ? `<button class="secondary" id="harvestBtn">✂️ Registrar colheita</button>` : ""}
+        ${(s.harvestWindow || s.afterWindow) ? `<button class="secondary" id="harvestBtn">✂️ Registrar colheita</button>` : ""}
         <button class="secondary" id="deleteCultivationBtn">🗑️ Excluir cultivo</button>
       </div>
       </div>
