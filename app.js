@@ -483,7 +483,7 @@ async function getTodayOverview(cultivations) {
   return items;
 }
 
-function renderTodayHero(items) {
+function renderTodayHero(items, totalHarvests) {
   const actions = items.reduce((sum,x)=>sum + Math.max(0,x.s.totalActions-x.s.completedCount),0);
   const ready = items.filter(x=>x.s.harvestWindow).length;
   const attention = items.filter(x=>["danger","warning"].includes(x.attention.level)).length;
@@ -500,7 +500,7 @@ function renderTodayHero(items) {
       <div class="today-metrics">
         <div><strong>${items.length}</strong><span>ativos</span></div>
         <div><strong>${actions}</strong><span>tarefas</span></div>
-        <div><strong>${ready}</strong><span>colheitas</span></div>
+        <div><strong>${totalHarvests}</strong><span>colheitas</span></div>
         ${attention ? `<div class="metric-alert"><strong>${attention}</strong><span>atenção</span></div>` : ""}
       </div>
     </section>`;
@@ -619,11 +619,12 @@ async function renderDashboard() {
 const cultivations = await getAll("cultivations");
 const items = await getTodayOverview(cultivations);
 const harvests = await getAll("harvests");
+const totalHarvests = harvests.length;
 
   showView("dashboard");
   $("#dashboard").innerHTML = `
     <div class="app-shell">
-      ${renderTodayHero(items)}
+      ${renderTodayHero(items, totalHarvests)}
 
       <div class="quick-actions">
         <button class="quick-action primary" id="quickNew"><span>＋</span><strong>Novo cultivo</strong><small>Começar agora</small></button>
