@@ -13,11 +13,10 @@ fbq('track', 'PageView');
 fbq('track', 'ViewContent');
 </script>
 
-<div id="cookie-bar" style="position:fixed;bottom:0;left:0;right:0;background:#111;color:#fff;padding:12px 20px;font-size:13px;text-align:center;z-index:9999;display:flex;justify-content:center;align-items:center;gap:15px;">
-  <span>Usamos cookies para melhorar sua experiência e personalizar anúncios. Ao continuar, você concorda.</span>
-  <button onclick="document.getElementById('cookie-bar').style.display='none'; localStorage.setItem('cookie_ok','1')" style="background:#fff;color:#111;border:0;padding:6px 14px;border-radius:20px;cursor:pointer;font-weight:bold;">OK</button>
+<div id="cookie-bar" style="position:fixed;bottom:0;left:0;right:0;background:#000;color:#fff;padding:14px 20px;font-family:Arial,sans-serif;font-size:13px;line-height:1.4;z-index:9999;display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap;">
+  <span>Usamos cookies para melhorar sua experiência e personalizar anúncios. Ao continuar navegando, você concorda com nossa política.</span>
+  <button onclick="document.getElementById('cookie-bar').style.display='none'; localStorage.setItem('cookie_ok','1')" style="background:#FFD600;color:#000;border:0;padding:7px 18px;font-size:12px;font-weight:700;letter-spacing:0.5px;cursor:pointer;border-radius:3px;">OK</button>
 </div>
 <script>
-// Esconde se já clicou antes
-if(localStorage.getItem('cookie_ok')) document.getElementById('cookie-bar').style.display='none';
+if(localStorage.getItem('cookie_ok')){document.getElementById('cookie-bar').style.display='none';}
 </script>
