@@ -1,1 +1,23 @@
-Landing Page - Guia de Cultivo
+<!-- Pixel Antigo Aquecido -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'SEU_ID_AQUI'); // <-- TROCA AQUI PELO ID COM HISTÓRICO
+fbq('track', 'PageView');
+fbq('track', 'ViewContent');
+</script>
+
+<div id="cookie-bar" style="position:fixed;bottom:0;left:0;right:0;background:#111;color:#fff;padding:12px 20px;font-size:13px;text-align:center;z-index:9999;display:flex;justify-content:center;align-items:center;gap:15px;">
+  <span>Usamos cookies para melhorar sua experiência e personalizar anúncios. Ao continuar, você concorda.</span>
+  <button onclick="document.getElementById('cookie-bar').style.display='none'; localStorage.setItem('cookie_ok','1')" style="background:#fff;color:#111;border:0;padding:6px 14px;border-radius:20px;cursor:pointer;font-weight:bold;">OK</button>
+</div>
+<script>
+// Esconde se já clicou antes
+if(localStorage.getItem('cookie_ok')) document.getElementById('cookie-bar').style.display='none';
+</script>
