@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passo a Passo Meus Microverdes | Cultive Microverdes em Casa em 7 a 14 Dias</title>
+    <meta name="description" content="O guia passo a passo + aplicativo que acompanha cada plantio. Cultive microverdes frescos na sua cozinha, mesmo em apartamento e sem experiência.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --verde-natureza: #2E7D32;
+            --verde-broto: #81C784;
+            --bege-areia: #F9F5EB;
+            --branco: #FFFFFF;
+            --cinza-claro: #F0F0F0;
+            --sombra: 0 8px 20px rgba(0, 0, 0, 0.06);
+            --sombra-forte: 0 12px 28px rgba(0, 0, 0, 0.12);
+            --borda-arredondada: 20px;
+            --transicao: all 0.3s ease;
+            --texto-escuro: #1a2e1a;
+            --texto-corpo: #2d3e2d;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bege-areia);
+            color: var(--texto-corpo);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--texto-escuro);
+            word-wrap: break-word;
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.5px; }
+        h2 { font-size: 2rem; margin-bottom: 1.5rem; text-align: center; letter-spacing: -0.3px; }
+        h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+        p { font-size: 1.1rem; color: var(--texto-corpo); }
+
+        .text-center { text-align: center; }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--verde-natureza);
+            color: #ffffff;
+            padding: 18px 40px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: var(--transicao);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(46, 125, 50, 0.35);
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #1f5a22;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(46, 125, 50, 0.45);
+        }
+
+        .btn-pulsar { animation: pulsar 1.8s infinite; }
+
+        @keyframes pulsar {
+            0% { transform: scale(1); box-shadow: 0 8px 18px rgba(46, 125, 50, 0.35); }
+            50% { transform: scale(1.04); box-shadow: 0 12px 28px rgba(46, 125, 50, 0.55); }
+            100% { transform: scale(1); box-shadow: 0 8px 18px rgba(46, 125, 50, 0.35); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-in.visivel { opacity: 1; transform: translateY(0); }
+
+        section { padding: 80px 0; }
+        .bg-branco { background-color: var(--branco); }
+        .bg-bege { background-color: var(--bege-areia); }
+
+        /* ===== EMOJIS COMO ÍCONES ===== */
+        .emoji-icone {
+            display: inline-block;
+            line-height: 1;
+            font-style: normal;
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", "EmojiSymbols", sans-serif;
+        }
+
+        .hero-check .emoji-icone { font-size: 1.2rem; }
+
+        .dor-card .emoji-icone {
+            font-size: 2.5rem;
+            color: var(--verde-natureza);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .transformacao-item .emoji-icone {
+            font-size: 2.2rem;
+            color: var(--verde-natureza);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .lista-aprender .emoji-icone {
+            font-size: 1.4rem;
+            min-width: 30px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .app-lista .emoji-icone {
+            font-size: 1.2rem;
+            min-width: 25px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .beneficio-card .emoji-icone {
+            font-size: 2.8rem;
+            color: var(--verde-natureza);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .escassez .emoji-icone { font-size: 1.4rem; }
+
+        .selos .emoji-icone { font-size: 1rem; }
+
+        .kiwify-selo .emoji-icone {
+            font-size: 1.1rem;
+            margin-right: 8px;
+        }
+
+        .porque-card .emoji-icone {
+            font-size: 2rem;
+            color: var(--verde-natureza);
+            margin-bottom: 18px;
+            display: block;
+        }
+
+        .faq-pergunta .emoji-icone {
+            font-size: 1.1rem;
+            color: var(--verde-natureza);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        /* ===== FIM EMOJIS ===== */
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #f0f7f0 0%, #e8f5e9 100%);
+            padding: 60px 0 80px;
+        }
+        .hero-grid {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+        .hero-texto { flex: 1 1 500px; min-width: 0; }
+        .hero-imagem {
+            flex: 1 1 400px;
+            border-radius: var(--borda-arredondada);
+            overflow: hidden;
+            box-shadow: var(--sombra-forte);
+            aspect-ratio: 4/3;
+            background-color: #d4e8d4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-imagem img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .hero-sub { font-size: 1.2rem; color: #3a4a3a; margin-bottom: 30px; }
+        .hero-check {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+            font-weight: 600;
+            color: var(--verde-natureza);
+        }
+        .hero-check span { display: flex; align-items: center; gap: 8px; }
+
+        /* DOR */
+        .dor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .dor-card {
+            background: var(--branco);
+            padding: 35px 25px;
+            border-radius: var(--borda-arredondada);
+            box-shadow: var(--sombra);
+            text-align: center;
+            transition: var(--transicao);
+            border-bottom: 5px solid var(--verde-broto);
+        }
+        .dor-card p { font-size: 1.1rem; font-weight: 500; color: var(--texto-escuro); }
+
+        /* MECANISMO */
+        .mecanismo-box {
+            background: var(--branco);
+            border-radius: var(--borda-arredondada);
+            padding: 50px 40px;
+            box-shadow: var(--sombra);
+            max-width: 900px;
+            margin: 0 auto;
+            border-left: 6px solid var(--verde-natureza);
+        }
+        .mecanismo-box p {
+            font-size: 18px;
+            line-height: 1.9;
+            font-weight: 500;
+        }
+        .mecanismo-box p + p {
+            margin-top: 25px;
+        }
+
+        /* TRANSFORMAÇÃO */
+        .transformacao-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        .transformacao-item {
+            background: var(--branco);
+            padding: 30px 22px;
+            border-radius: var(--borda-arredondada);
+            box-shadow: var(--sombra);
+            text-align: center;
+        }
+        .transformacao-item p {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--texto-escuro);
+        }
+
+        /* LISTA DE APRENDIZADO */
+        .lista-aprender {
+            list-style: none;
+            max-width: 800px;
+            margin: 40px auto 0;
+        }
+        .lista-aprender li {
+            background: var(--branco);
+            padding: 18px 25px;
+            margin-bottom: 15px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: var(--sombra);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--texto-escuro);
+            transition: var(--transicao);
+        }
+        .lista-aprender li:hover { transform: translateX(10px); }
+
+        /* GALERIA */
+        .galeria {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        .galeria-item {
+            border-radius: var(--borda-arredondada);
+            overflow: hidden;
+            box-shadow: var(--sombra);
+            aspect-ratio: 1/1;
+            background-color: #d4e8d4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transicao);
+        }
+        .galeria-item:hover { transform: scale(1.03); }
+        .galeria-item img { width: 100%; height: 100%; object-fit: cover; }
+        .galeria-legenda { text-align: center; font-size: 0.9rem; color: #555; margin-top: 8px; font-weight: 500; }
+
+        /* APP SECTION */
+        .app-section {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 30px;
+            padding: 50px 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: var(--sombra-forte);
+        }
+        .app-grid {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        .app-texto { flex: 1 1 400px; min-width: 0; }
+        .app-imagem { flex: 1 1 300px; display: flex; justify-content: center; }
+        .app-imagem img { max-width: 100%; border-radius: 20px; box-shadow: var(--sombra); }
+        .app-lista { list-style: none; margin-top: 20px; }
+        .app-lista li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: var(--texto-escuro);
+        }
+
+        /* BENEFÍCIOS */
+        .beneficios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .beneficio-card {
+            background: var(--branco);
+            padding: 40px 28px;
+            border-radius: var(--borda-arredondada);
+            box-shadow: var(--sombra);
+            text-align: center;
+            transition: var(--transicao);
+        }
+        .beneficio-card:hover { transform: translateY(-8px); box-shadow: var(--sombra-forte); }
+        .beneficio-card h3 { font-size: 1.3rem; font-weight: 700; color: var(--texto-escuro); line-height: 1.4; }
+
+        /* OFERTA */
+        .oferta-section {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f0f7f0 100%);
+        }
+        .oferta-box {
+            background: var(--branco);
+            border-radius: 30px;
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 750px;
+            margin: 0 auto;
+            box-shadow: var(--sombra-forte);
+            border: 2px solid var(--verde-broto);
+            overflow-wrap: break-word;
+        }
+        .oferta-titulo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--verde-natureza);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .lista-oferta {
+            list-style: none;
+            text-align: left;
+            max-width: 550px;
+            margin: 0 auto 30px;
+        }
+        .lista-oferta li {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 500;
+            color: var(--texto-escuro);
+            font-size: 1rem;
+        }
+        .lista-oferta li:last-child { border-bottom: none; }
+        .lista-oferta .item-nome { flex: 1; }
+        .lista-oferta .item-valor { font-weight: 700; color: var(--verde-natureza); white-space: nowrap; }
+        .lista-oferta .bonus-tag {
+            display: inline-block;
+            background: var(--verde-natureza);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        .valor-total {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #666;
+            margin: 20px 0 10px;
+        }
+        .preco-antigo-oferta {
+            text-decoration: line-through;
+            color: #777;
+            font-size: 1.4rem;
+        }
+        .preco-principal {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--verde-natureza);
+            line-height: 1.2;
+        }
+        .preco-parcelado { font-size: 1.3rem; color: #444; margin-bottom: 25px; }
+        .escassez {
+            background: #fff3e0;
+            border-radius: 60px;
+            padding: 15px 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            color: #c43e00;
+            margin: 25px 0;
+            font-size: 1rem;
+            border: 1px solid #ffcc80;
+        }
+        .selos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            color: #333;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .selos span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f7f0;
+            padding: 8px 16px;
+            border-radius: 60px;
+            border: 1px solid #c8e6c9;
+        }
+        .kiwify-selo {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #2d3e2d;
+            font-weight: 600;
+            background: #f1f8e9;
+            padding: 12px 20px;
+            border-radius: 60px;
+            border: 1px solid #c5e1a5;
+        }
+
+        /* DEPOIMENTOS */
+        .depoimentos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .depoimento-card {
+            background: var(--branco);
+            border-radius: var(--borda-arredondada);
+            padding: 30px 25px;
+            box-shadow: var(--sombra);
+            text-align: center;
+            transition: var(--transicao);
+        }
+        .depoimento-card:hover { transform: translateY(-5px); }
+        .depoimento-foto {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #d4e8d4;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid var(--verde-broto);
+        }
+        .depoimento-foto img { width: 100%; height: 100%; object-fit: cover; }
+        .depoimento-card p { font-style: italic; color: #2d3e2d; font-size: 1rem; font-weight: 500; }
+        .depoimento-nome { font-weight: 700; color: var(--verde-natureza); margin-top: 15px; }
+        .aviso-resultados {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #777;
+            margin-top: 30px;
+            font-style: italic;
+        }
+
+        /* AUTORIDADE */
+        .autoridade-grid {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+        .autoridade-imagem {
+            flex: 1 1 300px;
+            border-radius: var(--borda-arredondada);
+            overflow: hidden;
+            box-shadow: var(--sombra-forte);
+            aspect-ratio: 1/1;
+            background: #d4e8d4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .autoridade-imagem img { width: 100%; height: 100%; object-fit: cover; }
+        .autoridade-texto { flex: 1 1 400px; min-width: 0; }
+
+        /* POR QUE CRIAMOS */
+        .porque-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .porque-card {
+            background: var(--branco);
+            padding: 35px 28px;
+            border-radius: var(--borda-arredondada);
+            box-shadow: var(--sombra);
+            transition: var(--transicao);
+            border-left: 5px solid var(--verde-broto);
+        }
+        .porque-card:hover { transform: translateY(-5px); box-shadow: var(--sombra-forte); }
+        .porque-card h3 { font-size: 1.2rem; color: var(--texto-escuro); margin-bottom: 10px; }
+        .porque-card p { font-size: 1rem; font-weight: 500; }
+
+        /* GARANTIA */
+        .garantia-box {
+            background: var(--branco);
+            border-radius: var(--borda-arredondada);
+            padding: 40px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: var(--sombra);
+            border: 2px solid var(--verde-broto);
+        }
+        .garantia-selo {
+            width: 120px;
+            height: 120px;
+            background: var(--verde-broto);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: #ffffff;
+            font-size: 5rem;
+            font-weight: 800;
+            border: 5px solid var(--verde-natureza);
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: var(--branco);
+            border-radius: var(--borda-arredondada);
+            padding: 20px 25px;
+            margin-bottom: 15px;
+            box-shadow: var(--sombra);
+            cursor: pointer;
+            transition: var(--transicao);
+        }
+        .faq-item:hover { box-shadow: var(--sombra-forte); }
+        .faq-pergunta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--texto-escuro);
+            gap: 15px;
+        }
+        .faq-resposta {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            color: #2d3e2d;
+            padding-top: 0;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        .faq-item.ativo .faq-resposta { max-height: 400px; padding-top: 15px; }
+        .faq-item.ativo .faq-pergunta .emoji-icone { transform: rotate(180deg); }
+
+        /* RODAPÉ */
+        footer {
+            background: #e0e0e0;
+            padding: 40px 0;
+            text-align: center;
+            color: #444;
+            font-size: 0.9rem;
+        }
+        footer a {
+            color: #444;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: var(--transicao);
+            font-weight: 500;
+        }
+        footer a:hover { color: var(--verde-natureza); }
+        footer .footer-links { margin-top: 10px; }
+
+        /* ===== CTA FIXO: ESCONDE POR PADRÃO, MOSTRA SÓ NO MOBILE COM .mostrar ===== */
+        #fixed-cta-mobile { display: none; }
+        @media (max-width: 768px) {
+            #fixed-cta-mobile.mostrar { display: block; }
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.9rem; }
+            h2 { font-size: 1.6rem; }
+            .hero { padding: 40px 0 60px; }
+            .hero-grid { flex-direction: column; gap: 30px; }
+            .hero-imagem { width: 100%; flex: none; }
+            .hero-check { flex-direction: column; gap: 10px; }
+            .btn { padding: 15px 30px; font-size: 1rem; width: 100%; text-align: center; }
+            .oferta-box { padding: 30px 20px; }
+            .preco-principal { font-size: 2.5rem; }
+            .porque-grid { grid-template-columns: 1fr; }
+            .app-grid { flex-direction: column; }
+            .autoridade-grid { flex-direction: column; }
+            .selos { flex-direction: column; align-items: center; }
+            .mecanismo-box { padding: 30px 22px; }
+            .app-section { padding: 35px 22px; }
+            .lista-oferta li { flex-direction: column; gap: 5px; }
+            .lista-oferta .item-valor { align-self: flex-start; }
+            #cookie-banner { font-size: 13px; padding: 12px 15px; }
+            #cookie-banner > div { width: 100%; justify-content: flex-end; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. HERO -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-texto fade-in">
+                    <h1>Cultive microverdes frescos na sua cozinha em 7 a 14 dias, mesmo morando em apartamento e sem nunca ter plantado nada</h1>
+                    <p class="hero-sub">O guia passo a passo <strong>"Meus Microverdes"</strong> + o aplicativo que acompanha cada plantio, do primeiro dia à colheita.</p>
+                    <a href="#oferta" class="btn btn-pulsar">QUERO COMEÇAR MEU CULTIVO</a>
+                    <div class="hero-check">
+                        <span><span class="emoji-icone">✅</span> Acesso imediato</span>
+                        <span><span class="emoji-icone">✅</span> 7 dias de garantia</span>
+                        <span><span class="emoji-icone">✅</span> Pagamento seguro</span>
+                    </div>
+                </div>
+                <div class="hero-imagem fade-in">
+                    <img src="cozinha.jpg" alt="Colhendo microverdes frescos na cozinha" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. DOR -->
+    <section class="bg-branco">
+        <div class="container">
+            <h2 class="fade-in">Você já comprou folhas e viu estragar antes de comer?</h2>
+            <div class="dor-grid">
+                <div class="dor-card fade-in">
+                    <span class="emoji-icone">🍃</span>
+                    <p>Verduras que murcham em 2 dias na geladeira.</p>
+                </div>
+                <div class="dor-card fade-in">
+                    <span class="emoji-icone">🍽️</span>
+                    <p>Saladas que se repetem e ninguém quer variar.</p>
+                </div>
+                <div class="dor-card fade-in">
+                    <span class="emoji-icone">❓</span>
+                    <p>Vontade de saber de onde vem o que você come.</p>
+                </div>
+            </div>
+            <p class="fade-in text-center" style="margin-top: 40px; font-size: 1.2rem; font-weight: 600; color: var(--verde-natureza);">Com Microverdes, você planta hoje e colhe em poucos dias, fresquinhas e saudáveis.</p>
+        </div>
+    </section>
+
+    <!-- 3. MECANISMO -->
+    <section class="bg-bege">
+        <div class="container">
+            <h2 class="fade-in">Passo a Passo "Meus Microverdes"</h2>
+            <div class="mecanismo-box fade-in">
+                <p>O Passo a Passo Meus Microverdes reduz o cultivo a três decisões: <strong>o substrato certo</strong>, <strong>o tempo de luz</strong> e <strong>a rega correta</strong>.</p>
+                <p>Em vez de "testar e errar", você segue um roteiro fase por fase: <strong>germinação, blackout, crescimento e colheita, </strong> que evita os 3 erros que fazem iniciantes desistirem: <strong>mofo</strong>, <strong>talos moles</strong> e <strong>sementes que não germinam</strong>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. TRANSFORMAÇÃO -->
+    <section class="bg-branco">
+        <div class="container">
+            <h2 class="fade-in">Como vai ser sua semana</h2>
+            <div class="transformacao-grid">
+                <div class="transformacao-item fade-in">
+                    <span class="emoji-icone">🌱</span>
+                    <p>Dia 1: você semeia a primeira bandeja.</p>
+                </div>
+                <div class="transformacao-item fade-in">
+                    <span class="emoji-icone">👀</span>
+                    <p>Dia 3: os brotos aparecem no blackout.</p>
+                </div>
+                <div class="transformacao-item fade-in">
+                    <span class="emoji-icone">☀️</span>
+                    <p>Dia 5: a bandeja vai para a luz e fica verde.</p>
+                </div>
+                <div class="transformacao-item fade-in">
+                    <span class="emoji-icone">✂️</span>
+                    <p>Dia 7 a 14: você colhe e serve no prato.</p>
+                </div>
+            </div>
+            <p class="fade-in text-center" style="margin-top: 40px; font-size: 1.2rem; font-weight: 600; color: var(--verde-natureza);">E na semana seguinte, começa de novo com uma ou mais variedades novas se quiser.</p>
+        </div>
+    </section>
+
+    <!-- 5. O QUE VOCÊ VAI APRENDER -->
+    <section class="bg-bege">
+        <div class="container">
+            <h2 class="fade-in">O que você vai aprender com o Guia</h2>
+            <ul class="lista-aprender">
+                <li class="fade-in"><span class="emoji-icone">🌱</span> As 15 variedades mais fáceis e saborosas para começar (rúcula, mostarda, rabanete, ervilha, girassol, coentro, manjericão, beterraba e mais)</li>
+                <li class="fade-in"><span class="emoji-icone">🌱</span> O passo a passo completo da semeadura à colheita: preparo do substrato, blackout, banho de luz, rega por baixo e timing ideal</li>
+                <li class="fade-in"><span class="emoji-icone">🌱</span> Como escolher o substrato certo: terra vegetal fina, fibra de coco ou manta de cultivo e por que nunca usar terra de quintal</li>
+                <li class="fade-in"><span class="emoji-icone">🌱</span> Como evitar mofo, estiolamento e tombamento: os três problemas que mais fazem iniciantes desistirem</li>
+                <li class="fade-in"><span class="emoji-icone">🌱</span> Segurança alimentar: como identificar sementes tratadas quimicamente, higienizar utensílios e armazenar com segurança</li>
+                <li class="fade-in"><span class="emoji-icone">🌱</span> Como conservar na geladeira por até 14 dias com o método do papel-toalha e o que fazer com o excedente</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 6. DENTRO DO MATERIAL -->
+    <section class="bg-branco">
+        <div class="container">
+            <h2 class="fade-in">O Mundo dos Microverdes</h2>
+            <div class="galeria">
+                <div class="fade-in">
+                    <div class="galeria-item">
+                        <img src="bandeja.jpg" alt="Germinação de microverdes em bandeja com substrato" loading="lazy">
+                    </div>
+                    <p class="galeria-legenda">Germinação em bandeja</p>
+                </div>
+                <div class="fade-in">
+                    <div class="galeria-item">
+                        <img src="janela.jpg" alt="Bandeja de microverdes na janela do apartamento" loading="lazy">
+                    </div>
+                    <p class="galeria-legenda">Na janela da cozinha</p>
+                </div>
+                <div class="fade-in">
+                    <div class="galeria-item">
+                        <img src="tesoura.jpg" alt="Mão colhendo microverdes com tesoura" loading="lazy">
+                    </div>
+                    <p class="galeria-legenda">Colhendo com tesoura</p>
+                </div>
+                <div class="fade-in">
+                    <div class="galeria-item">
+                        <img src="prato.jpg" alt="Prato finalizado com microverdes frescos" loading="lazy">
+                    </div>
+                    <p class="galeria-legenda">No prato, fresquinho</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. APP -->
+    <section class="bg-bege">
+        <div class="container">
+            <div class="app-section fade-in">
+                <div class="app-grid">
+                    <div class="app-texto">
+                        <h2 style="text-align: left;">Aplicativo Meus Microverdes incluso</h2>
+                        <p>Você não recebe apenas um guia em PDF. Recebe também o <strong>App Meus Microverdes</strong>, que acompanha cada bandeja do plantio à colheita.</p>
+                        <ul class="app-lista">
+                            <li><span class="emoji-icone">✅</span> Crie cultivos com variedade, data e nome da bandeja</li>
+                            <li><span class="emoji-icone">✅</span> Diário diário com umidade, ventilação, temperatura e irrigação</li>
+                            <li><span class="emoji-icone">✅</span> Checklist do dia e orientações por fase (germinação, blackout, crescimento, colheita)</li>
+                            <li><span class="emoji-icone">✅</span> Registro fotográfico da evolução</li>
+                            <li><span class="emoji-icone">✅</span> Histórico de colheitas com peso e avaliação</li>
+                            <li><span class="emoji-icone">✅</span> Lembretes de rega, alertas inteligentes e backup dos seus dados</li>
+                        </ul>
+                    </div>
+                    <div class="app-imagem">
+                        <img src="app.jpg" alt="Aplicativo Meus Microverdes no celular" loading="lazy">
+                    </div>
+                </div>
+            </div>
+            <!-- CTA após o app -->
+            <div class="text-center fade-in" style="margin-top: 40px;">
+                <a href="#oferta" class="btn btn-pulsar">QUERO COMEÇAR MEU CULTIVO</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. BENEFÍCIOS -->
+    <section class="bg-branco">
+        <div class="container">
+            <h2 class="fade-in">Por que cultivar em casa?</h2>
+            <div class="beneficios-grid">
+                <div class="beneficio-card fade-in">
+                    <span class="emoji-icone">💪</span>
+                    <h3>Pesquisadores da University of Maryland e do USDA encontraram, em algumas variedades de microverdes, concentrações de nutrientes até 40x maiores que na planta adulta.</h3>
+                </div>
+                <div class="beneficio-card fade-in">
+                    <span class="emoji-icone">☀️</span>
+                    <h3>Comida fresca todos os dias, colhida na hora.</h3>
+                </div>
+                <div class="beneficio-card fade-in">
+                    <span class="emoji-icone">💰</span>
+                    <h3>Economia real no mercado: um pacote de sementes rende várias bandejas.</h3>
+                </div>
+                <div class="beneficio-card fade-in">
+                    <span class="emoji-icone">🧘</span>
+                    <h3>Um hobby leve e relaxante para fazer em casa.</h3>
+                </div>
+            </div>
+            <p class="fade-in text-center" style="margin-top: 30px; font-size: 0.9rem; color: #777; font-style: italic;">Microverdes são um complemento alimentar e não substituem uma dieta equilibrada nem acompanhamento profissional.</p>
+        </div>
+    </section>
+
+  <!-- 9. OFERTA EMPILHADA -->
+<section id="oferta" class="oferta-section" style="background-color: #1A2E1A; padding: 80px 0;">
+    <div class="container">
+        <div class="oferta-box fade-in" style="background: #243A24; border: 1px solid rgba(129,199,132,0.3); border-radius: 20px; padding: 40px; max-width: 700px; margin: 0 auto;">
+            <p class="oferta-titulo" style="color: #FFFFFF; text-align: center; font-weight: 700; font-size: 1.3rem; margin-bottom: 20px;">O que você recebe hoje</p>
+
+            <ul class="lista-oferta" style="list-style: none;">
+                <li style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); color: #F9F5EB;">
+                    <span class="item-nome">Guia Meus Microverdes (PDF): 15 variedades, passo a passo completo, dicas e técnicas</span>
+                    <span class="item-valor" style="color: #81C784; font-weight: 700;">R$ 47,99</span>
+                </li>
+                <li style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); color: #F9F5EB;">
+                    <span class="item-nome"><span style="background: #81C784; color: #1A2E1A; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-right: 6px;">BÔNUS 1</span> Aplicativo Meus Microverdes: lembretes de rega, colheita e backup, etc.</span>
+                    <span class="item-valor" style="color: #81C784; font-weight: 700;">R$ 57,99</span>
+                </li>
+                <li style="display: flex; justify-content: space-between; padding: 12px 0; color: #F9F5EB;">
+                    <span class="item-nome"><span style="background: #81C784; color: #1A2E1A; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-right: 6px;">BÔNUS 2</span> Do Cultivo ao Prato: 37 Formas em 5 minutos + Tabela: "Tenho rúcula, uso onde?"</span>
+                    <span class="item-valor" style="color: #81C784; font-weight: 700;">R$ 47,00</span>
+                </li>
+            </ul>
+
+            <p style="text-align: center; color: rgba(255,255,255,0.6); margin: 20px 0 10px; font-size: 1rem;">Valor total: R$ 152,98</p>
+            <p style="text-align: center; color: #81C784; font-size: 3.5rem; font-weight: 700; line-height: 1.2;">R$ 37,98</p>
+            <p style="text-align: center; color: #F9F5EB; margin-bottom: 25px;">à vista ou até 8x de R$ 5,52</p>
+
+            <!-- PARTE NOVA COM ESTÉTICA MELHOR -->
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin-top: 28px;">
+                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(129,199,132,0.15); border: 1px solid rgba(129,199,132,0.3); color: #81C784; font-weight: 600; font-size: 0.85rem; padding: 8px 16px; border-radius: 100px;">
+                    <span style="width: 8px; height: 8px; background: #81C784; border-radius: 50%; display: inline-block;"></span>
+                    Promoção por tempo limitado
+                </div>
+
+                <a href="#" style="background: #FFFFFF; color: #1A2E1A; padding: 22px 48px; border-radius: 12px; font-weight: 800; font-size: 1.15rem; text-decoration: none; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: block;">SIM, QUERO CULTIVAR MEUS MICROVERDES</a>
+
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); text-align: center;">
+                    🛡️ Compra 100% segura pela Kiwify | Acesso imediato no seu e-mail
+                </div>
+
+                <div style="display: flex; gap: 24px; margin-top: 10px; flex-wrap: wrap; justify-content: center; font-size: 0.8rem; color: rgba(255,255,255,0.6);">
+                    <span>📧 Acesso imediato</span>
+                    <span>🔒 Pagamento seguro</span>
+                    <span>↩️ 7 dias de garantia</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+    <!-- 10. DEPOIMENTOS -->
+    <section class="bg-branco">
+        <div class="container">
+            <h2 class="fade-in">Quem já cultiva em casa</h2>
+            <div class="depoimentos-grid">
+                <div class="depoimento-card fade-in">
+                    <div class="depoimento-foto">
+                        <img src="depoimento.png" alt="Juliana, cliente real" loading="lazy">
+                    </div>
+                    <p>"Minha filha agora come salada todo dia! Ela mesma colhe os microverdes de rúcula."</p>
+                    <p class="depoimento-nome">Juliana, Campo Grande</p>
+                </div>
+                <div class="depoimento-card fade-in">
+                    <div class="depoimento-foto">
+                        <img src="depoimento.png" alt="Marcos, cliente real" loading="lazy">
+                    </div>
+                    <p>"Colho na janela do apê. O app me lembra de girar a bandeja e registrar tudo."</p>
+                    <p class="depoimento-nome">Marcos, São Paulo</p>
+                </div>
+                <div class="depoimento-card fade-in">
+                    <div class="depoimento-foto">
+                        <img src="depoimento.png" alt="Carla, cliente real" loading="lazy">
+                    </div>
+                    <p>"Nunca imaginei que conseguiria cultivar algo. Em 10 dias estava colhendo mostarda!"</p>
+                    <p class="depoimento-nome">Carla, Curitiba</p>
+                </div>
+                <div class="depoimento-card fade-in">
+                    <div class="depoimento-foto">
+                        <img src="depoimento.png" alt="Rafael, cliente real" loading="lazy">
+                    </div>
+                    <p>"As crianças amam ajudar. O diário do app virou programação em família."</p>
+                    <p class="depoimento-nome">Rafael, Florianópolis</p>
+                </div>
+            </div>
+            <p class="aviso-resultados">Resultados variam conforme ambiente, clima e dedicação de cada pessoa.</p>
+            <!-- CTA após depoimentos -->
+            <div class="text-center fade-in" style="margin-top: 40px;">
+                <a href="#oferta" class="btn btn-pulsar">QUERO COMEÇAR MEU CULTIVO</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. AUTORIDADE -->
+    <section class="bg-bege">
+        <div class="container">
+            <h2 class="fade-in">O Que Realmente Importa</h2>
+            <div class="autoridade-grid fade-in">
+                <div class="autoridade-imagem">
+                    <img src="micros.jpg" alt="Passo a Passo Meus Microverdes" loading="lazy">
+                </div>
+                <div class="autoridade-texto">
+                    <p><strong>Nosso objetivo: tornar o cultivo de microverdes simples para qualquer pessoa.</strong></p>
+                    <p style="margin-top: 15px;">Microverdes são cultivados há anos por quem gosta de comida fresca, mas a maioria dos conteúdos disponíveis é fragmentada, técnica demais ou cheia de detalhes que confundem quem está começando.</p>
+                    <p style="margin-top: 15px;">O Guia Meus Microverdes reune em um só lugar, as práticas mais conhecidas de cultivo, organizadas em um passo a passo claro, do plantio à colheita, e acompanhadas por um aplicativo que ajuda você a manter a rotina.</p>
+                    <p style="margin-top: 15px; font-weight: 600; color: var(--verde-natureza);">O objetivo não é fazer você virar agricultor. É fazer você colher seu primeiro prato em casa, na próxima semana.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12. POR QUE CRIAMOS -->
+    <section class="bg-branco">
+        <div class="container">
+            <h2 class="fade-in">Por que criamos o guia</h2>
+            <p class="fade-in" style="text-align: center; max-width: 800px; margin: 0 auto 20px; font-weight: 500;">Não vendemos um sonho. Vendemos um caminho simples, testado e seguro para você colher alimento fresco dentro de casa, mesmo sem experiência, sem quintal e sem tempo sobrando.</p>
+            <div class="porque-grid">
+                <div class="porque-card fade-in">
+                    <span class="emoji-icone">🎯</span>
+                    <h3>Tornar o cultivo doméstico acessível</h3>
+                    <p>Ensinar qualquer pessoa, mesmo sem "dedo verde", a cultivar microverdes em substrato, com potes reciclados, fibra de coco ou manta — do jeito que couber na sua rotina.</p>
+                </div>
+                <div class="porque-card fade-in">
+                    <span class="emoji-icone">❤️</span>
+                    <h3>Levar comida limpa para mais famílias</h3>
+                    <p>Reduzir a dependência de verduras de mercado, que muitas vezes murcham antes de serem consumidas. Você escolhe o que usa no cultivo, sem agrotóxicos.</p>
+                </div>
+                <div class="porque-card fade-in">
+                    <span class="emoji-icone">📱</span>
+                    <h3>Eliminar a insegurança de iniciante</h3>
+                    <p>Com o aplicativo, você nunca fica perdido: o app mostra o que fazer hoje, registra o que aconteceu e avisa quando é hora de colher.</p>
+                </div>
+                <div class="porque-card fade-in">
+                    <span class="emoji-icone">🌱</span>
+                    <h3>Fechar o ciclo de forma sustentável</h3>
+                    <p>Reaproveitar embalagens, usar fibra de coco (subproduto da indústria) e compostar o substrato usado. Pequenas escolhas conscientes, dentro da sua cozinha.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 13. GARANTIA -->
+    <section class="bg-bege">
+        <div class="container">
+            <div class="garantia-box fade-in">
+                <div class="garantia-selo">7</div>
+                <h2>Garantia de 7 Dias</h2>
+                <p>7 dias para testar, sem risco. Se, seguindo o guia, você não gostar, devolvemos 100% do valor. Basta um e-mail.</p>
+                <p style="margin-top: 15px; font-weight: 700; color: var(--verde-natureza);">Risco zero para você!</p>
+            </div>
+            <!-- CTA após garantia -->
+            <div class="text-center fade-in" style="margin-top: 40px;">
+                <a href="#oferta" class="btn btn-pulsar">QUERO COMEÇAR MEU CULTIVO</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 14. FAQ -->
+    <section class="bg-branco">
+        <div class="container">
+            <h2 class="fade-in">Perguntas Frequentes</h2>
+            <div style="max-width: 800px; margin: 40px auto 0;">
+                <div class="faq-item fade-in">
+                    <div class="faq-pergunta">
+                        <span>Preciso de sol direto?</span>
+                        <span class="emoji-icone">⌄</span>
+                    </div>
+                    <div class="faq-resposta">
+                        <p>Não. Basta luz natural indireta ou uma luminária simples. 4 a 6 horas de luz por dia já são suficientes.</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-pergunta">
+                        <span>Preciso de muito espaço?</span>
+                        <span class="emoji-icone">⌄</span>
+                    </div>
+                    <div class="faq-resposta">
+                        <p>Uma bandeja cabe no balcão ou na janela. Potes reciclados de morango ou uva (3 a 5 cm de profundidade) já funcionam.</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-pergunta">
+                        <span>Meu filho pode ajudar?</span>
+                        <span class="emoji-icone">⌄</span>
+                    </div>
+                    <div class="faq-resposta">
+                        <p>Sim, é uma atividade leve para fazer em família, com supervisão de um adulto. O guia tem um capítulo dedicado a envolver crianças no cultivo.</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-pergunta">
+                        <span>Quanto tempo por dia?</span>
+                        <span class="emoji-icone">⌄</span>
+                    </div>
+                    <div class="faq-resposta">
+                        <p>Cerca de 5 minutos. Observar, regar por baixo e girar a bandeja. O aplicativo te orienta no que fazer a cada dia.</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-pergunta">
+                        <span>Como recebo?</span>
+                        <span class="emoji-icone">⌄</span>
+                    </div>
+                    <div class="faq-resposta">
+                        <p>Por e-mail, logo após a confirmação do pagamento. Você recebe o Guia completo em PDF + acesso ao aplicativo Meus Microverdes.</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-pergunta">
+                        <span>Posso usar qualquer semente?</span>
+                        <span class="emoji-icone">⌄</span>
+                    </div>
+                    <div class="faq-resposta">
+                        <p>Use sementes próprias para cultivo de microverdes. O guia explica como escolher e onde comprar. Evite sementes tratadas quimicamente (com corantes artificiais).</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-pergunta">
+                        <span>Preciso de terra?</span>
+                        <span class="emoji-icone">⌄</span>
+                    </div>
+                    <div class="faq-resposta">
+                        <p>Não é obrigatório. O guia mostra alternativas ao substrato tradicional, como fibra de coco e manta de cultivo. Você pode começar com terra vegetal fina, que é barata e fácil de encontrar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. CTA FINAL -->
+    <section class="bg-bege">
+        <div class="container text-center fade-in">
+            <h2>Comece hoje e, na semana que vem, colha seu primeiro prato de microverdes.</h2>
+            <p style="max-width: 700px; margin: 0 auto 30px; font-weight: 500;">Você não precisa de quintal, não precisa de experiência e não precisa de muito tempo. Só precisa começar.</p>
+            <a href="https://pay.kiwify.com.br/Px3er04" class="btn btn-pulsar" style="font-size: 1.2rem; padding: 20px 50px;">QUERO COMEÇAR AGORA</a>
+        </div>
+    </section>
+
+    <!-- 16. RODAPÉ -->
+    <footer>
+        <div class="container">
+            <p><strong>Meus Microverdes</strong> | Contato: contato@meusmicroverdes.com</p>
+            <p class="footer-links">
+                <a href="politica-de-privacidade.html">Política de Privacidade</a> | 
+                <a href="termos-de-uso.html">Termos de Uso</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- ============================================
+         CTA FIXO MOBILE
+         ============================================ -->
+    <div id="fixed-cta-mobile">
+      <a href="#oferta" style="display:block; width:100%; background:white; color:#2E7D32; padding:14px; border-radius:12px; font-weight:700; text-decoration:none; font-family:Poppins,sans-serif;">QUERO CULTIVAR POR R$37,98</a>
+    </div>
+
+    <!-- ============================================
+         BANNER DE COOKIES (LGPD)
+         ============================================ -->
+    <div id="cookie-banner" style="position:fixed; bottom:0; left:0; width:100%; background:#FFF; padding:16px 20px; box-shadow:0 -4px 20px rgba(0,0,0,0.15); z-index:9999; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-family:Poppins,sans-serif; font-size:14px; border-top:1px solid #E0E0E0;">
+      <span style="flex:1; min-width:260px;">Usamos cookies para melhorar sua experiência. Ao aceitar, você concorda com nossa Política de Privacidade.</span>
+      <div style="display:flex; gap:10px;">
+        <button id="btn-reject-cookie" style="padding:10px 18px; background:transparent; border:1px solid #CCC; border-radius:8px; cursor:pointer;">Recusar</button>
+        <button id="btn-accept-cookie" style="padding:10px 22px; background:#2E7D32; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Aceitar</button>
+      </div>
+    </div>
+
+    <!-- ============================================
+         SCRIPTS
+         ============================================ -->
+    <script>
+        // ===== FAQ ACCORDION =====
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const isActive = item.classList.contains('ativo');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('ativo'));
+                if (!isActive) {
+                    item.classList.add('ativo');
+                }
+            });
+        });
+
+        // ===== ROLAGEM SUAVE =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ===== FADE-IN AO ROLAR =====
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visivel');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+        fadeElements.forEach(el => observer.observe(el));
+
+        // ============================================
+        // BANNER DE COOKIES + CTA FIXO (mobile) + PIXEL LGPD
+        // ============================================
+        var banner = document.getElementById('cookie-banner');
+        var cta = document.getElementById('fixed-cta-mobile');
+
+        // ===== FACEBOOK PIXEL (carrega só com consentimento) =====
+        var MEU_PIXEL_ID = '123456789012345';
+        function carregarPixel(){
+          if(window.fbq) return;
+          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+          n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src='https://connect.facebook.net/en_US/fbevents.js';s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script');
+          fbq('init', MEU_PIXEL_ID);
+          fbq('track', 'PageView');
+        }
+
+        var consent = localStorage.getItem('cookieConsent');
+
+        function mostrarCtaFixo(){
+          cta.classList.add('mostrar');
+          document.body.style.paddingBottom = '85px';
+        }
+
+        function esconderBannerEMostrarCta(){
+          banner.style.display = 'none';
+          mostrarCtaFixo();
+        }
+
+        if(consent === 'accepted'){
+          carregarPixel();
+          esconderBannerEMostrarCta();
+        } else if(consent === 'rejected'){
+          esconderBannerEMostrarCta();
+        } else {
+          banner.style.display='flex';
+          cta.classList.remove('mostrar');
+          document.body.style.paddingBottom = '0';
+        }
+
+        document.getElementById('btn-accept-cookie').onclick = function(){
+          localStorage.setItem('cookieConsent','accepted');
+          carregarPixel();
+          esconderBannerEMostrarCta();
+        };
+
+        document.getElementById('btn-reject-cookie').onclick = function(){
+          localStorage.setItem('cookieConsent','rejected');
+          esconderBannerEMostrarCta();
+        };
+    </script>
+</body>
+</html>
