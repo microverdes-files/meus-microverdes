@@ -32,7 +32,6 @@
             background-color: var(--bege-areia);
             color: var(--texto-corpo);
             line-height: 1.6;
-            padding-bottom: 80px;
             overflow-x: hidden;
         }
 
@@ -99,7 +98,6 @@
         .bg-bege { background-color: var(--bege-areia); }
 
         /* ===== EMOJIS COMO ÍCONES ===== */
-        /* Replica exatamente os tamanhos que os <i> do Font Awesome tinham */
         .emoji-icone {
             display: inline-block;
             line-height: 1;
@@ -107,12 +105,8 @@
             font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", "EmojiSymbols", sans-serif;
         }
 
-        /* HERO - check dentro do .hero-check (herdava font-size padrão, mas com gap) */
-        .hero-check .emoji-icone {
-            font-size: 1.2rem;
-        }
+        .hero-check .emoji-icone { font-size: 1.2rem; }
 
-        /* DOR - era .dor-card i { font-size: 2.5rem; margin-bottom: 20px; } */
         .dor-card .emoji-icone {
             font-size: 2.5rem;
             color: var(--verde-natureza);
@@ -120,7 +114,6 @@
             display: block;
         }
 
-        /* TRANSFORMAÇÃO - era .transformacao-item i { font-size: 2.2rem; margin-bottom: 15px; } */
         .transformacao-item .emoji-icone {
             font-size: 2.2rem;
             color: var(--verde-natureza);
@@ -128,7 +121,6 @@
             display: block;
         }
 
-        /* LISTA APRENDER - era .lista-aprender i { font-size: 1.4rem; min-width: 30px; } */
         .lista-aprender .emoji-icone {
             font-size: 1.4rem;
             min-width: 30px;
@@ -136,7 +128,6 @@
             flex-shrink: 0;
         }
 
-        /* APP LISTA - era .app-lista i { font-size: 1.2rem; min-width: 25px; } */
         .app-lista .emoji-icone {
             font-size: 1.2rem;
             min-width: 25px;
@@ -144,7 +135,6 @@
             flex-shrink: 0;
         }
 
-        /* BENEFÍCIOS - era .beneficio-card i { font-size: 2.8rem; margin-bottom: 20px; } */
         .beneficio-card .emoji-icone {
             font-size: 2.8rem;
             color: var(--verde-natureza);
@@ -152,23 +142,15 @@
             display: block;
         }
 
-        /* ESCASSEZ - era .escassez i { font-size: 1.4rem; } */
-        .escassez .emoji-icone {
-            font-size: 1.4rem;
-        }
+        .escassez .emoji-icone { font-size: 1.4rem; }
 
-        /* SELOS - herdavam o tamanho do texto, sem regra específica */
-        .selos .emoji-icone {
-            font-size: 1rem;
-        }
+        .selos .emoji-icone { font-size: 1rem; }
 
-        /* KIWIFY - era .kiwify-selo i { margin-right: 8px; } */
         .kiwify-selo .emoji-icone {
             font-size: 1.1rem;
             margin-right: 8px;
         }
 
-        /* PORQUE CARD - era .porque-card i { font-size: 2rem; margin-bottom: 18px; } */
         .porque-card .emoji-icone {
             font-size: 2rem;
             color: var(--verde-natureza);
@@ -176,7 +158,6 @@
             display: block;
         }
 
-        /* FAQ SETA - era .faq-pergunta i { transition: transform 0.3s; color: verde; } */
         .faq-pergunta .emoji-icone {
             font-size: 1.1rem;
             color: var(--verde-natureza);
@@ -249,7 +230,14 @@
             margin: 0 auto;
             border-left: 6px solid var(--verde-natureza);
         }
-        .mecanismo-box p { font-size: 1.15rem; font-weight: 500; }
+        .mecanismo-box p {
+            font-size: 18px;
+            line-height: 1.9;
+            font-weight: 500;
+        }
+        .mecanismo-box p + p {
+            margin-top: 25px;
+        }
 
         /* TRANSFORMAÇÃO */
         .transformacao-grid {
@@ -622,32 +610,23 @@
             color: #444;
             font-size: 0.9rem;
         }
-        footer a { color: #444; text-decoration: none; margin: 0 10px; transition: var(--transicao); font-weight: 500; }
+        footer a {
+            color: #444;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: var(--transicao);
+            font-weight: 500;
+        }
         footer a:hover { color: var(--verde-natureza); }
-        footer .cnpj { margin-top: 10px; font-size: 0.85rem; color: #666; }
+        footer .footer-links { margin-top: 10px; }
 
-        /* CTA FIXO MOBILE */
-        .cta-fixo-mobile {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: var(--branco);
-            padding: 12px 20px;
-            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
-            z-index: 999;
-            text-align: center;
-        }
-        .cta-fixo-mobile .btn {
-            width: 100%;
-            padding: 15px;
-            font-size: 1rem;
-            background-color: var(--verde-natureza);
-            color: #ffffff;
-            font-weight: 700;
+        /* ===== CTA FIXO: ESCONDE POR PADRÃO, MOSTRA SÓ NO MOBILE COM .mostrar ===== */
+        #fixed-cta-mobile { display: none; }
+        @media (max-width: 768px) {
+            #fixed-cta-mobile.mostrar { display: block; }
         }
 
+        /* ===== RESPONSIVO ===== */
         @media (max-width: 768px) {
             h1 { font-size: 1.9rem; }
             h2 { font-size: 1.6rem; }
@@ -661,17 +640,13 @@
             .porque-grid { grid-template-columns: 1fr; }
             .app-grid { flex-direction: column; }
             .autoridade-grid { flex-direction: column; }
-            .cta-fixo-mobile { display: block; }
-            body { padding-bottom: 80px; }
             .selos { flex-direction: column; align-items: center; }
             .mecanismo-box { padding: 30px 22px; }
             .app-section { padding: 35px 22px; }
             .lista-oferta li { flex-direction: column; gap: 5px; }
             .lista-oferta .item-valor { align-self: flex-start; }
-        }
-
-        @media (min-width: 769px) {
-            .cta-fixo-mobile { display: none; }
+            #cookie-banner { font-size: 13px; padding: 12px 15px; }
+            #cookie-banner > div { width: 100%; justify-content: flex-end; }
         }
     </style>
 </head>
@@ -726,7 +701,7 @@
             <h2 class="fade-in">Passo a Passo Meus Microverdes</h2>
             <div class="mecanismo-box fade-in">
                 <p>O Passo a Passo Meus Microverdes reduz o cultivo a três decisões: <strong>o substrato certo</strong>, <strong>o timing de luz</strong> e <strong>a rega correta</strong>.</p>
-                <p style="margin-top: 20px;">Em vez de "testar e errar", você segue um roteiro fase por fase — <strong>germinação, blackout, crescimento e colheita</strong> — que evita os 3 erros que fazem iniciantes desistirem: <strong>mofo</strong>, <strong>talos moles</strong> e <strong>sementes que não germinam</strong>.</p>
+                <p>Em vez de "testar e errar", você segue um roteiro fase por fase — <strong>germinação, blackout, crescimento e colheita</strong> — que evita os 3 erros que fazem iniciantes desistirem: <strong>mofo</strong>, <strong>talos moles</strong> e <strong>sementes que não germinam</strong>.</p>
             </div>
         </div>
     </section>
@@ -753,7 +728,7 @@
                     <p>Dia 7 a 14: você colhe e serve no prato.</p>
                 </div>
             </div>
-            <p class="fade-in text-center" style="margin-top: 40px; font-size: 1.2rem; font-weight: 600; color: var(--verde-natureza);">E na semana seguinte, inicia um novo cultivo com uma ou mais variedades, se desejar.</p>
+            <p class="fade-in text-center" style="margin-top: 40px; font-size: 1.2rem; font-weight: 600; color: var(--verde-natureza);">E na semana seguinte, começa de novo com uma ou mais variedades novas se quiser.</p>
         </div>
     </section>
 
@@ -781,13 +756,13 @@
                     <div class="galeria-item">
                         <img src="bandeja.jpg" alt="Germinação de microverdes em bandeja com substrato" loading="lazy">
                     </div>
-                    <p class="galeria-legenda">Microverdes na bandeja</p>
+                    <p class="galeria-legenda">Germinação em bandeja</p>
                 </div>
                 <div class="fade-in">
                     <div class="galeria-item">
                         <img src="janela.jpg" alt="Bandeja de microverdes na janela do apartamento" loading="lazy">
                     </div>
-                    <p class="galeria-legenda">Na janela da cozinha</p>
+                    <p class="galeria-legenda">Na janela do apê</p>
                 </div>
                 <div class="fade-in">
                     <div class="galeria-item">
@@ -883,7 +858,7 @@
 
                 <div class="escassez">
                     <span class="emoji-icone">🏷️</span>
-                    <span>PREÇO DE LANÇAMENTO</span>
+                    <span>Preço de lançamento por tempo limitado</span>
                 </div>
 
                 <a href="#" class="btn btn-pulsar" style="font-size: 1.15rem; padding: 20px 45px;">SIM, QUERO CULTIVAR MEUS MICROVERDES</a>
@@ -907,28 +882,28 @@
             <h2 class="fade-in">Quem já cultiva em casa</h2>
             <div class="depoimentos-grid">
                 <div class="depoimento-card fade-in">
-                    <div class="depoimentox-foto">
+                    <div class="depoimento-foto">
                         <img src="depoimento.png" alt="Juliana, cliente real" loading="lazy">
                     </div>
                     <p>"Minha filha agora come salada todo dia! Ela mesma colhe os microverdes de rúcula."</p>
                     <p class="depoimento-nome">Juliana, Blumenau</p>
                 </div>
                 <div class="depoimento-card fade-in">
-                    <div class="depoimentox-foto">
+                    <div class="depoimento-foto">
                         <img src="depoimento.png" alt="Marcos, cliente real" loading="lazy">
                     </div>
                     <p>"Colho na janela do apê. O app me lembra de girar a bandeja e registrar tudo."</p>
                     <p class="depoimento-nome">Marcos, São Paulo</p>
                 </div>
                 <div class="depoimento-card fade-in">
-                    <div class="depoimentox-foto">
+                    <div class="depoimento-foto">
                         <img src="depoimento.png" alt="Carla, cliente real" loading="lazy">
                     </div>
                     <p>"Nunca imaginei que conseguiria cultivar algo. Em 10 dias estava colhendo mostarda!"</p>
                     <p class="depoimento-nome">Carla, Curitiba</p>
                 </div>
                 <div class="depoimento-card fade-in">
-                    <div class="depoimentox-foto">
+                    <div class="depoimento-foto">
                         <img src="depoimento.png" alt="Rafael, cliente real" loading="lazy">
                     </div>
                     <p>"As crianças amam ajudar. O diário do app virou programação em família."</p>
@@ -1092,21 +1067,36 @@
     <footer>
         <div class="container">
             <p><strong>Meus Microverdes</strong> | Contato: contato@meusmicroverdes.com</p>
-            <p style="margin-top: 10px;">
-                <a href="#">Política de Privacidade</a> | 
-                <a href="#">Termos de Uso</a>
+            <p class="footer-links">
+                <a href="/politica-de-privacidade">Política de Privacidade</a> | 
+                <a href="/termos-de-uso">Termos de Uso</a>
             </p>
-            <p style="margin-top: 20px;">© 2026 Meus Microverdes. Todos os direitos reservados.</p>
         </div>
     </footer>
 
-    <!-- CTA Fixo Mobile -->
-    <div class="cta-fixo-mobile">
-        <a href="#oferta" class="btn btn-pulsar">QUERO CULTIVAR POR R$37,90</a>
+    <!-- ============================================
+         CTA FIXO MOBILE
+         ============================================ -->
+    <div id="fixed-cta-mobile">
+      <a href="#oferta" style="display:block; width:100%; background:white; color:#2E7D32; padding:14px; border-radius:12px; font-weight:700; text-decoration:none; font-family:Poppins,sans-serif;">QUERO CULTIVAR POR R$37,98</a>
     </div>
 
+    <!-- ============================================
+         BANNER DE COOKIES (LGPD)
+         ============================================ -->
+    <div id="cookie-banner" style="position:fixed; bottom:0; left:0; width:100%; background:#FFF; padding:16px 20px; box-shadow:0 -4px 20px rgba(0,0,0,0.15); z-index:9999; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-family:Poppins,sans-serif; font-size:14px; border-top:1px solid #E0E0E0;">
+      <span style="flex:1; min-width:260px;">Usamos cookies para melhorar sua experiência. Ao aceitar, você concorda com nossa Política de Privacidade.</span>
+      <div style="display:flex; gap:10px;">
+        <button id="btn-reject-cookie" style="padding:10px 18px; background:transparent; border:1px solid #CCC; border-radius:8px; cursor:pointer;">Recusar</button>
+        <button id="btn-accept-cookie" style="padding:10px 22px; background:#2E7D32; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Aceitar</button>
+      </div>
+    </div>
+
+    <!-- ============================================
+         SCRIPTS
+         ============================================ -->
     <script>
-        // FAQ Accordion (primeira já vem aberta)
+        // ===== FAQ ACCORDION =====
         document.querySelectorAll('.faq-item').forEach(item => {
             item.addEventListener('click', () => {
                 const isActive = item.classList.contains('ativo');
@@ -1117,7 +1107,7 @@
             });
         });
 
-        // Rolagem suave
+        // ===== ROLAGEM SUAVE =====
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -1130,7 +1120,7 @@
             });
         });
 
-        // Fade-in ao rolar
+        // ===== FADE-IN AO ROLAR =====
         const fadeElements = document.querySelectorAll('.fade-in');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1141,6 +1131,59 @@
             });
         }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
         fadeElements.forEach(el => observer.observe(el));
+
+        // ============================================
+        // BANNER DE COOKIES + CTA FIXO (mobile) + PIXEL LGPD
+        // ============================================
+        var banner = document.getElementById('cookie-banner');
+        var cta = document.getElementById('fixed-cta-mobile');
+
+        // ===== FACEBOOK PIXEL (carrega só com consentimento) =====
+        var MEU_PIXEL_ID = '123456789012345';
+        function carregarPixel(){
+          if(window.fbq) return;
+          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+          n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src='https://connect.facebook.net/en_US/fbevents.js';s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script');
+          fbq('init', MEU_PIXEL_ID);
+          fbq('track', 'PageView');
+        }
+
+        var consent = localStorage.getItem('cookieConsent');
+
+        function mostrarCtaFixo(){
+          cta.classList.add('mostrar');
+          document.body.style.paddingBottom = '85px';
+        }
+
+        function esconderBannerEMostrarCta(){
+          banner.style.display = 'none';
+          mostrarCtaFixo();
+        }
+
+        if(consent === 'accepted'){
+          carregarPixel();
+          esconderBannerEMostrarCta();
+        } else if(consent === 'rejected'){
+          esconderBannerEMostrarCta();
+        } else {
+          banner.style.display='flex';
+          cta.classList.remove('mostrar');
+          document.body.style.paddingBottom = '0';
+        }
+
+        document.getElementById('btn-accept-cookie').onclick = function(){
+          localStorage.setItem('cookieConsent','accepted');
+          carregarPixel();
+          esconderBannerEMostrarCta();
+        };
+
+        document.getElementById('btn-reject-cookie').onclick = function(){
+          localStorage.setItem('cookieConsent','rejected');
+          esconderBannerEMostrarCta();
+        };
     </script>
 </body>
 </html>
