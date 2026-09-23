@@ -1146,14 +1146,14 @@
         var banner = document.getElementById('cookie-banner');
         var cta = document.getElementById('fixed-cta-mobile');
 
-        // ===== FACEBOOK PIXEL (carrega só com consentimento) =====
-        var MEU_PIXEL_ID = '552534333526371';
+       // ===== FACEBOOK PIXEL =====
+        var MEU_PIXEL_ID = '55253433526371';
         function carregarPixel(){
           if(window.fbq) return;
-          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
           n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
           n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-          t.src='https://connect.facebook.net/en_US/fbevents.js';s=b.getElementsByTagName(e)[0];
+          t.src='https://pixels.meusmicroverdes.com/fbevents.js';s=b.getElementsByTagName(e)[0];
           s.parentNode.insertBefore(t,s)}(window, document,'script');
           fbq('init', MEU_PIXEL_ID);
           fbq('track', 'PageView');
