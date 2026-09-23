@@ -108,13 +108,20 @@
 
         .hero-check .emoji-icone { font-size: 1.2rem; }
 
-        .dor-card .emoji-icone {
-            font-size: 2.5rem;
-            color: var(--verde-natureza);
-            margin-bottom: 20px;
-            display: block;
+       .dor-card {
+          display: flex;
+          flex-direction: column;
+          align-items: center; /* centraliza o ícone */
+          text-align: center;  /* centraliza o texto */
         }
 
+        .dor-card .icone-card {
+          width: 90px;
+          height: 90px;
+          margin: 0 auto 12px auto;
+          display: block;
+        }
+        
         .transformacao-item .emoji-icone {
             font-size: 2.2rem;
             color: var(--verde-natureza);
@@ -679,16 +686,18 @@
         <div class="container">
             <h2 class="fade-in">Você já comprou folhas e viu estragar antes de comer?</h2>
             <div class="dor-grid">
-                <div class="dor-card fade-in">
-                    <span class="emoji-icone">🍃</span>
+                 <div class="dor-card fade-in">
+                    <img src="murcha.png" class="icone-card" alt="Verduras que murcham">
                     <p>Verduras que murcham em 2 dias na geladeira.</p>
                 </div>
+
                 <div class="dor-card fade-in">
-                    <span class="emoji-icone">🍽️</span>
+                    <img src="saladas.png" class="icone-card" alt="icone salada">
                     <p>Saladas que se repetem e ninguém quer variar.</p>
                 </div>
-                <div class="dor-card fade-in">
-                    <span class="emoji-icone">❓</span>
+
+                 <div class="dor-card fade-in">
+                    <img src="origem.png" class="icone-card" alt="icone salada">
                     <p>Vontade de saber de onde vem o que você come.</p>
                 </div>
             </div>
@@ -1147,7 +1156,7 @@
         var cta = document.getElementById('fixed-cta-mobile');
 
      // ===== FACEBOOK PIXEL (corrigido) =====
-        var MEU_PIXEL_ID = '55253433526371';
+        // var MEU_PIXEL_ID = '55253433526371';
         function carregarPixel(){
           if(window.fbq) return;
          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
