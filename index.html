@@ -111,8 +111,8 @@
        .dor-card {
           display: flex;
           flex-direction: column;
-          align-items: center; /* centraliza o ícone */
-          text-align: center;  /* centraliza o texto */
+          align-items: center;
+          text-align: center;
         }
 
         .dor-card .icone-card {
@@ -141,13 +141,6 @@
             min-width: 25px;
             text-align: center;
             flex-shrink: 0;
-        }
-
-        .beneficio-card .emoji-icone {
-            font-size: 2.8rem;
-            color: var(--verde-natureza);
-            margin-bottom: 20px;
-            display: block;
         }
 
         .escassez .emoji-icone { font-size: 1.4rem; }
@@ -339,23 +332,54 @@
             color: var(--texto-escuro);
         }
 
-        /* BENEFÍCIOS */
+        /* ===== BENEFÍCIOS (AJUSTADO) ===== */
         .beneficios-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 30px;
             margin-top: 50px;
+            align-items: stretch;
         }
         .beneficio-card {
             background: var(--branco);
             padding: 40px 28px;
             border-radius: var(--borda-arredondada);
             box-shadow: var(--sombra);
-            text-align: center;
             transition: var(--transicao);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            height: 100%;
         }
         .beneficio-card:hover { transform: translateY(-8px); box-shadow: var(--sombra-forte); }
-        .beneficio-card h3 { font-size: 1.3rem; font-weight: 700; color: var(--texto-escuro); line-height: 1.4; }
+        .beneficio-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--texto-escuro);
+            line-height: 1.4;
+            margin: 0;
+        }
+        .beneficio-card .emoji-icone {
+            font-size: 2.8rem;
+            color: var(--verde-natureza);
+            margin-bottom: 20px;
+            display: block;
+            width: 48px;
+            height: 48px;
+            line-height: 48px;
+            margin-left: auto;
+            margin-right: auto;
+            background: transparent;
+        }
+        .beneficio-card img.icone-card {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px auto;
+            display: block;
+            object-fit: contain;
+            background: transparent;
+        }
 
         /* OFERTA */
         .oferta-section {
@@ -646,6 +670,7 @@
             .oferta-box { padding: 30px 20px; }
             .preco-principal { font-size: 2.5rem; }
             .porque-grid { grid-template-columns: 1fr; }
+            .beneficios-grid { grid-template-columns: 1fr; }
             .app-grid { flex-direction: column; }
             .autoridade-grid { flex-direction: column; }
             .selos { flex-direction: column; align-items: center; }
@@ -826,7 +851,7 @@
             <div class="beneficios-grid">
                 <div class="beneficio-card fade-in">
                     <span class="emoji-icone">💪</span>
-                    <h3>Pesquisadores da University of Maryland e do USDA encontraram, em algumas variedades de microverdes, concentrações de nutrientes até 40x maiores que na planta adulta.</h3>
+                    <h3>Sabor e nutrientes concentrados: colhidos novinhos, por isso uma bandejinha vale mais que um maço de alface. Você colhe na hora.</h3>
                 </div>
                 <div class="beneficio-card fade-in">
                     <span class="emoji-icone">☀️</span>
