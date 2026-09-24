@@ -1166,59 +1166,85 @@
             });
         }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
         fadeElements.forEach(el => observer.observe(el));
+    <!-- ============================================
+         BANNER DE COOKIES (LGPD) - FIX
+         ============================================ -->
+    <div id="cookie-banner" style="position:fixed; bottom:0; left:0; width:100%; background:#FFF; padding:16px 20px; box-shadow:0 -4px 20px rgba(0,0,0,0.15); z-index:99999; display:none; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-family:Poppins,sans-serif; font-size:14px; border-top:1px solid #E0E0E0;">
+      <span style="flex:1; min-width:260px;">Usamos cookies para melhorar sua experiência. Ao aceitar, você concorda com nossa Política de Privacidade.</span>
+      <div style="display:flex; gap:10px;">
+        <button id="btn-reject-cookie" type="button" style="padding:10px 18px; background:transparent; border:1px solid #CCC; border-radius:8px; cursor:pointer; touch-action: manipulation;">Recusar</button>
+        <button id="btn-accept-cookie" type="button" style="padding:10px 22px; background:#2E7D32; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer; touch-action: manipulation;">Aceitar</button>
+      </div>
+    </div>
 
-        // ============================================
-        // BANNER DE COOKIES + CTA FIXO (mobile) + PIXEL LGPD
-        // ============================================
-        var banner = document.getElementById('cookie-banner');
-        var cta = document.getElementById('fixed-cta-mobile');
+    <script>
+        // ===== FAQ e FADE-IN (seu código original, mantido) =====
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const isActive = item.classList.contains('ativo');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('ativo'));
+                if (!isActive) item.classList.add('ativo');
+            });
+        });
 
-     // ===== FACEBOOK PIXEL (corrigido) =====
-        var MEU_PIXEL_ID = 'x055253433526371';
-        function carregarPixel(){
-          if(window.fbq) return;
-         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-          n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-          t.src='https://pixels.meusmicroverdes.com/fbevents.js';s=b.getElementsByTagName(e)[0];
-          s.parentNode.insertBefore(t,s)}(window, document,'script');
-          fbq('init', MEU_PIXEL_ID);
-          fbq('track', 'PageView');
-        }
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visivel');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+        fadeElements.forEach(el => observer.observe(el));
 
-        var consent = localStorage.getItem('cookieConsent');
+        // ===== BANNER LGPD + PIXEL - CORRIGIDO =====
+        document.addEventListener('DOMContentLoaded', function(){
+            var banner = document.getElementById('cookie-banner');
+            var btnAccept = document.getElementById('btn-accept-cookie');
+            var btnReject = document.getElementById('btn-reject-cookie');
 
-        function mostrarCtaFixo(){
-          cta.classList.add('mostrar');
-          document.body.style.paddingBottom = '85px';
-        }
+            if(!banner ||!btnAccept ||!btnReject) return;
 
-        function esconderBannerEMostrarCta(){
-          banner.style.display = 'none';
-          mostrarCtaFixo();
-        }
+            var MEU_PIXEL_ID = 'xx55253433526371';
+            function carregarPixel(){
+              if(window.fbq) return;
+             !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+              n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src='https://pixels.meusmicroverdes.com/fbevents.js';s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script');
+              fbq('init', MEU_PIXEL_ID);
+              fbq('track', 'PageView');
+            }
 
-        if(consent === 'accepted'){
-          carregarPixel();
-          esconderBannerEMostrarCta();
-        } else if(consent === 'rejected'){
-          esconderBannerEMostrarCta();
-        } else {
-          banner.style.display='flex';
-          cta.classList.remove('mostrar');
-          document.body.style.paddingBottom = '0';
-        }
+            var consent = localStorage.getItem('cookieConsent');
 
-        document.getElementById('btn-accept-cookie').onclick = function(){
-          localStorage.setItem('cookieConsent','accepted');
-          carregarPixel();
-          esconderBannerEMostrarCta();
-        };
+            if(consent === 'accepted'){
+              carregarPixel();
+              banner.style.display = 'none';
+            } else if(consent === 'rejected'){
+              banner.style.display = 'none';
+            } else {
+              banner.style.display = 'flex';
+            }
 
-        document.getElementById('btn-reject-cookie').onclick = function(){
-          localStorage.setItem('cookieConsent','rejected');
-          esconderBannerEMostrarCta();
-        };
+            function aceitar(){
+              localStorage.setItem('cookieConsent','accepted');
+              carregarPixel();
+              banner.style.display = 'none';
+            }
+            function recusar(){
+              localStorage.setItem('cookieConsent','rejected');
+              banner.style.display = 'none';
+            }
+
+            btnAccept.addEventListener('click', aceitar);
+            btnReject.addEventListener('click', recusar);
+            // garantia extra pro iOS
+            btnAccept.addEventListener('touchend', function(e){ e.preventDefault(); aceitar(); }, {passive:false});
+            btnReject.addEventListener('touchend', function(e){ e.preventDefault(); recusar(); }, {passive:false});
+        });
     </script>
 </body>
 </html>
